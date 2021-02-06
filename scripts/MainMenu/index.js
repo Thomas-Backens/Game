@@ -5,7 +5,17 @@ function setup() {
   rectMode(CENTER);
 
   buttons.push(
-    new Button(windowWidth / 2, windowHeight / 2, 200, 50, 30, "Play")
+    new Button(
+      windowWidth / 2,
+      windowHeight / 2,
+      200,
+      50,
+      30,
+      "Play",
+      function () {
+        window.location.href = "/html/game.html";
+      }
+    )
   );
   buttons.push(
     new Button(windowWidth / 2, windowHeight / 2 + 60, 200, 50, 30, "Quit")
@@ -13,6 +23,7 @@ function setup() {
 }
 
 function draw() {
+  cursor("default");
   background(50);
 
   strokeWeight(10);
@@ -32,13 +43,22 @@ function draw() {
     buttons[i].display();
   }
 }
+function mousePressed() {
+  for (let i = 0; i < buttons.length; i++) {
+    if (buttons[i].mouseHover()) {
+      buttons[i].pressed = true;
+    }
+  }
+}
+function mouseReleased() {
+  for (let i = 0; i < buttons.length; i++) {
+    if (buttons[i].mouseHover() && buttons[i].pressed) {
+      buttons[i].onClick();
+    }
+    buttons[i].pressed = false;
+  }
+}
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-}
-
-function keyReleased() {
-  if (keyCode === ENTER) {
-    window.location.href = "/html/game.html";
-  }
 }
