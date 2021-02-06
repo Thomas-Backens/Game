@@ -22,16 +22,16 @@ class Block {
         fill(0, 0, 255);
         rect(
           this.position.x + camera.x,
-          this.position.y - this.size / 4 + camera.y,
+          this.position.y + camera.y,
           this.size,
-          this.size * 1.5
+          this.size
         );
         fill(0, 0, 200);
         rect(
           this.position.x + camera.x,
-          this.position.y - this.size / 1.5 + camera.y,
+          this.position.y - this.size / 2 + camera.y,
           this.size,
-          this.size / 1.5
+          this.size
         );
         break;
     }
