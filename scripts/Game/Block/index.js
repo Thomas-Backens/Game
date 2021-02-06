@@ -3,6 +3,8 @@ class Block {
     this.position = new p5.Vector(x, y);
     this.size = size;
     this.type = type;
+
+    this.floorTile = loadImage("../../../sprites/Tiles/Wood_floor.png");
   }
 
   display() {
@@ -10,8 +12,15 @@ class Block {
 
     switch (this.type) {
       case "floor":
-        fill(255, 0, 0);
-        rect(
+        // fill(255, 0, 0);
+        // rect(
+        //   this.position.x + camera.x,
+        //   this.position.y + camera.y,
+        //   this.size,
+        //   this.size
+        // );
+        image(
+          this.floorTile,
           this.position.x + camera.x,
           this.position.y + camera.y,
           this.size,

@@ -3,7 +3,7 @@ class Hero {
     this.position = new p5.Vector(config.x, config.y);
     this.velocity = new p5.Vector(0, 0);
 
-    this.idle = loadImage("../sprites/Hero/You.png");
+    this.idle = loadImage("../../../sprites/Hero/You.png");
     this.speed = config.speed;
     this.size = 50;
   }
