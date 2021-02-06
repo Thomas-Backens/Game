@@ -1,5 +1,23 @@
 let keys = [];
+let bitMap = [
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, "p", 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+  [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
+let wallSize = 100;
+let camera = {
+  x: 0,
+  y: 0,
+};
 
+let blocks = [];
 let heroes = [];
 
 function setup() {
@@ -7,33 +25,107 @@ function setup() {
   rectMode(CENTER);
   imageMode(CENTER);
 
-  heroes.push(
-    new Hero({
-      x: 100,
-      y: 150,
-    })
-  );
-  heroes.push(
-    new Hero({
-      x: 200,
-      y: 400,
-    })
-  );
-  heroes.push(
-    new Hero({
-      x: 800,
-      y: 500,
-    })
-  );
+  for (let i = 0; i < bitMap.length; i++) {
+    for (let j = 0; j < bitMap[i].length; j++) {
+      switch (bitMap[j][i]) {
+        case 0:
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "floor"
+            )
+          );
+          break;
+        case 1:
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "wall"
+            )
+          );
+          break;
+        case "p":
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "floor"
+            )
+          );
+
+          heroes.push(
+            new Hero({
+              x: i * wallSize + wallSize / 2,
+              y: j * wallSize + wallSize / 2,
+              speed: 5,
+            })
+          );
+          break;
+      }
+    }
+  }
 }
 
 function draw() {
-  background(255);
+  background(0);
+
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].type === "floor") {
+      blocks[i].display();
+    }
+    if (blocks[i].type === "wall") {
+      for (let j = 0; j < heroes.length; j++) {
+        if (blocks[i].position.y - 5 <= heroes[j].position.y) {
+          blocks[i].display();
+        }
+      }
+      blocks[i].collideWithPlayer();
+    }
+  }
 
   for (let i = 0; i < heroes.length; i++) {
     heroes[i].display();
     heroes[i].move();
   }
+
+  for (let i = 0; i < blocks.length; i++) {
+    if (blocks[i].type === "wall") {
+      for (let j = 0; j < heroes.length; j++) {
+        if (blocks[i].position.y >= heroes[j].position.y) {
+          blocks[i].display();
+        }
+      }
+    }
+  }
+
+  {
+    if (5 < abs(camera.x + heroes[0].position.x - width / 2)) {
+      if (camera.x + heroes[0].position.x - width / 2 < 0) {
+        camera.x += round(
+          (-heroes[0].position.x - camera.x + width / 2 - 5) * 0.1
+        );
+      } else {
+        camera.x += round(
+          (-heroes[0].position.x - camera.x + width / 2 + 5) * 0.1
+        );
+      }
+    }
+
+    if (camera.y + heroes[0].position.y - height / 2 < -10) {
+      camera.y += round(
+        (-heroes[0].position.y - camera.y + height / 2 - 10) * 0.1
+      );
+    } else if (camera.y + heroes[0].position.y - height / 2 > 10) {
+      camera.y += round(
+        (-heroes[0].position.y - camera.y + height / 2 + 10) * 0.1
+      );
+    }
+  } // Camera
 }
 
 function windowResized() {
