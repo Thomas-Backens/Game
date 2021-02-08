@@ -4,7 +4,58 @@ class Block {
     this.size = size;
     this.type = type;
 
-    this.floorTile = loadImage("../../../sprites/Tiles/Wood_floor.png");
+    this.floorTiles;
+    this.floorTile;
+    this.wallTiles;
+    this.wallTile;
+    this.pillarTile;
+  }
+
+  loadImages() {
+    this.floorTiles = [
+      loadImage("../../../sprites/Tiles/Dirt/Dirt1.png"),
+      loadImage("../../../sprites/Tiles/Dirt/Dirt2.png"),
+      loadImage("../../../sprites/Tiles/Dirt/Dirt3.png"),
+      loadImage("../../../sprites/Tiles/Dirt/Dirt4.png"),
+      loadImage("../../../sprites/Tiles/Dirt/Dirt_wall_top.png"),
+    ];
+    this.wallTiles = [
+      loadImage("../../../sprites/Tiles/Stone/Stone1.png"),
+      loadImage("../../../sprites/Tiles/Stone/Stone2.png"),
+      loadImage("../../../sprites/Tiles/Stone/Stone1_side.png"),
+      loadImage("../../../sprites/Tiles/Stone/Stone2_side.png"),
+    ];
+    this.pillarTile = loadImage("../../../sprites/Tiles/Pillar.png");
+
+    this.floorTile = round(random(0, this.floorTiles.length - 2));
+    this.wallTile = round(random(0, 1));
+
+    for (let i = 0; i < blocks.length; i++) {
+      if (
+        blocks[i].position.x === this.position.x &&
+        blocks[i].position.y === this.position.y - wallSize
+      ) {
+        if (blocks[i].type === "wall") {
+          this.floorTile = this.floorTiles.length - 1;
+        }
+      }
+      if (
+        blocks[i].position.y === this.position.y &&
+        blocks[i].position.x === this.position.x + wallSize
+      ) {
+        if (blocks[i].type === "floor") {
+          this.wallTile = 2;
+        }
+      }
+      if (
+        blocks[i].position.y === this.position.y &&
+        blocks[i].position.x === this.position.x - wallSize
+      ) {
+        if (blocks[i].type === "floor") {
+          this.wallTile = 3;
+        }
+      }
+    }
   }
 
   display() {
@@ -12,15 +63,8 @@ class Block {
 
     switch (this.type) {
       case "floor":
-        // fill(255, 0, 0);
-        // rect(
-        //   this.position.x + camera.x,
-        //   this.position.y + camera.y,
-        //   this.size,
-        //   this.size
-        // );
         image(
-          this.floorTile,
+          this.floorTiles[this.floorTile],
           this.position.x + camera.x,
           this.position.y + camera.y,
           this.size,
@@ -28,17 +72,10 @@ class Block {
         );
         break;
       case "wall":
-        fill(0, 0, 255);
-        rect(
+        image(
+          this.wallTiles[this.wallTile],
           this.position.x + camera.x,
           this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        fill(0, 0, 200);
-        rect(
-          this.position.x + camera.x,
-          this.position.y - this.size / 2 + camera.y,
           this.size,
           this.size
         );

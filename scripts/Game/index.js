@@ -1,14 +1,14 @@
 let keys = [];
 let bitMap = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, "p", 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-  [1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-  [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 let wallSize = 100;
@@ -48,6 +48,16 @@ function setup() {
             )
           );
           break;
+        case 2:
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "pillar"
+            )
+          );
+          break;
         case "p":
           blocks.push(
             new Block(
@@ -69,6 +79,10 @@ function setup() {
       }
     }
   }
+
+  for (let i = 0; i < blocks.length; i++) {
+    blocks[i].loadImages();
+  }
 }
 
 function draw() {
@@ -78,7 +92,7 @@ function draw() {
     if (blocks[i].type === "floor") {
       blocks[i].display();
     }
-    if (blocks[i].type === "wall") {
+    if (blocks[i].type === "wall" || blocks[i].type === "pillar") {
       for (let j = 0; j < heroes.length; j++) {
         if (blocks[i].position.y - 5 <= heroes[j].position.y) {
           blocks[i].display();
@@ -94,7 +108,7 @@ function draw() {
   }
 
   for (let i = 0; i < blocks.length; i++) {
-    if (blocks[i].type === "wall") {
+    if (blocks[i].type === "wall" || blocks[i].type === "pillar") {
       for (let j = 0; j < heroes.length; j++) {
         if (blocks[i].position.y >= heroes[j].position.y) {
           blocks[i].display();
