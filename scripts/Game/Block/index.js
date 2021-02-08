@@ -83,20 +83,14 @@ class Block {
     }
   }
 
-  collideWithPlayer() {
-    for (let i = 0; i < heroes.length; i++) {
-      if (
-        heroes[i].position.x + heroes[i].size / 2 >=
-          this.position.x - this.size / 2 &&
-        heroes[i].position.x - heroes[i].size / 2 <=
-          this.position.x + this.size / 2 &&
-        heroes[i].position.y + heroes[i].size / 2 >=
-          this.position.y - this.size / 2 &&
-        heroes[i].position.y - heroes[i].size / 2 <=
-          this.position.y + this.size / 2
-      ) {
-        heroes[i].repel(this);
-      }
+  collideWithObj(target) {
+    if (
+      target.position.x + target.size / 2 >= this.position.x - this.size / 2 &&
+      target.position.x - target.size / 2 <= this.position.x + this.size / 2 &&
+      target.position.y + target.size / 2 >= this.position.y - this.size / 2 &&
+      target.position.y - target.size / 2 <= this.position.y + this.size / 2
+    ) {
+      target.repel(this);
     }
   }
 }

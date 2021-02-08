@@ -19,11 +19,13 @@ let camera = {
 
 let blocks = [];
 let heroes = [];
+let monsters = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   rectMode(CENTER);
   imageMode(CENTER);
+  frameRate(60);
 
   for (let i = 0; i < bitMap.length; i++) {
     for (let j = 0; j < bitMap[i].length; j++) {
@@ -83,6 +85,15 @@ function setup() {
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].loadImages();
   }
+
+  monsters.push(
+    new Monster({
+      x: 200,
+      y: 200,
+      speed: 1,
+      type: "Spider",
+    })
+  );
 }
 
 function draw() {
@@ -97,9 +108,18 @@ function draw() {
         if (blocks[i].position.y - 5 <= heroes[j].position.y) {
           blocks[i].display();
         }
+        blocks[i].collideWithObj(heroes[j]);
       }
-      blocks[i].collideWithPlayer();
+      for (let j = 0; j < monsters.length; j++) {
+        blocks[i].collideWithObj(monsters[j]);
+      }
     }
+  }
+
+  for (let i = 0; i < monsters.length; i++) {
+    monsters[i].display();
+    monsters[i].move();
+    monsters[i].attack();
   }
 
   for (let i = 0; i < heroes.length; i++) {

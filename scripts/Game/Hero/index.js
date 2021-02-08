@@ -5,6 +5,7 @@ class Hero {
 
     this.idle = loadImage("../../../sprites/Hero/You.png");
     this.speed = config.speed;
+    this.health = 100;
     this.size = 50;
   }
 
@@ -22,6 +23,15 @@ class Hero {
       this.position.y + camera.y,
       this.size,
       this.size
+    );
+
+    textAlign(CENTER);
+    textSize(20);
+    fill(255);
+    text(
+      "Health: " + this.health,
+      this.position.x + camera.x,
+      this.position.y + camera.y - 50
     );
   }
 
