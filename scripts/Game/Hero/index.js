@@ -15,6 +15,12 @@ class Hero {
       speed: 0,
       visionRange: 0,
     };
+    this.collidingWith = {
+      top: false,
+      bottom: false,
+      right: false,
+      left: false,
+    };
 
     this.idle;
     this.walk;
@@ -42,6 +48,15 @@ class Hero {
   }
 
   display() {
+    noStroke();
+    fill(0, 50);
+    ellipse(
+      this.position.x + camera.x,
+      this.position.y + camera.y + 50,
+      50,
+      40
+    );
+
     if (this.running) {
       image(
         this.walk,
@@ -59,14 +74,14 @@ class Hero {
         100
       );
     }
-    // noStroke();
-    // fill(0, 255, 0);
-    // rect(
-    //   this.position.x + camera.x,
-    //   this.position.y + camera.y,
-    //   this.size,
-    //   this.size
-    // );
+    noStroke();
+    fill(0, 255, 0);
+    rect(
+      this.position.x + camera.x,
+      this.position.y + camera.y,
+      this.size,
+      this.size
+    );
 
     textAlign(CENTER);
     textSize(20);
@@ -107,18 +122,94 @@ class Hero {
 
   move() {
     this.running = false;
-    if (keys[87]) {
+    if (keys[87] && this.collidingWith.bottom === false) {
       this.position.y -= this.stats.speed;
     }
-    if (keys[83]) {
+    if (keys[83] && this.collidingWith.top === false) {
       this.position.y += this.stats.speed;
       this.running = true;
     }
-    if (keys[68]) {
+    if (keys[68] && this.collidingWith.left === false) {
       this.position.x += this.stats.speed;
     }
-    if (keys[65]) {
+    if (keys[65] && this.collidingWith.right === false) {
       this.position.x -= this.stats.speed;
+    }
+  }
+
+  collideWithBlock() {
+    this.collideWithBottomBlock();
+    this.collideWithTopBlock();
+    this.collideWithRightBlock();
+    this.collideWithLeftBlock();
+  }
+
+  collideWithBottomBlock() {
+    this.collidingWith.bottom = false;
+    for (let i = 0; i < blocks.length; i++) {
+      if (
+        this.position.x + this.size / 2 >=
+          blocks[i].position.x - blocks[i].size / 2 + 5 &&
+        this.position.x - this.size / 2 <=
+          blocks[i].position.x + blocks[i].size / 2 - 5 &&
+        this.position.y + this.size / 2 >= blocks[i].position.y &&
+        this.position.y - this.size / 2 <=
+          blocks[i].position.y + blocks[i].size / 2 &&
+        blocks[i].type === "wall"
+      ) {
+        this.collidingWith.bottom = true;
+      }
+    }
+  }
+  collideWithTopBlock() {
+    this.collidingWith.top = false;
+    for (let i = 0; i < blocks.length; i++) {
+      if (
+        this.position.x + this.size / 2 >=
+          blocks[i].position.x - blocks[i].size / 2 + 5 &&
+        this.position.x - this.size / 2 <=
+          blocks[i].position.x + blocks[i].size / 2 - 5 &&
+        this.position.y + this.size / 2 >=
+          blocks[i].position.y - blocks[i].size / 2 &&
+        this.position.y - this.size / 2 <= blocks[i].position.y &&
+        blocks[i].type === "wall"
+      ) {
+        this.collidingWith.top = true;
+      }
+    }
+  }
+  collideWithRightBlock() {
+    this.collidingWith.right = false;
+    for (let i = 0; i < blocks.length; i++) {
+      if (
+        this.position.x + this.size / 2 >= blocks[i].position.x &&
+        this.position.x - this.size / 2 <=
+          blocks[i].position.x + blocks[i].size / 2 &&
+        this.position.y + this.size / 2 >=
+          blocks[i].position.y - blocks[i].size / 2 + 5 &&
+        this.position.y - this.size / 2 <=
+          blocks[i].position.y + blocks[i].size / 2 - 5 &&
+        blocks[i].type === "wall"
+      ) {
+        this.collidingWith.right = true;
+      }
+    }
+  }
+  collideWithLeftBlock() {
+    this.collidingWith.left = false;
+    for (let i = 0; i < blocks.length; i++) {
+      if (
+        this.position.x + this.size / 2 >=
+          blocks[i].position.x - blocks[i].size / 2 &&
+        this.position.x - this.size / 2 <= blocks[i].position.x &&
+        this.position.y + this.size / 2 >=
+          blocks[i].position.y - blocks[i].size / 2 + 5 &&
+        this.position.y - this.size / 2 <=
+          blocks[i].position.y + blocks[i].size / 2 - 5 &&
+        blocks[i].type === "wall"
+      ) {
+        this.collidingWith.left = true;
+      }
     }
   }
 

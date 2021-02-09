@@ -9,6 +9,8 @@ class Block {
     this.wallTiles;
     this.wallTile;
     this.pillarTile;
+
+    this.clr = null;
   }
 
   loadImages() {
@@ -80,6 +82,17 @@ class Block {
           this.size
         );
         break;
+    }
+
+    if (this.clr !== null) {
+      noStroke();
+      fill(this.clr);
+      rect(
+        this.position.x + camera.x,
+        this.position.y + camera.y,
+        this.size,
+        this.size
+      );
     }
   }
 

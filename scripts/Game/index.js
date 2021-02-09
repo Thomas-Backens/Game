@@ -6,7 +6,7 @@ let bitMap = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, "p", 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -109,7 +109,7 @@ function draw() {
         if (blocks[i].position.y - 5 <= heroes[j].position.y) {
           blocks[i].display();
         }
-        blocks[i].collideWithObj(heroes[j]);
+        // blocks[i].collideWithObj(heroes[j]);
       }
       for (let j = 0; j < monsters.length; j++) {
         blocks[i].collideWithObj(monsters[j]);
@@ -138,6 +138,8 @@ function draw() {
     heroes[i].displayProjectileLength();
     heroes[i].display();
     heroes[i].move();
+
+    heroes[i].collideWithBlock();
   }
 
   for (let i = 0; i < blocks.length; i++) {
