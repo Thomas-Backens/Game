@@ -7,6 +7,7 @@ class Monster {
 
     this.stats = {
       maxHealth: 0,
+      health: 0,
       damage: 0,
       defense: 0,
       attackRange: 0,
@@ -22,6 +23,7 @@ class Monster {
       case "Spider":
         this.stats = {
           maxHealth: 55,
+          health: 55,
           damage: 7,
           defense: 2,
           attackRange: 1,
@@ -34,14 +36,33 @@ class Monster {
   }
 
   display() {
+    strokeWeight(2);
+    stroke(255, 0, 0);
+    fill(255, 0, 0, 50);
+    ellipse(
+      this.position.x + camera.x,
+      this.position.y + camera.y,
+      this.stats.attackRange * 100,
+      this.stats.attackRange * 100
+    );
     // let angle = this.velocity.heading();
 
+    noStroke();
     fill(255, 0, 0);
     // push();
     // translate(this.position.x + camera.x, this.position.y + camera.y);
     // rotate(angle);
     rect(this.position.x + camera.x, this.position.y + camera.y, 50, 50);
     // pop();
+
+    textAlign(CENTER);
+    textSize(20);
+    fill(255);
+    text(
+      "Health: " + this.stats.health + "/" + this.stats.maxHealth,
+      this.position.x + camera.x,
+      this.position.y + camera.y - 50
+    );
   }
 
   move() {
@@ -82,7 +103,10 @@ class Monster {
       this.attackTimer++;
 
       if (this.attackTimer >= this.stats.attackSpeed * 60) {
-        this.target.health -= this.stats.damage;
+        this.target.stats.health -= calculateDefense(
+          this.target.stats.defense,
+          this.stats.damage
+        );
         this.attackTimer = 0;
       }
     }

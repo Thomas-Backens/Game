@@ -20,6 +20,7 @@ let camera = {
 let blocks = [];
 let heroes = [];
 let monsters = [];
+let projectiles = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -74,7 +75,7 @@ function setup() {
             new Hero({
               x: i * wallSize + wallSize / 2,
               y: j * wallSize + wallSize / 2,
-              speed: 5,
+              character: "Arthur",
             })
           );
           break;
@@ -122,7 +123,19 @@ function draw() {
     monsters[i].attack();
   }
 
+  for (let i = 0; i < projectiles.length; i++) {
+    projectiles[i].display();
+    projectiles[i].move();
+    projectiles[i].hitMonster();
+
+    if (projectiles[i].dead) {
+      projectiles.splice(i, 1);
+      i--;
+    }
+  }
+
   for (let i = 0; i < heroes.length; i++) {
+    heroes[i].displayProjectileLength();
     heroes[i].display();
     heroes[i].move();
   }
@@ -169,6 +182,19 @@ function windowResized() {
 function keyPressed() {
   keys[keyCode] = true;
 }
+
 function keyReleased() {
   keys[keyCode] = false;
+}
+
+function mouseReleased() {
+  projectiles.push(
+    new Projectile({
+      x: heroes[0].position.x,
+      y: heroes[0].position.y,
+      target: heroes[0].endPoint,
+      damage: heroes[0].stats.damage,
+      type: "bullet",
+    })
+  );
 }
