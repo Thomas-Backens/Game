@@ -15,6 +15,7 @@ class Hero {
       speed: 0,
       visionRange: 0,
     };
+    this.abilities = [];
     this.collidingWith = {
       top: false,
       bottom: false,
@@ -43,6 +44,34 @@ class Hero {
           speed: 5,
           visionRange: 12,
         };
+        this.abilities = [
+          {
+            x: 0,
+            y: 0,
+            name: "Staff Smash",
+            damage: "Low",
+            description:
+              "Pushes Monsters away from you, dealing minimal damage",
+            key: "Q",
+          },
+          {
+            x: 0,
+            y: 0,
+            name: "Rain Fire",
+            damage: "Medium",
+            description:
+              "Throw a Fireball at your mouse location, dealing medium damage",
+            key: "E",
+          },
+          {
+            x: 0,
+            y: 0,
+            name: "Lightning Strike",
+            damage: "High",
+            description: "Hits a single target, dealing high damage",
+            key: "R",
+          },
+        ];
         break;
     }
   }
