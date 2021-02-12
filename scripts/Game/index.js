@@ -1,14 +1,14 @@
 let keys = [];
 let bitMap = [
   "1111111111",
-  "1        1",
-  "1 p      1",
+  "1   1    1",
+  "1 p     11",
   "1        1",
   "1    11  1",
   "1    11  1",
   "1        1",
-  "1        1",
-  "1        1",
+  "1 11  1  1",
+  "1      1 1",
   "1111111111",
 ];
 let camera = {
@@ -114,16 +114,8 @@ function draw() {
     background(0);
 
     for (let i = 0; i < blocks.length; i++) {
-      if (blocks[i].type === "floor") {
-        blocks[i].display();
-      }
-      if (blocks[i].type === "wall" || blocks[i].type === "pillar") {
-        for (let j = 0; j < heroes.length; j++) {
-          if (blocks[i].position.y - 5 <= heroes[j].position.y) {
-            blocks[i].display();
-          }
-          // blocks[i].collideWithObj(heroes[j]);
-        }
+      blocks[i].display();
+      if (blocks[i].type === "wall") {
         for (let j = 0; j < monsters.length; j++) {
           blocks[i].collideWithObj(monsters[j]);
         }
@@ -153,19 +145,6 @@ function draw() {
       heroes[i].update();
     }
 
-    for (let i = 0; i < blocks.length; i++) {
-      if (blocks[i].type === "wall" || blocks[i].type === "pillar") {
-        for (let j = 0; j < heroes.length; j++) {
-          if (blocks[i].position.y >= heroes[j].position.y) {
-            blocks[i].display();
-          }
-        }
-      }
-    }
-
-    fill(0, 0, 0, 50);
-    rect(windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
-
     {
       if (5 < abs(camera.x + heroes[0].position.x - width / 2)) {
         if (camera.x + heroes[0].position.x - width / 2 < 0) {
@@ -192,7 +171,7 @@ function draw() {
 
     {
       noFill();
-      strokeWeight(700);
+      strokeWeight(600);
       stroke(0);
       rect(
         heroes[0].position.x + camera.x,

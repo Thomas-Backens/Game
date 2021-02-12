@@ -28,7 +28,7 @@ class Hero {
 
     this.idle;
     this.walk;
-    this.size = 50;
+    this.size = 70;
     this.character = config.character;
 
     this.running = false;
@@ -78,7 +78,7 @@ class Hero {
     fill(0, 50);
     ellipse(
       this.position.x + camera.x,
-      this.position.y + camera.y + 50,
+      this.position.y + camera.y + 30,
       50,
       40
     );
@@ -87,7 +87,7 @@ class Hero {
       image(
         this.walk,
         this.position.x + camera.x,
-        this.position.y + camera.y,
+        this.position.y + camera.y - 15,
         100,
         100
       );
@@ -95,19 +95,20 @@ class Hero {
       image(
         this.idle,
         this.position.x + camera.x,
-        this.position.y + camera.y,
+        this.position.y + camera.y - 15,
         100,
         100
       );
     }
-    noStroke();
-    fill(0, 255, 0);
-    rect(
-      this.position.x + camera.x,
-      this.position.y + camera.y,
-      this.size,
-      this.size
-    );
+
+    // noStroke();
+    // fill(0, 255, 0, 150);
+    // rect(
+    //   this.position.x + camera.x,
+    //   this.position.y + camera.y,
+    //   this.size,
+    //   this.size
+    // );
 
     textAlign(CENTER);
     textSize(20);
@@ -134,7 +135,12 @@ class Hero {
     push();
     translate(this.position.x + camera.x, this.position.y + camera.y);
     rotate(angle);
-    rect(this.stats.attackRange * 25, 0, this.stats.attackRange * 50, 50);
+    rect(
+      this.stats.attackRange * 25 + 50,
+      0,
+      this.stats.attackRange * 50 - 50,
+      50
+    );
     pop();
 
     let mouse = new p5.Vector(mouseX - camera.x, mouseY - camera.y);
@@ -232,68 +238,202 @@ class Hero {
   collideWithBottomBlock() {
     this.collidingWith.bottom = false;
     for (let i = 0; i < blocks.length; i++) {
-      if (
-        this.position.x + this.size / 2 >=
-          blocks[i].position.x - blocks[i].size / 2 + 5 &&
-        this.position.x - this.size / 2 <=
-          blocks[i].position.x + blocks[i].size / 2 - 5 &&
-        this.position.y + this.size / 2 >= blocks[i].position.y &&
-        this.position.y - this.size / 2 <=
-          blocks[i].position.y + blocks[i].size / 2 &&
-        blocks[i].type === "wall"
-      ) {
-        this.collidingWith.bottom = true;
+      if (blocks[i].type === "wall") {
+        if (
+          blocks[i].wallTile === 4 ||
+          blocks[i].wallTile === 5 ||
+          blocks[i].wallTile === 9
+        ) {
+          if (
+            this.position.x + this.size / 2 >= blocks[i].position.x + 5 &&
+            this.position.x - this.size / 2 <=
+              blocks[i].position.x + blocks[i].size / 2 - 5 &&
+            this.position.y + this.size / 2 >= blocks[i].position.y &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2
+          ) {
+            this.collidingWith.bottom = true;
+          }
+        } else if (
+          blocks[i].wallTile === 2 ||
+          blocks[i].wallTile === 3 ||
+          blocks[i].wallTile === 8
+        ) {
+          if (
+            this.position.x + this.size / 2 >=
+              blocks[i].position.x - blocks[i].size / 2 + 5 &&
+            this.position.x - this.size / 2 <= blocks[i].position.x - 5 &&
+            this.position.y + this.size / 2 >= blocks[i].position.y &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2
+          ) {
+            this.collidingWith.bottom = true;
+          }
+        } else {
+          if (
+            this.position.x + this.size / 2 >=
+              blocks[i].position.x - blocks[i].size / 2 + 5 &&
+            this.position.x - this.size / 2 <=
+              blocks[i].position.x + blocks[i].size / 2 - 5 &&
+            this.position.y + this.size / 2 >= blocks[i].position.y &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2
+          ) {
+            this.collidingWith.bottom = true;
+          }
+        }
       }
     }
   }
   collideWithTopBlock() {
     this.collidingWith.top = false;
     for (let i = 0; i < blocks.length; i++) {
-      if (
-        this.position.x + this.size / 2 >=
-          blocks[i].position.x - blocks[i].size / 2 + 5 &&
-        this.position.x - this.size / 2 <=
-          blocks[i].position.x + blocks[i].size / 2 - 5 &&
-        this.position.y + this.size / 2 >=
-          blocks[i].position.y - blocks[i].size / 2 &&
-        this.position.y - this.size / 2 <= blocks[i].position.y &&
-        blocks[i].type === "wall"
-      ) {
-        this.collidingWith.top = true;
+      if (blocks[i].type === "wall") {
+        if (
+          blocks[i].wallTile === 4 ||
+          blocks[i].wallTile === 5 ||
+          blocks[i].wallTile === 9
+        ) {
+          if (
+            this.position.x + this.size / 2 >= blocks[i].position.x + 5 &&
+            this.position.x - this.size / 2 <=
+              blocks[i].position.x + blocks[i].size / 2 - 5 &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 &&
+            this.position.y - this.size / 2 <= blocks[i].position.y
+          ) {
+            this.collidingWith.top = true;
+          }
+        } else if (
+          blocks[i].wallTile === 2 ||
+          blocks[i].wallTile === 3 ||
+          blocks[i].wallTile === 8
+        ) {
+          if (
+            this.position.x + this.size / 2 >=
+              blocks[i].position.x - blocks[i].size / 2 + 5 &&
+            this.position.x - this.size / 2 <= blocks[i].position.x - 5 &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 &&
+            this.position.y - this.size / 2 <= blocks[i].position.y
+          ) {
+            this.collidingWith.top = true;
+          }
+        } else {
+          if (
+            this.position.x + this.size / 2 >=
+              blocks[i].position.x - blocks[i].size / 2 + 5 &&
+            this.position.x - this.size / 2 <=
+              blocks[i].position.x + blocks[i].size / 2 - 5 &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 &&
+            this.position.y - this.size / 2 <= blocks[i].position.y
+          ) {
+            this.collidingWith.top = true;
+          }
+        }
       }
     }
   }
   collideWithRightBlock() {
     this.collidingWith.right = false;
     for (let i = 0; i < blocks.length; i++) {
-      if (
-        this.position.x + this.size / 2 >= blocks[i].position.x &&
-        this.position.x - this.size / 2 <=
-          blocks[i].position.x + blocks[i].size / 2 &&
-        this.position.y + this.size / 2 >=
-          blocks[i].position.y - blocks[i].size / 2 + 5 &&
-        this.position.y - this.size / 2 <=
-          blocks[i].position.y + blocks[i].size / 2 - 5 &&
-        blocks[i].type === "wall"
-      ) {
-        this.collidingWith.right = true;
+      if (blocks[i].type === "wall") {
+        if (
+          blocks[i].wallTile === 4 ||
+          blocks[i].wallTile === 5 ||
+          blocks[i].wallTile === 9
+        ) {
+          if (
+            this.position.x + this.size / 2 >= blocks[i].position.x + 5 &&
+            this.position.x - this.size / 2 <=
+              blocks[i].position.x + blocks[i].size / 2 &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 + 5 &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2 - 5
+          ) {
+            this.collidingWith.right = true;
+          }
+        } else if (
+          blocks[i].wallTile === 2 ||
+          blocks[i].wallTile === 3 ||
+          blocks[i].wallTile === 8
+        ) {
+          if (
+            this.position.x + this.size / 2 >= blocks[i].position.x &&
+            this.position.x - this.size / 2 <= blocks[i].position.x &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 + 5 &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2 - 5
+          ) {
+            this.collidingWith.right = true;
+          }
+        } else {
+          if (
+            this.position.x + this.size / 2 >= blocks[i].position.x &&
+            this.position.x - this.size / 2 <=
+              blocks[i].position.x + blocks[i].size / 2 &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 + 5 &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2 - 5
+          ) {
+            this.collidingWith.right = true;
+          }
+        }
       }
     }
   }
   collideWithLeftBlock() {
     this.collidingWith.left = false;
     for (let i = 0; i < blocks.length; i++) {
-      if (
-        this.position.x + this.size / 2 >=
-          blocks[i].position.x - blocks[i].size / 2 &&
-        this.position.x - this.size / 2 <= blocks[i].position.x &&
-        this.position.y + this.size / 2 >=
-          blocks[i].position.y - blocks[i].size / 2 + 5 &&
-        this.position.y - this.size / 2 <=
-          blocks[i].position.y + blocks[i].size / 2 - 5 &&
-        blocks[i].type === "wall"
-      ) {
-        this.collidingWith.left = true;
+      if (blocks[i].type === "wall") {
+        if (
+          blocks[i].wallTile === 4 ||
+          blocks[i].wallTile === 5 ||
+          blocks[i].wallTile === 9
+        ) {
+          if (
+            this.position.x + this.size / 2 >= blocks[i].position.x &&
+            this.position.x - this.size / 2 <= blocks[i].position.x &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 + 5 &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2 - 5
+          ) {
+            this.collidingWith.left = true;
+          }
+        } else if (
+          blocks[i].wallTile === 2 ||
+          blocks[i].wallTile === 3 ||
+          blocks[i].wallTile === 8
+        ) {
+          if (
+            this.position.x + this.size / 2 >=
+              blocks[i].position.x - blocks[i].size / 2 &&
+            this.position.x - this.size / 2 <= blocks[i].position.x - 5 &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 + 5 &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2 - 5
+          ) {
+            this.collidingWith.left = true;
+          }
+        } else {
+          if (
+            this.position.x + this.size / 2 >=
+              blocks[i].position.x - blocks[i].size / 2 &&
+            this.position.x - this.size / 2 <= blocks[i].position.x &&
+            this.position.y + this.size / 2 >=
+              blocks[i].position.y - blocks[i].size / 2 + 5 &&
+            this.position.y - this.size / 2 <=
+              blocks[i].position.y + blocks[i].size / 2 - 5
+          ) {
+            this.collidingWith.left = true;
+          }
+        }
       }
     }
   }
