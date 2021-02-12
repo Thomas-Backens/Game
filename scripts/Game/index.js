@@ -21,7 +21,9 @@ let blocks = [];
 let heroes = [];
 let monsters = [];
 let projectiles = [];
+
 let UI;
+let shadow;
 
 let totalLoadedSprites = 0;
 let loadedSprites = false;
@@ -103,6 +105,8 @@ function setup() {
   UI = new Interface({
     character: heroes[0],
   });
+
+  shadow = loadImage("../../sprites/Misc/Shadow.png");
 }
 
 function draw() {
@@ -146,9 +150,7 @@ function draw() {
     for (let i = 0; i < heroes.length; i++) {
       heroes[i].displayProjectileLength();
       heroes[i].display();
-      heroes[i].move();
-
-      heroes[i].collideWithBlock();
+      heroes[i].update();
     }
 
     for (let i = 0; i < blocks.length; i++) {
@@ -160,6 +162,9 @@ function draw() {
         }
       }
     }
+
+    fill(0, 0, 0, 50);
+    rect(windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
 
     {
       if (5 < abs(camera.x + heroes[0].position.x - width / 2)) {
@@ -184,6 +189,24 @@ function draw() {
         );
       }
     } // Camera
+
+    {
+      noFill();
+      strokeWeight(700);
+      stroke(0);
+      rect(
+        heroes[0].position.x + camera.x,
+        heroes[0].position.y + camera.y,
+        windowWidth - 100,
+        windowHeight + 800
+      );
+      image(
+        shadow,
+        heroes[0].position.x + camera.x,
+        heroes[0].position.y + camera.y
+      );
+      noStroke();
+    } // Shadow
 
     UI.display();
   } else {
@@ -245,16 +268,12 @@ function keyPressed() {
 }
 function keyReleased() {
   keys[keyCode] = false;
+
+  if (keyCode === ENTER) {
+    heroes[0].useAbility("Staff Smash");
+  }
 }
 
 function mouseReleased() {
-  projectiles.push(
-    new Projectile({
-      x: heroes[0].position.x,
-      y: heroes[0].position.y,
-      target: heroes[0].endPoint,
-      damage: heroes[0].stats.damage,
-      type: "bullet",
-    })
-  );
+  heroes[0].attack();
 }

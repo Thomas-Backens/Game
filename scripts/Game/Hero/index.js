@@ -16,6 +16,9 @@ class Hero {
       visionRange: 0,
     };
     this.abilities = [];
+    this.usingAbility = {
+      StaffSmash: { using: false, timeOut: 20, timer: 0 },
+    };
     this.collidingWith = {
       top: false,
       bottom: false,
@@ -46,8 +49,6 @@ class Hero {
         };
         this.abilities = [
           {
-            x: 0,
-            y: 0,
             name: "Staff Smash",
             damage: "Low",
             description:
@@ -55,8 +56,6 @@ class Hero {
             key: "Q",
           },
           {
-            x: 0,
-            y: 0,
             name: "Rain Fire",
             damage: "Medium",
             description:
@@ -64,8 +63,6 @@ class Hero {
             key: "E",
           },
           {
-            x: 0,
-            y: 0,
             name: "Lightning Strike",
             damage: "High",
             description: "Hits a single target, dealing high damage",
@@ -149,6 +146,46 @@ class Hero {
     this.projectileVelocity.limit(10);
   }
 
+  update() {
+    this.move();
+    this.collideWithBlock();
+
+    if (this.usingAbility.StaffSmash.using) {
+      for (let i = 0; i < monsters.length; i++) {
+        if (
+          dist(
+            this.position.x,
+            this.position.y,
+            monsters[i].position.x,
+            monsters[i].position.y
+          ) <
+          this.stats.attackRange * 50
+        ) {
+          monsters[i].repel(
+            this,
+            50 -
+              dist(
+                this.position.x,
+                this.position.y,
+                monsters[i].position.x,
+                monsters[i].position.y
+              ) /
+                10
+          );
+        }
+      }
+      this.usingAbility.StaffSmash.timer++;
+
+      if (
+        this.usingAbility.StaffSmash.timer >=
+        this.usingAbility.StaffSmash.timeOut
+      ) {
+        this.usingAbility.StaffSmash.using = false;
+        this.usingAbility.StaffSmash.timer = 0;
+      }
+    }
+  }
+
   move() {
     this.running = false;
     if (keys[87] && this.collidingWith.bottom === false) {
@@ -163,6 +200,25 @@ class Hero {
     }
     if (keys[65] && this.collidingWith.right === false) {
       this.position.x -= this.stats.speed;
+    }
+  }
+
+  attack() {
+    projectiles.push(
+      new Projectile({
+        x: this.position.x,
+        y: this.position.y,
+        target: this.endPoint,
+        damage: this.stats.damage,
+        type: "bullet",
+      })
+    );
+  }
+  useAbility(ability) {
+    switch (ability) {
+      case "Staff Smash":
+        this.usingAbility.StaffSmash.using = true;
+        break;
     }
   }
 

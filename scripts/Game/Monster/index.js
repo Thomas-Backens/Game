@@ -112,13 +112,20 @@ class Monster {
     }
   }
 
-  repel(target) {
+  repel(target, power) {
+    let strength;
+    if (!power) {
+      strength = this.stats.speed * 2;
+    } else {
+      strength = power;
+    }
+
     let repeller = p5.Vector.sub(this.position, target.position);
     repeller.normalize();
     repeller.mult(10);
 
     this.repelVelocity.add(repeller);
-    this.repelVelocity.limit(this.stats.speed * 2);
+    this.repelVelocity.limit(strength);
     this.position.add(this.repelVelocity);
   }
 }
