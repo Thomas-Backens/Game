@@ -124,14 +124,12 @@ function draw() {
 
     for (let i = 0; i < monsters.length; i++) {
       monsters[i].display();
-      monsters[i].move();
-      monsters[i].attack();
+      monsters[i].update();
     }
 
     for (let i = 0; i < projectiles.length; i++) {
       projectiles[i].display();
-      projectiles[i].move();
-      projectiles[i].hitMonster();
+      projectiles[i].update();
 
       if (projectiles[i].dead) {
         projectiles.splice(i, 1);
@@ -140,9 +138,12 @@ function draw() {
     }
 
     for (let i = 0; i < heroes.length; i++) {
-      heroes[i].displayProjectileLength();
       heroes[i].display();
       heroes[i].update();
+
+      if (!heroes[0].ability.RainFire.using) {
+        heroes[i].displayProjectileLength();
+      }
     }
 
     {
@@ -248,11 +249,17 @@ function keyPressed() {
 function keyReleased() {
   keys[keyCode] = false;
 
-  if (keyCode === ENTER) {
-    heroes[0].useAbility("Staff Smash");
+  for (let i = 0; i < heroes[0].abilities.length; i++) {
+    if (key.toString() === heroes[0].abilities[i].key) {
+      heroes[0].useAbility(heroes[0].abilities[i].name);
+    }
   }
 }
 
 function mouseReleased() {
-  heroes[0].attack();
+  if (!heroes[0].ability.RainFire.using) {
+    heroes[0].attack();
+  } else {
+    heroes[0].ability.RainFire.used = true;
+  }
 }

@@ -19,6 +19,12 @@ class Monster {
     this.attackTimer = 0;
     this.size = 100;
 
+    this.burnTime = 30;
+    this.burnTimer = 0;
+    this.burning = false;
+    this.burningTime = 300;
+    this.burningTimer = 0;
+
     switch (this.type) {
       case "Spider":
         this.stats = {
@@ -63,6 +69,26 @@ class Monster {
       this.position.x + camera.x,
       this.position.y + camera.y - 50
     );
+  }
+
+  update() {
+    this.move();
+    this.attack();
+
+    if (this.burning) {
+      this.burnTimer++;
+      this.burningTimer++;
+
+      if (this.burnTimer >= this.burnTime) {
+        this.stats.health -= calculateDefense(this.stats.defense, 30);
+        this.burnTimer = 0;
+      }
+
+      if (this.burningTimer >= this.burningTime) {
+        this.burning = false;
+        this.burnTimer = 0;
+      }
+    }
   }
 
   move() {

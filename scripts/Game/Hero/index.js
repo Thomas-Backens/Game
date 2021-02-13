@@ -16,8 +16,10 @@ class Hero {
       visionRange: 0,
     };
     this.abilities = [];
-    this.usingAbility = {
+    this.ability = {
       StaffSmash: { using: false, timeOut: 20, timer: 0 },
+      RainFire: { using: false, used: false, timeOut: 60, duration: 300 },
+      LightningStrike: { using: false },
     };
     this.collidingWith = {
       top: false,
@@ -53,20 +55,20 @@ class Hero {
             damage: "Low",
             description:
               "Pushes Monsters away from you, dealing minimal damage",
-            key: "Q",
+            key: "q",
           },
           {
             name: "Rain Fire",
             damage: "Medium",
             description:
               "Throw a Fireball at your mouse location, dealing medium damage",
-            key: "E",
+            key: "e",
           },
           {
             name: "Lightning Strike",
             damage: "High",
             description: "Hits a single target, dealing high damage",
-            key: "R",
+            key: "r",
           },
         ];
         break;
@@ -156,7 +158,15 @@ class Hero {
     this.move();
     this.collideWithBlock();
 
-    if (this.usingAbility.StaffSmash.using) {
+    switch (this.character) {
+      case "Arthur":
+        this.arthursAbilites();
+        break;
+    }
+  }
+
+  arthursAbilites() {
+    if (this.ability.StaffSmash.using) {
       for (let i = 0; i < monsters.length; i++) {
         if (
           dist(
@@ -180,14 +190,35 @@ class Hero {
           );
         }
       }
-      this.usingAbility.StaffSmash.timer++;
+      this.ability.StaffSmash.timer++;
 
-      if (
-        this.usingAbility.StaffSmash.timer >=
-        this.usingAbility.StaffSmash.timeOut
-      ) {
-        this.usingAbility.StaffSmash.using = false;
-        this.usingAbility.StaffSmash.timer = 0;
+      if (this.ability.StaffSmash.timer >= this.ability.StaffSmash.timeOut) {
+        this.ability.StaffSmash.using = false;
+        this.ability.StaffSmash.timer = 0;
+      }
+    }
+
+    if (this.ability.RainFire.using) {
+      strokeWeight(5);
+      stroke(255, 0, 0);
+      fill(255, 0, 0, 50);
+      ellipse(mouseX, mouseY, 300, 300);
+    }
+    if (this.ability.RainFire.used) {
+      if (this.ability.RainFire.using) {
+        projectiles.push(
+          new Projectile({
+            x: mouseX - camera.x,
+            y: mouseY - camera.y,
+            damage: 100,
+            waitingTime: this.ability.RainFire.timeOut,
+            duration: this.ability.RainFire.duration,
+            attackRange: 3,
+            type: "Fire Ball",
+          })
+        );
+        this.ability.RainFire.using = false;
+        this.ability.RainFire.used = false;
       }
     }
   }
@@ -223,7 +254,13 @@ class Hero {
   useAbility(ability) {
     switch (ability) {
       case "Staff Smash":
-        this.usingAbility.StaffSmash.using = true;
+        this.ability.StaffSmash.using = true;
+        break;
+      case "Rain Fire":
+        this.ability.RainFire.using = true;
+        break;
+      case "Lightning Strike":
+        this.ability.LightningStrike.using = true;
         break;
     }
   }
