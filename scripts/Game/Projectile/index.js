@@ -1,10 +1,12 @@
 class Projectile {
   constructor(config) {
     this.position = new p5.Vector(config.x, config.y);
+    this.shadowPosition = new p5.Vector(config.x, config.y);
     this.velocity = new p5.Vector(0, 0);
     this.startObj = config.startObj;
     this.target = config.target;
     this.damage = config.damage;
+    this.speed = config.speed;
     this.attackRange = config.attackRange;
     this.waitingTime = config.waitingTime;
     this.duration = config.duration;
@@ -22,6 +24,10 @@ class Projectile {
     this.waitingTimer = 0;
     this.exploded = false;
     this.durationTimer = 0;
+    this.r = 0;
+    this.curveNum = this.speed / 2;
+    this.splashed = false;
+    this.splashTimer = 0;
 
     this.magicBall = loadImage("../../../sprites/Projectiles/MagicBall.gif");
     this.fireBall = loadImage("../../../sprites/Projectiles/FireBall.gif");
@@ -91,6 +97,40 @@ class Projectile {
         );
         break;
       case "Toss":
+        if (!this.splashed) {
+          noStroke();
+          fill(0, 50);
+          ellipse(
+            this.shadowPosition.x + camera.x,
+            this.shadowPosition.y + camera.y,
+            50,
+            50
+          );
+
+          fill(100, 100, 100);
+          push();
+          translate(this.position.x + camera.x, this.position.y + camera.y);
+          this.r += 0.25;
+          rotate(this.r);
+          rect(0, 0, this.size, this.size / 2, 5);
+          // ellipse(0, 0, this.size, this.size);
+          pop();
+        } else {
+          noStroke();
+          fill(255, map(this.splashTimer, 0, 60, 150, 0));
+          ellipse(
+            this.target.x + camera.x,
+            this.target.y + camera.y,
+            this.attackRange,
+            this.attackRange
+          );
+
+          if (this.splashTimer < 60) {
+            this.splashTimer++;
+          } else {
+            this.dead = true;
+          }
+        }
         break;
     }
   }
@@ -119,6 +159,69 @@ class Projectile {
         }
         break;
       case "Toss":
+        if (this.splashed) return;
+
+        let destination = p5.Vector.sub(this.target, this.shadowPosition);
+        destination.normalize();
+        destination.mult(100);
+
+        this.velocity.add(destination);
+        this.velocity.limit(this.speed);
+
+        if (
+          dist(
+            this.shadowPosition.x,
+            this.shadowPosition.y,
+            this.target.x,
+            this.target.y
+          ) < this.speed
+        ) {
+          for (let i = 0; i < monsters.length; i++) {
+            if (
+              dist(
+                this.target.x,
+                this.target.y,
+                monsters[i].position.x,
+                monsters[i].position.y
+              ) <
+              this.attackRange / 2
+            ) {
+              monsters[i].stats.health -= calculateDefense(
+                monsters[i].stats.defense,
+                this.damage
+              );
+            }
+          }
+          this.splashed = true;
+          return;
+        }
+
+        this.shadowPosition.add(this.velocity);
+        this.position.add(this.velocity);
+
+        if (
+          dist(
+            this.shadowPosition.x,
+            this.shadowPosition.y,
+            this.target.x,
+            this.target.y
+          ) <=
+          dist(
+            this.startObj.position.x,
+            this.startObj.position.y,
+            this.target.x,
+            this.target.y
+          ) /
+            2
+        ) {
+          this.size -= this.curveNum / 2;
+          this.position.y += this.curveNum;
+          this.curveNum += this.speed / 200;
+        } else {
+          this.size += this.curveNum / 2;
+          this.position.y -= this.curveNum;
+          this.curveNum -= this.speed / 200;
+        }
         break;
     }
   }

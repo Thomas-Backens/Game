@@ -4,6 +4,7 @@ class Hero {
     this.velocity = new p5.Vector(0, 0);
     // this.projectileVelocity = new p5.Vector(0, 0);
     this.endPoint = new p5.Vector(0, 0);
+    this.angle = 0;
 
     this.stats = {
       maxHealth: 0,
@@ -29,6 +30,7 @@ class Hero {
     };
     this.closestEnemy = null;
     this.closestEnemysDistance = Infinity;
+    this.attackTimer = 0;
 
     this.idle;
     this.walk;
@@ -47,7 +49,7 @@ class Hero {
           damage: 50,
           defense: 25,
           attackRange: 10,
-          attackSpeed: 1,
+          attackSpeed: 0.5,
           speed: 5,
           visionRange: 16,
         };
@@ -82,7 +84,7 @@ class Hero {
           health: 500,
           damage: 50,
           defense: 25,
-          attackRange: 2,
+          attackRange: 1.5,
           attackSpeed: 1,
           speed: 5,
           visionRange: 16,
@@ -120,7 +122,7 @@ class Hero {
           defense: 25,
           attackRange: 8,
           splashRange: 3,
-          attackSpeed: 1,
+          attackSpeed: 2,
           speed: 5,
           visionRange: 16,
         };
@@ -190,7 +192,7 @@ class Hero {
 
   displayProjectileLength() {
     // let angle = this.projectileVelocity.heading();
-    let a = atan2(
+    this.angle = atan2(
       mouseY - camera.y - this.position.y,
       mouseX - camera.x - this.position.x
     );
@@ -199,16 +201,20 @@ class Hero {
     this.endPoint = calculateEndPosition(
       this.position,
       this.stats.attackRange * 50,
-      a
+      this.angle
     );
 
     switch (this.character) {
       case "Arthur":
         noStroke();
-        fill(255, 50);
+        if (this.attackTimer < this.stats.attackSpeed * 60) {
+          fill(255, 0, 0, 50);
+        } else {
+          fill(255, 50);
+        }
         push();
         translate(this.position.x + camera.x, this.position.y + camera.y);
-        rotate(a);
+        rotate(this.angle);
         rect(
           this.stats.attackRange * 25 + 50,
           0,
@@ -221,17 +227,21 @@ class Hero {
         noFill();
         strokeCap(SQUARE);
         strokeWeight(this.stats.attackRange * 100);
-        stroke(255, 50);
+        if (this.attackTimer < this.stats.attackSpeed * 60) {
+          stroke(255, 0, 0, 50);
+        } else {
+          stroke(255, 50);
+        }
         push();
         translate(this.position.x + camera.x, this.position.y + camera.y);
-        rotate(a);
+        rotate(this.angle);
         arc(
           0,
           0,
           this.stats.attackRange * 100 + 100,
           this.stats.attackRange * 100 + 100,
-          -HALF_PI / 2,
-          HALF_PI / 2
+          -HALF_PI / 1.5,
+          HALF_PI / 1.5
         );
         pop();
         break;
@@ -246,7 +256,11 @@ class Hero {
           this.stats.attackRange * 100
         );
         noStroke();
-        fill(255, 50);
+        if (this.attackTimer < this.stats.attackSpeed * 60) {
+          stroke(255, 0, 0, 50);
+        } else {
+          stroke(255, 50);
+        }
         if (
           dist(
             mouseX,
@@ -265,7 +279,7 @@ class Hero {
         } else {
           push();
           translate(this.position.x + camera.x, this.position.y + camera.y);
-          rotate(a);
+          rotate(this.angle);
           ellipse(
             this.stats.attackRange * 50,
             0,
@@ -289,6 +303,8 @@ class Hero {
   update() {
     this.move();
     this.collideWithBlock();
+
+    this.attackTimer++;
 
     switch (this.character) {
       case "Arthur":
@@ -408,6 +424,9 @@ class Hero {
   }
 
   attack() {
+    if (this.attackTimer < this.stats.attackSpeed * 60) return;
+
+    this.attackTimer = 0;
     switch (this.character) {
       case "Arthur":
         projectiles.push(
@@ -421,17 +440,83 @@ class Hero {
         );
         break;
       case "Rex":
+        for (let i = 0; i < monsters.length; i++) {
+          if (
+            dist(
+              this.position.x + camera.x,
+              this.position.y + camera.y,
+              monsters[i].position.x + camera.x,
+              monsters[i].position.y + camera.y
+            ) <
+            50 + this.stats.attackRange * 100
+          ) {
+            if (
+              rectCircleCollide(
+                this.position.x + camera.x,
+                this.position.y + camera.y,
+                200,
+                200,
+                this.angle - HALF_PI / 1.5,
+                monsters[i].position.x + camera.x,
+                monsters[i].position.y + camera.y,
+                5
+              ) ||
+              rectCircleCollide(
+                this.position.x + camera.x,
+                this.position.y + camera.y,
+                200,
+                200,
+                this.angle + HALF_PI / 3 - HALF_PI / 1.5,
+                monsters[i].position.x + camera.x,
+                monsters[i].position.y + camera.y,
+                5
+              )
+            ) {
+              monsters[i].stats.health -= calculateDefense(
+                monsters[i].stats.defense,
+                this.stats.damage
+              );
+              monsters[i].repel(this, 1500);
+            }
+          }
+        }
         break;
       case "Kora":
-        projectiles.push(
-          new Projectile({
-            x: this.position.x,
-            y: this.position.y,
-            target: this.endPoint,
-            damage: this.stats.damage,
-            type: "Toss",
-          })
-        );
+        if (
+          dist(
+            this.position.x + camera.x,
+            this.position.y + camera.y,
+            mouseX,
+            mouseY
+          ) <
+          this.stats.attackRange * 50
+        ) {
+          projectiles.push(
+            new Projectile({
+              x: this.position.x,
+              y: this.position.y,
+              startObj: this,
+              target: new p5.Vector(mouseX - camera.x, mouseY - camera.y),
+              damage: this.stats.damage,
+              speed: 5,
+              attackRange: this.stats.splashRange * 100,
+              type: "Toss",
+            })
+          );
+        } else {
+          projectiles.push(
+            new Projectile({
+              x: this.position.x,
+              y: this.position.y,
+              startObj: this,
+              target: this.endPoint,
+              damage: this.stats.damage,
+              speed: 5,
+              attackRange: this.stats.splashRange * 100,
+              type: "Toss",
+            })
+          );
+        }
         break;
     }
   }
