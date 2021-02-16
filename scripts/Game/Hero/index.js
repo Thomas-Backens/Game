@@ -2,7 +2,7 @@ class Hero {
   constructor(config) {
     this.position = new p5.Vector(config.x, config.y);
     this.velocity = new p5.Vector(0, 0);
-    this.projectileVelocity = new p5.Vector(0, 0);
+    // this.projectileVelocity = new p5.Vector(0, 0);
     this.endPoint = new p5.Vector(0, 0);
 
     this.stats = {
@@ -19,7 +19,7 @@ class Hero {
     this.ability = {
       StaffSmash: { using: false, timeOut: 20, timer: 0 },
       RainFire: { using: false, used: false, timeOut: 60, duration: 300 },
-      LightningStrike: { using: false },
+      LightningStrike: { using: false, used: false, duration: 10 },
     };
     this.collidingWith = {
       top: false,
@@ -27,6 +27,8 @@ class Hero {
       right: false,
       left: false,
     };
+    this.closestEnemy = null;
+    this.closestEnemysDistance = Infinity;
 
     this.idle;
     this.walk;
@@ -38,16 +40,89 @@ class Hero {
     switch (this.character) {
       case "Arthur":
         this.idle = loadImage("../../../sprites/Hero/Arthur/Idle.png");
-        this.walk = loadImage("../../../sprites/Hero/Arthur/walk.gif");
+        this.walk = loadImage("../../../sprites/Hero/Arthur/Walk.gif");
         this.stats = {
-          maxHealth: 1000,
-          health: 1000,
-          damage: 80,
+          maxHealth: 500,
+          health: 500,
+          damage: 50,
           defense: 25,
           attackRange: 10,
           attackSpeed: 1,
           speed: 5,
-          visionRange: 12,
+          visionRange: 16,
+        };
+        this.abilities = [
+          {
+            name: "Staff Smash",
+            damage: "Low",
+            description:
+              "Pushes Monsters away from you, dealing minimal damage",
+            key: "q",
+          },
+          {
+            name: "Rain Fire",
+            damage: "Medium",
+            description:
+              "Throw a Fireball at your mouse location, dealing medium damage",
+            key: "e",
+          },
+          {
+            name: "Lightning Strike",
+            damage: "High",
+            description: "Hits a single target, dealing high damage",
+            key: "r",
+          },
+        ];
+        break;
+      case "Rex":
+        this.idle = loadImage("../../../sprites/Hero/Arthur/Idle.png");
+        this.walk = loadImage("../../../sprites/Hero/Arthur/Walk.gif");
+        this.stats = {
+          maxHealth: 500,
+          health: 500,
+          damage: 50,
+          defense: 25,
+          attackRange: 2,
+          attackSpeed: 1,
+          speed: 5,
+          visionRange: 16,
+        };
+        this.abilities = [
+          {
+            name: "Staff Smash",
+            damage: "Low",
+            description:
+              "Pushes Monsters away from you, dealing minimal damage",
+            key: "q",
+          },
+          {
+            name: "Rain Fire",
+            damage: "Medium",
+            description:
+              "Throw a Fireball at your mouse location, dealing medium damage",
+            key: "e",
+          },
+          {
+            name: "Lightning Strike",
+            damage: "High",
+            description: "Hits a single target, dealing high damage",
+            key: "r",
+          },
+        ];
+        break;
+      case "Kora":
+        this.idle = loadImage("../../../sprites/Hero/Arthur/Idle.png");
+        this.walk = loadImage("../../../sprites/Hero/Arthur/Walk.gif");
+        this.stats = {
+          maxHealth: 500,
+          health: 500,
+          damage: 50,
+          defense: 25,
+          attackRange: 8,
+          splashRange: 3,
+          attackSpeed: 1,
+          speed: 5,
+          visionRange: 16,
         };
         this.abilities = [
           {
@@ -103,15 +178,6 @@ class Hero {
       );
     }
 
-    // noStroke();
-    // fill(0, 255, 0, 150);
-    // rect(
-    //   this.position.x + camera.x,
-    //   this.position.y + camera.y,
-    //   this.size,
-    //   this.size
-    // );
-
     textAlign(CENTER);
     textSize(20);
     fill(255);
@@ -123,35 +189,101 @@ class Hero {
   }
 
   displayProjectileLength() {
-    let angle = this.projectileVelocity.heading();
+    // let angle = this.projectileVelocity.heading();
+    let a = atan2(
+      mouseY - camera.y - this.position.y,
+      mouseX - camera.x - this.position.x
+    );
 
-    let newPosition = new p5.Vector(this.position.x, this.position.y);
+    // let newPosition = new p5.Vector(this.position.x, this.position.y);
     this.endPoint = calculateEndPosition(
-      newPosition,
+      this.position,
       this.stats.attackRange * 50,
-      angle
+      a
     );
 
-    noStroke();
-    fill(255, 50);
-    push();
-    translate(this.position.x + camera.x, this.position.y + camera.y);
-    rotate(angle);
-    rect(
-      this.stats.attackRange * 25 + 50,
-      0,
-      this.stats.attackRange * 50 - 50,
-      50
-    );
-    pop();
+    switch (this.character) {
+      case "Arthur":
+        noStroke();
+        fill(255, 50);
+        push();
+        translate(this.position.x + camera.x, this.position.y + camera.y);
+        rotate(a);
+        rect(
+          this.stats.attackRange * 25 + 50,
+          0,
+          this.stats.attackRange * 50 - 50,
+          50
+        );
+        pop();
+        break;
+      case "Rex":
+        noFill();
+        strokeCap(SQUARE);
+        strokeWeight(this.stats.attackRange * 100);
+        stroke(255, 50);
+        push();
+        translate(this.position.x + camera.x, this.position.y + camera.y);
+        rotate(a);
+        arc(
+          0,
+          0,
+          this.stats.attackRange * 100 + 100,
+          this.stats.attackRange * 100 + 100,
+          -HALF_PI / 2,
+          HALF_PI / 2
+        );
+        pop();
+        break;
+      case "Kora":
+        noFill();
+        strokeWeight(5);
+        stroke(255);
+        ellipse(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.stats.attackRange * 100,
+          this.stats.attackRange * 100
+        );
+        noStroke();
+        fill(255, 50);
+        if (
+          dist(
+            mouseX,
+            mouseY,
+            this.position.x + camera.x,
+            this.position.y + camera.y
+          ) <
+          this.stats.attackRange * 50
+        ) {
+          ellipse(
+            mouseX,
+            mouseY,
+            this.stats.splashRange * 100,
+            this.stats.splashRange * 100
+          );
+        } else {
+          push();
+          translate(this.position.x + camera.x, this.position.y + camera.y);
+          rotate(a);
+          ellipse(
+            this.stats.attackRange * 50,
+            0,
+            this.stats.splashRange * 100,
+            this.stats.splashRange * 100
+          );
+          pop();
+        }
+        break;
+    }
 
-    let mouse = new p5.Vector(mouseX - camera.x, mouseY - camera.y);
-    let destination = p5.Vector.sub(mouse, this.position);
-    destination.normalize();
-    destination.mult(10);
+    // let mouse = new p5.Vector(mouseX - camera.x, mouseY - camera.y);
+    // let destination = p5.Vector.sub(mouse, this.position);
+    // destination.normalize();
+    // destination.mult(100);
 
-    this.projectileVelocity.add(destination);
-    this.projectileVelocity.limit(10);
+    // this.projectileVelocity.add(destination);
+    // this.projectileVelocity.limit(10);
   }
 
   update() {
@@ -221,6 +353,41 @@ class Hero {
         this.ability.RainFire.used = false;
       }
     }
+
+    if (this.ability.LightningStrike.using) {
+      this.closestEnemysDistance = Infinity;
+      this.closestEnemy = null;
+      for (let i = 0; i < monsters.length; i++) {
+        if (
+          Math.pow(monsters[i].position.x - (mouseX - camera.x), 2) +
+            Math.pow(monsters[i].position.y - (mouseY - camera.y), 2) <
+          this.closestEnemysDistance
+        ) {
+          this.closestEnemy = monsters[i];
+          this.closestEnemysDistance =
+            Math.pow(monsters[i].position.x - (mouseX - camera.x), 2) +
+            Math.pow(monsters[i].position.y - (mouseY - camera.y), 2);
+        }
+
+        monsters[i].glow = false;
+      }
+      this.closestEnemy.glow = true;
+
+      if (this.ability.LightningStrike.used) {
+        projectiles.push(
+          new Projectile({
+            startObj: this,
+            damage: 100,
+            duration: this.ability.LightningStrike.duration,
+            target: this.closestEnemy,
+            type: "Lazer",
+          })
+        );
+        this.ability.LightningStrike.using = false;
+        this.ability.LightningStrike.used = false;
+        this.closestEnemy.glow = false;
+      }
+    }
   }
 
   move() {
@@ -241,26 +408,46 @@ class Hero {
   }
 
   attack() {
-    projectiles.push(
-      new Projectile({
-        x: this.position.x,
-        y: this.position.y,
-        target: this.endPoint,
-        damage: this.stats.damage,
-        type: "bullet",
-      })
-    );
+    switch (this.character) {
+      case "Arthur":
+        projectiles.push(
+          new Projectile({
+            x: this.position.x,
+            y: this.position.y,
+            target: this.endPoint,
+            damage: this.stats.damage,
+            type: "Bullet",
+          })
+        );
+        break;
+      case "Rex":
+        break;
+      case "Kora":
+        projectiles.push(
+          new Projectile({
+            x: this.position.x,
+            y: this.position.y,
+            target: this.endPoint,
+            damage: this.stats.damage,
+            type: "Toss",
+          })
+        );
+        break;
+    }
   }
   useAbility(ability) {
     switch (ability) {
       case "Staff Smash":
         this.ability.StaffSmash.using = true;
+        this.ability.StaffSmash.used = false;
         break;
       case "Rain Fire":
         this.ability.RainFire.using = true;
+        this.ability.RainFire.used = false;
         break;
       case "Lightning Strike":
         this.ability.LightningStrike.using = true;
+        this.ability.LightningStrike.used = false;
         break;
     }
   }

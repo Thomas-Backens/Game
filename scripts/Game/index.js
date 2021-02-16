@@ -2,9 +2,9 @@ let keys = [];
 let bitMap = [
   "1111111111",
   "1   1    1",
-  "1 p     11",
+  "1       11",
   "1        1",
-  "1    11  1",
+  "1 p  11  1",
   "1    11  1",
   "1        1",
   "1 11  1  1",
@@ -14,6 +14,8 @@ let bitMap = [
 let camera = {
   x: 0,
   y: 0,
+  offsetX: 0,
+  offsetY: 0,
 };
 let wallSize = 100;
 
@@ -33,6 +35,7 @@ function setup() {
   rectMode(CENTER);
   imageMode(CENTER);
   frameRate(60);
+  angleMode(RADIANS);
 
   for (let i = 0; i < bitMap.length; i++) {
     for (let j = 0; j < bitMap[i].length; j++) {
@@ -81,7 +84,7 @@ function setup() {
             new Hero({
               x: i * wallSize + wallSize / 2,
               y: j * wallSize + wallSize / 2,
-              character: "Arthur",
+              character: "Kora",
             })
           );
           break;
@@ -101,6 +104,18 @@ function setup() {
       type: "Spider",
     })
   );
+  monsters.push(
+    new Monster({
+      x: 800,
+      y: 200,
+      speed: 1,
+      type: "Spider",
+    })
+  );
+
+  for (let i = 0; i < monsters.length; i++) {
+    monsters[i].loadImages();
+  }
 
   UI = new Interface({
     character: heroes[0],
@@ -109,9 +124,28 @@ function setup() {
   shadow = loadImage("../../sprites/Misc/Shadow.png");
 }
 
+let done = false;
+let timer = 0;
 function draw() {
   if (loadedSprites) {
     background(0);
+
+    if (timer >= 120) {
+      monsters.push(
+        new Monster({
+          x: 200,
+          y: 200,
+          speed: 1,
+          type: "Spider",
+        })
+      );
+      timer = 0;
+    } else {
+      timer++;
+    }
+
+    push();
+    translate(camera.offsetX, camera.offsetY);
 
     for (let i = 0; i < blocks.length; i++) {
       blocks[i].display();
@@ -123,8 +157,37 @@ function draw() {
     }
 
     for (let i = 0; i < monsters.length; i++) {
-      monsters[i].display();
-      monsters[i].update();
+      if (!monsters[i].loaded) {
+        monsters[i].loadImages();
+      } else {
+        monsters[i].display();
+        monsters[i].update();
+
+        if (monsters[i].dead) {
+          monsters.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    for (let i = 0; i < monsters.length; i++) {
+      if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
+        monsters[i].attackGif.delay(1400, 0);
+        monsters[i].deathGif.delay(10000, 13);
+        monsters[i].setDelays = true;
+      }
+    }
+
+    for (let i = 0; i < heroes.length; i++) {
+      heroes[i].display();
+      heroes[i].update();
+
+      if (
+        !heroes[0].ability.RainFire.using &&
+        !heroes[0].ability.LightningStrike.using
+      ) {
+        heroes[i].displayProjectileLength();
+      }
     }
 
     for (let i = 0; i < projectiles.length; i++) {
@@ -137,14 +200,7 @@ function draw() {
       }
     }
 
-    for (let i = 0; i < heroes.length; i++) {
-      heroes[i].display();
-      heroes[i].update();
-
-      if (!heroes[0].ability.RainFire.using) {
-        heroes[i].displayProjectileLength();
-      }
-    }
+    pop();
 
     {
       if (5 < abs(camera.x + heroes[0].position.x - width / 2)) {
@@ -172,18 +228,24 @@ function draw() {
 
     {
       noFill();
-      strokeWeight(600);
+      strokeWeight(2000 - heroes[0].stats.visionRange * 100);
       stroke(0);
       rect(
         heroes[0].position.x + camera.x,
         heroes[0].position.y + camera.y,
-        windowWidth - 100,
-        windowHeight + 800
+        heroes[0].stats.visionRange * 100 +
+          2000 -
+          heroes[0].stats.visionRange * 100,
+        heroes[0].stats.visionRange * 100 +
+          2000 -
+          heroes[0].stats.visionRange * 100
       );
       image(
         shadow,
         heroes[0].position.x + camera.x,
-        heroes[0].position.y + camera.y
+        heroes[0].position.y + camera.y,
+        heroes[0].stats.visionRange * 100,
+        heroes[0].stats.visionRange * 100
       );
       noStroke();
     } // Shadow
@@ -210,18 +272,18 @@ function draw() {
       windowWidth / 2 -
         250 +
         map(
-          constrain(totalLoadedSprites, 0, blocks.length),
+          constrain(totalLoadedSprites, 0, blocks.length + monsters.length),
           0,
-          blocks.length,
+          blocks.length + monsters.length,
           0,
           500
         ) /
           2,
       windowHeight / 2 + 100,
       map(
-        constrain(totalLoadedSprites, 0, blocks.length),
+        constrain(totalLoadedSprites, 0, blocks.length + monsters.length),
         0,
-        blocks.length,
+        blocks.length + monsters.length,
         0,
         500
       ),
@@ -231,6 +293,13 @@ function draw() {
     for (let i = 0; i < blocks.length; i++) {
       loadedSprites = true;
       if (!blocks[i].loaded) {
+        loadedSprites = false;
+      } else {
+        totalLoadedSprites++;
+      }
+    }
+    for (let i = 0; i < monsters.length; i++) {
+      if (!monsters[i].loaded) {
         loadedSprites = false;
       } else {
         totalLoadedSprites++;
@@ -257,9 +326,13 @@ function keyReleased() {
 }
 
 function mouseReleased() {
-  if (!heroes[0].ability.RainFire.using) {
+  if (
+    !heroes[0].ability.RainFire.using &&
+    !heroes[0].ability.LightningStrike.using
+  ) {
     heroes[0].attack();
   } else {
     heroes[0].ability.RainFire.used = true;
+    heroes[0].ability.LightningStrike.used = true;
   }
 }

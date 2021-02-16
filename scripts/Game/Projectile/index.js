@@ -2,12 +2,18 @@ class Projectile {
   constructor(config) {
     this.position = new p5.Vector(config.x, config.y);
     this.velocity = new p5.Vector(0, 0);
+    this.startObj = config.startObj;
     this.target = config.target;
     this.damage = config.damage;
     this.attackRange = config.attackRange;
     this.waitingTime = config.waitingTime;
     this.duration = config.duration;
     this.type = config.type;
+
+    if (this.type === "Lazer") {
+      this.position.x = this.startObj.position.x;
+      this.position.y = this.startObj.position.y;
+    }
 
     this.foundRotation = false;
     this.size = 50;
@@ -18,11 +24,16 @@ class Projectile {
     this.durationTimer = 0;
 
     this.magicBall = loadImage("../../../sprites/Projectiles/MagicBall.gif");
+    this.fireBall = loadImage("../../../sprites/Projectiles/FireBall.gif");
+    this.fireRing_still = loadImage(
+      "../../../sprites/Projectiles/FireRing_still.png"
+    );
   }
 
   display() {
     switch (this.type) {
-      case "bullet":
+      case "Bullet":
+        noStroke();
         fill(0, 200, 255, 20);
         ellipse(
           this.position.x + camera.x,
@@ -55,25 +66,59 @@ class Projectile {
         noStroke();
         fill(random(100, 255), random(100, 200), 0, 50);
         if (this.waitingTimer >= this.waitingTime) {
-          ellipse(
+          // ellipse(
+          //   this.position.x + camera.x,
+          //   this.position.y + camera.y,
+          //   this.attackRange * 100,
+          //   this.attackRange * 100
+          // );
+          image(
+            this.fireRing_still,
             this.position.x + camera.x,
-            this.position.y + camera.y,
-            this.attackRange * 100,
-            this.attackRange * 100
+            this.position.y + camera.y
           );
         }
+        break;
+      case "Lazer":
+        noFill();
+        strokeWeight(5);
+        stroke(0, 255, 255);
+        line(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.target.position.x + camera.x,
+          this.target.position.y + camera.y
+        );
+        break;
+      case "Toss":
         break;
     }
   }
 
   update() {
     switch (this.type) {
-      case "bullet":
+      case "Bullet":
         this.move();
         this.hitMonster();
         break;
       case "Fire Ball":
         this.rain();
+        break;
+      case "Lazer":
+        this.position.x = this.startObj.position.x;
+        this.position.y = this.startObj.position.y;
+
+        this.target.stats.health -= calculateDefense(
+          this.target.stats.defense,
+          this.damage
+        );
+
+        this.durationTimer++;
+        if (this.durationTimer >= this.duration) {
+          this.dead = true;
+        }
+        break;
+      case "Toss":
         break;
     }
   }
@@ -99,6 +144,36 @@ class Projectile {
         map(this.waitingTimer, 0, this.waitingTime, 0, this.attackRange * 100),
         map(this.waitingTimer, 0, this.waitingTime, 0, this.attackRange * 100)
       );
+
+      noStroke();
+      push();
+      translate(
+        this.position.x +
+          camera.x +
+          map(this.waitingTimer, 0, this.waitingTime, 500, 0),
+        this.position.y +
+          camera.y -
+          map(this.waitingTimer, 0, this.waitingTime, 1000, 0)
+      );
+      rotate(-0.2);
+      image(this.fireBall, 0, 0);
+      pop();
+      push();
+      translate(
+        this.position.x +
+          camera.x +
+          map(this.waitingTimer, 0, this.waitingTime, 500, 0),
+        this.position.y +
+          camera.y -
+          map(this.waitingTimer, 0, this.waitingTime, 1000, 0)
+      );
+      fill(255, random(0, 100), 0, 30);
+      ellipse(0, 0, 100, 100);
+      fill(255, random(0, 100), 0, 30);
+      ellipse(0, 0, 150, 150);
+      fill(255, random(0, 100), 0, 30);
+      ellipse(0, 0, 200, 200);
+      pop();
     } else {
       if (!this.exploded) {
         for (let i = 0; i < monsters.length; i++) {
@@ -136,6 +211,20 @@ class Projectile {
       }
 
       this.durationTimer++;
+      if (this.durationTimer < 50) {
+        camera.offsetX = random(
+          -25 + this.durationTimer / 2,
+          25 - this.durationTimer / 2
+        );
+        camera.offsetY = random(
+          -25 + this.durationTimer / 2,
+          25 - this.durationTimer / 2
+        );
+      } else {
+        camera.offsetX = 0;
+        camera.offsetY = 0;
+      }
+
       if (this.durationTimer >= this.duration) {
         this.dead = true;
       }
@@ -177,7 +266,8 @@ class Projectile {
           this.position.y,
           monsters[i].position.x,
           monsters[i].position.y
-        ) < this.size
+        ) < this.size &&
+        !monsters[i].dying
       ) {
         monsters[i].stats.health -= calculateDefense(
           monsters[i].stats.defense,
