@@ -34,6 +34,7 @@ class Hero {
 
     this.idle;
     this.walk;
+    this.staffSmash;
     this.size = 70;
     this.character = config.character;
 
@@ -43,6 +44,7 @@ class Hero {
       case "Arthur":
         this.idle = loadImage("../../../sprites/Hero/Arthur/Idle.png");
         this.walk = loadImage("../../../sprites/Hero/Arthur/Walk.gif");
+        this.staffSmash = loadImage("../../../sprites/Projectiles/Wind.gif");
         this.stats = {
           maxHealth: 500,
           health: 500,
@@ -153,6 +155,15 @@ class Hero {
   }
 
   display() {
+    if (this.ability.StaffSmash.using) {
+      this.staffSmash.reset();
+      image(
+        this.staffSmash,
+        this.position.x + camera.x,
+        this.position.y + camera.y
+      );
+    }
+
     noStroke();
     fill(0, 50);
     ellipse(
@@ -246,20 +257,11 @@ class Hero {
         pop();
         break;
       case "Kora":
-        noFill();
-        strokeWeight(5);
-        stroke(255);
-        ellipse(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.stats.attackRange * 100,
-          this.stats.attackRange * 100
-        );
         noStroke();
         if (this.attackTimer < this.stats.attackSpeed * 60) {
-          stroke(255, 0, 0, 50);
+          fill(255, 0, 0, 50);
         } else {
-          stroke(255, 50);
+          fill(255, 50);
         }
         if (
           dist(
