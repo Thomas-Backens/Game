@@ -84,7 +84,7 @@ function setup() {
             new Hero({
               x: i * wallSize + wallSize / 2,
               y: j * wallSize + wallSize / 2,
-              character: "Arthur",
+              character: "Kora",
             })
           );
           break;

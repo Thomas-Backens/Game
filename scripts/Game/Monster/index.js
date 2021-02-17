@@ -29,6 +29,11 @@ class Monster {
     this.burningTime = 300;
     this.burningTimer = 0;
 
+    this.isRepelling = false;
+    this.repelDuration = 0;
+    this.repelTarget = null;
+    this.repelTimer = 0;
+
     this.idleImg;
     this.walkGif;
     this.idleAttackImg;
@@ -181,6 +186,18 @@ class Monster {
         this.loadDelay++;
       }
     }
+
+    if (this.isRepelling) {
+      this.repel(this.repelTarget, 20);
+
+      this.repelTimer++;
+      if (this.repelTimer >= this.repelDuration) {
+        this.isRepelling = false;
+        this.repelTimer = 0;
+        this.repelDuration = 0;
+        this.repelTarget = null;
+      }
+    }
   }
 
   move() {
@@ -238,6 +255,12 @@ class Monster {
         this.attackTimer = 0;
       }
     }
+  }
+
+  repelling(target, duration) {
+    this.isRepelling = true;
+    this.repelDuration = duration;
+    this.repelTarget = target;
   }
 
   repel(target, power) {

@@ -18,7 +18,7 @@ class Hero {
     };
     this.abilities = [];
     this.ability = {
-      StaffSmash: { using: false, timeOut: 20, timer: 0 },
+      StaffSmash: { using: false, timeOut: 10, timer: 0 },
       RainFire: { using: false, used: false, timeOut: 60, duration: 300 },
       LightningStrike: { using: false, used: false, duration: 10 },
     };
@@ -46,34 +46,33 @@ class Hero {
         this.walk = loadImage("../../../sprites/Hero/Arthur/Walk.gif");
         this.staffSmash = loadImage("../../../sprites/Projectiles/Wind.gif");
         this.stats = {
-          maxHealth: 500,
-          health: 500,
+          maxHealth: 200,
+          health: 200,
           damage: 50,
-          defense: 25,
+          defense: 10,
           attackRange: 10,
           attackSpeed: 0.5,
-          speed: 5,
+          speed: 4,
           visionRange: 16,
         };
         this.abilities = [
           {
             name: "Staff Smash",
-            damage: "Low",
-            description:
-              "Pushes Monsters away from you, dealing minimal damage",
+            damage: "None",
+            description: "Pushes Monsters away from you",
             key: "q",
           },
           {
             name: "Rain Fire",
             damage: "Medium",
             description:
-              "Throw a Fireball at your mouse location, dealing medium damage",
+              "Throws a Fireball at your mouse location, then has a burn circle where it lands",
             key: "e",
           },
           {
             name: "Lightning Strike",
             damage: "High",
-            description: "Hits a single target, dealing high damage",
+            description: "Strikes a single target, multiple times",
             key: "r",
           },
         ];
@@ -84,32 +83,31 @@ class Hero {
         this.stats = {
           maxHealth: 500,
           health: 500,
-          damage: 50,
+          damage: 20,
           defense: 25,
           attackRange: 1.5,
           attackSpeed: 1,
-          speed: 5,
+          speed: 3,
           visionRange: 16,
         };
         this.abilities = [
           {
-            name: "Staff Smash",
-            damage: "Low",
-            description:
-              "Pushes Monsters away from you, dealing minimal damage",
+            name: "Spinning Blades",
+            damage: "Medium",
+            description: "Spins in a circle, damaging all monsters in range",
             key: "q",
           },
           {
-            name: "Rain Fire",
-            damage: "Medium",
-            description:
-              "Throw a Fireball at your mouse location, dealing medium damage",
+            name: "Thorns",
+            damage: "Low",
+            description: "For the next 10 seconds, he deflects 50% damage",
             key: "e",
           },
           {
-            name: "Lightning Strike",
+            name: "Rage",
             damage: "High",
-            description: "Hits a single target, dealing high damage",
+            description:
+              "For the next 5 seconds, he gains a 50% attack boost and a 100% speed boost",
             key: "r",
           },
         ];
@@ -118,36 +116,46 @@ class Hero {
         this.idle = loadImage("../../../sprites/Hero/Arthur/Idle.png");
         this.walk = loadImage("../../../sprites/Hero/Arthur/Walk.gif");
         this.stats = {
-          maxHealth: 500,
-          health: 500,
-          damage: 50,
-          defense: 25,
+          maxHealth: 300,
+          health: 300,
+          damage: 35,
+          defense: 15,
           attackRange: 8,
           splashRange: 3,
           attackSpeed: 2,
-          speed: 5,
+          speed: 4,
           visionRange: 16,
         };
         this.abilities = [
           {
-            name: "Staff Smash",
+            name: "Poison",
             damage: "Low",
-            description:
-              "Pushes Monsters away from you, dealing minimal damage",
+            description: "Poisons enemies for the next 3 throws",
             key: "q",
           },
           {
-            name: "Rain Fire",
+            name: "Acid",
             damage: "Medium",
-            description:
-              "Throw a Fireball at your mouse location, dealing medium damage",
+            description: "Doubles damage for the next 4 throws",
             key: "e",
           },
           {
-            name: "Lightning Strike",
-            damage: "High",
-            description: "Hits a single target, dealing high damage",
+            name: "Regeneration",
+            damage: "None",
+            description: "Heals you and your allies for the next 2 throws",
             key: "r",
+          },
+          {
+            name: "Gas Orb",
+            damage: "Medium",
+            description: "Places an orb that shoots gas at monsters for the next 10 seconds",
+            key: "f",
+          },
+          {
+            name: "Rapid Fire",
+            damage: "High",
+            description: "For the next 5 seconds, you have a 500% attack speed boost",
+            key: "c",
           },
         ];
         break;
@@ -156,7 +164,6 @@ class Hero {
 
   display() {
     if (this.ability.StaffSmash.using) {
-      this.staffSmash.reset();
       image(
         this.staffSmash,
         this.position.x + camera.x,
@@ -345,6 +352,7 @@ class Hero {
       if (this.ability.StaffSmash.timer >= this.ability.StaffSmash.timeOut) {
         this.ability.StaffSmash.using = false;
         this.ability.StaffSmash.timer = 0;
+        this.staffSmash.reset();
       }
     }
 
@@ -478,7 +486,8 @@ class Hero {
                 monsters[i].stats.defense,
                 this.stats.damage
               );
-              monsters[i].repel(this, 1500);
+              monsters[i].repelling(this, 5);
+              // monsters[i].repel(this, 1500);
             }
           }
         }
