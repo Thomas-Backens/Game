@@ -139,8 +139,7 @@ class Projectile {
     switch (this.type) {
       case "Bullet":
         this.move();
-        this.hitMonster();
-        this.hitWall();
+        this.hitObjects();
         break;
       case "Fire Ball":
         this.rain();
@@ -362,6 +361,12 @@ class Projectile {
     }
   }
 
+  hitObjects() {
+    this.hitMonster();
+    this.hitSpawner();
+    this.hitWall();
+  }
+
   hitMonster() {
     for (let i = 0; i < monsters.length; i++) {
       if (
@@ -381,7 +386,28 @@ class Projectile {
       }
     }
   }
-
+  hitSpawner() {
+    for (let i = 0; i < spawners.length; i++) {
+      if (
+        rectCircleCollide(
+          spawners[i].position.x,
+          spawners[i].position.y,
+          spawners[i].size,
+          spawners[i].size,
+          0,
+          this.position.x,
+          this.position.y,
+          this.size / 2
+        )
+      ) {
+        spawners[i].stats.health -= calculateDefense(
+          spawners[i].stats.defense,
+          this.damage
+        );
+        this.dead = true;
+      }
+    }
+  }
   hitWall() {
     for (let i = 0; i < blocks.length; i++) {
       if (blocks[i].type === "wall") {

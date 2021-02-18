@@ -1,14 +1,14 @@
 let keys = [];
 let bitMap = [
   "1111111111",
-  "1   1    1",
+  "1 s 1    1",
   "1       11",
   "1        1",
   "1 p  11  1",
   "1    11  1",
   "1        1",
-  "1 11  1  1",
-  "1      1 1",
+  "1s11  1  1",
+  "1      1s1",
   "1111111111",
 ];
 let camera = {
@@ -23,6 +23,7 @@ let blocks = [];
 let heroes = [];
 let monsters = [];
 let projectiles = [];
+let spawners = [];
 
 let UI;
 let shadow;
@@ -85,6 +86,16 @@ function setup() {
               x: i * wallSize + wallSize / 2,
               y: j * wallSize + wallSize / 2,
               character: "Arthur",
+            })
+          );
+          break;
+        case "s":
+          spawners.push(
+            new Spawner({
+              x: i * wallSize + wallSize / 2,
+              y: j * wallSize + wallSize / 2,
+              size: wallSize,
+              type: "Spider",
             })
           );
           break;
@@ -176,6 +187,11 @@ function draw() {
         monsters[i].deathGif.delay(10000, 13);
         monsters[i].setDelays = true;
       }
+    }
+
+    for (let i = 0; i < spawners.length; i++) {
+      spawners[i].display();
+      spawners[i].update();
     }
 
     for (let i = 0; i < heroes.length; i++) {
