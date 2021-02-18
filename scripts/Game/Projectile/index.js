@@ -140,6 +140,7 @@ class Projectile {
       case "Bullet":
         this.move();
         this.hitMonster();
+        this.hitWall();
         break;
       case "Fire Ball":
         this.rain();
@@ -377,6 +378,74 @@ class Projectile {
           this.damage
         );
         this.dead = true;
+      }
+    }
+  }
+
+  hitWall() {
+    for (let i = 0; i < blocks.length; i++) {
+      if (blocks[i].type === "wall") {
+        if (
+          blocks[i].wallTile === 2 ||
+          blocks[i].wallTile === 3 ||
+          blocks[i].wallTile === 8
+        ) {
+          if (
+            rectCircleCollide(
+              blocks[i].position.x - blocks[i].size / 4,
+              blocks[i].position.y,
+              blocks[i].size / 2,
+              blocks[i].size,
+              0,
+              this.position.x,
+              this.position.y,
+              this.size / 2
+            )
+          ) {
+            this.dead = true;
+          }
+        }
+        if (
+          blocks[i].wallTile === 4 ||
+          blocks[i].wallTile === 5 ||
+          blocks[i].wallTile === 9
+        ) {
+          if (
+            rectCircleCollide(
+              blocks[i].position.x + blocks[i].size / 4,
+              blocks[i].position.y,
+              blocks[i].size / 2,
+              blocks[i].size,
+              0,
+              this.position.x,
+              this.position.y,
+              this.size / 2
+            )
+          ) {
+            this.dead = true;
+          }
+        }
+        if (
+          blocks[i].wallTile === 0 ||
+          blocks[i].wallTile === 1 ||
+          blocks[i].wallTile === 6 ||
+          blocks[i].wallTile === 7
+        ) {
+          if (
+            rectCircleCollide(
+              blocks[i].position.x,
+              blocks[i].position.y,
+              blocks[i].size,
+              blocks[i].size,
+              0,
+              this.position.x,
+              this.position.y,
+              this.size / 2
+            )
+          ) {
+            this.dead = true;
+          }
+        }
       }
     }
   }

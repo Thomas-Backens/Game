@@ -84,7 +84,7 @@ function setup() {
             new Hero({
               x: i * wallSize + wallSize / 2,
               y: j * wallSize + wallSize / 2,
-              character: "Kora",
+              character: "Arthur",
             })
           );
           break;
@@ -96,22 +96,22 @@ function setup() {
     blocks[i].loadImages();
   }
 
-  monsters.push(
-    new Monster({
-      x: 200,
-      y: 200,
-      speed: 1,
-      type: "Spider",
-    })
-  );
-  monsters.push(
-    new Monster({
-      x: 800,
-      y: 200,
-      speed: 1,
-      type: "Spider",
-    })
-  );
+  // monsters.push(
+  //   new Monster({
+  //     x: 200,
+  //     y: 200,
+  //     speed: 1,
+  //     type: "Spider",
+  //   })
+  // );
+  // monsters.push(
+  //   new Monster({
+  //     x: 800,
+  //     y: 200,
+  //     speed: 1,
+  //     type: "Spider",
+  //   })
+  // );
 
   for (let i = 0; i < monsters.length; i++) {
     monsters[i].loadImages();
@@ -141,7 +141,7 @@ function draw() {
       );
       timer = 0;
     } else {
-      timer++;
+      // timer++;
     }
 
     push();
