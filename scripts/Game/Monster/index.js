@@ -138,6 +138,22 @@ class Monster {
     }
 
     if (this.dying) {
+      if (this.deathTimer === 0) {
+        coins.push(
+          new Coin({
+            x: this.position.x,
+            y: this.position.y,
+            type: "Coin",
+          })
+        );
+        coins.push(
+          new Coin({
+            x: this.position.x,
+            y: this.position.y,
+            type: "XP",
+          })
+        );
+      }
       this.deathTimer++;
 
       if (this.deathTimer >= 90) {
