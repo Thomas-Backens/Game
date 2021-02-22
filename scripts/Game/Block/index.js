@@ -4,11 +4,11 @@ class Block {
     this.size = size;
     this.type = type;
 
-    this.floorTiles;
-    this.floorTile;
-    this.wallTiles;
+    this.floorTiles = [];
+    this.floorTile = 0;
+    this.wallTiles = [];
     this.wallTile;
-    this.pillarTile;
+    // this.pillarTile;
 
     this.loaded = false;
 
@@ -23,86 +23,11 @@ class Block {
   }
 
   loadImages() {
-    this.floorTiles = [
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt1.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt2.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt3.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt4.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt_wall_top.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-    ];
-    this.wallTiles = [
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone1.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone2.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone1_side1.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone1_side2.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone2_side1.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone2_side2.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_corner1.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_corner2.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_side_corner1.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_side_corner2.png",
-        () => (this.loaded = true),
-        () => (this.loaded = false)
-      ),
-    ];
-    this.pillarTile = loadImage("../../../sprites/Tiles/Pillar.png");
+    if (!sprites.Blocks.loaded) return;
+
+    this.floorTiles = sprites.Blocks.floorTiles;
+    this.wallTiles = sprites.Blocks.wallTiles;
+    // this.pillarTile = loadImage("../../../sprites/Tiles/Pillar.png");
 
     this.floorTile = round(random(0, this.floorTiles.length - 2));
     this.wallTile = round(random(0, 1));
@@ -217,11 +142,12 @@ class Block {
         }
       }
     }
+
+    this.loaded = true;
   }
 
   display() {
     noStroke();
-
     switch (this.type) {
       case "floor":
         image(
@@ -242,6 +168,15 @@ class Block {
         );
         break;
     }
+  }
+
+  onScreen() {
+    return (
+      this.position.x > heroes[0].position.x - windowWidth / 2 &&
+      this.position.x < heroes[0].position.x + windowWidth / 2 &&
+      this.position.y > heroes[0].position.y - windowHeight / 1.5 &&
+      this.position.y < heroes[0].position.y + windowHeight / 1.5
+    );
   }
 
   collideWithObj(target) {

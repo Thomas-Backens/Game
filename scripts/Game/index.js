@@ -1,15 +1,37 @@
 let keys = [];
+// let bitMap = [
+//   "1111111111",
+//   "1   1 s  1",
+//   "1       11",
+//   "1        1",
+//   "1 p  11  1",
+//   "1    11  1",
+//   "1        1",
+//   "1s11  1  1",
+//   "1      1s1",
+//   "1111111111",
+// ];
 let bitMap = [
-  "1111111111",
-  "1   1 s  1",
-  "1       11",
-  "1        1",
-  "1 p  11  1",
-  "1    11  1",
-  "1        1",
-  "1s11  1  1",
-  "1      1s1",
-  "1111111111",
+  "11111111111111111111",
+  "1  1               1",
+  "1               s  1",
+  "1          1       1",
+  "1s    1            1",
+  "1             1    1",
+  "1                  1",
+  "1                  1",
+  "1                  1",
+  "1    1   p         1",
+  "1                  1",
+  "1         1        1",
+  "1                  1",
+  "1                  1",
+  "1  1       1       1",
+  "1                  1",
+  "1                  1",
+  "1  11              1",
+  "1  s           1   1",
+  "11111111111111111111",
 ];
 let camera = {
   x: 0,
@@ -18,6 +40,8 @@ let camera = {
   offsetY: 0,
 };
 let wallSize = 100;
+let floorTiles = [];
+let wallTiles = [];
 
 let blocks = [];
 let heroes = [];
@@ -27,6 +51,20 @@ let spawners = [];
 
 let UI;
 let shadow;
+
+let sprites = {
+  Spider: {
+    idleImg: null,
+    walkGif: null,
+    idleAttackImg: null,
+    loaded: false,
+  },
+  Blocks: {
+    floorTiles: [],
+    wallTiles: [],
+    loaded: false,
+  },
+};
 
 let totalLoadedSprites = 0;
 let loadedSprites = false;
@@ -124,15 +162,115 @@ function setup() {
   //   })
   // );
 
-  for (let i = 0; i < monsters.length; i++) {
-    monsters[i].loadImages();
-  }
+  // for (let i = 0; i < monsters.length; i++) {
+  //   monsters[i].loadImages();
+  // }
 
   UI = new Interface({
     character: heroes[0],
   });
 
   shadow = loadImage("../../sprites/Misc/Shadow.png");
+
+  {
+    sprites.Spider.idleImg = loadImage(
+      "../../../sprites/Monsters/Spider/Idle.png",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.walkGif = loadImage(
+      "../../../sprites/Monsters/Spider/Walk.gif",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.idleAttackImg = loadImage(
+      "../../../sprites/Monsters/Spider/Attack.png",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+  } // Spider Images
+
+  {
+    sprites.Blocks.floorTiles = [
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt3.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt4.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+    ];
+    sprites.Blocks.wallTiles = [
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone1_side1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone1_side2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone2_side1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone2_side2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_corner1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_corner2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_corner1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_corner2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+    ];
+  } // Block Images
 }
 
 let done = false;
@@ -159,7 +297,13 @@ function draw() {
     translate(camera.offsetX, camera.offsetY);
 
     for (let i = 0; i < blocks.length; i++) {
-      blocks[i].display();
+      if (!blocks[i].loaded) {
+        blocks[i].loadImages();
+      } else {
+        if (blocks[i].onScreen()) {
+          blocks[i].display();
+        }
+      }
       if (blocks[i].type === "wall") {
         for (let j = 0; j < monsters.length; j++) {
           blocks[i].collideWithObj(monsters[j]);
@@ -171,7 +315,9 @@ function draw() {
       if (!monsters[i].loaded) {
         monsters[i].loadImages();
       } else {
-        monsters[i].display();
+        if (monsters[i].onScreen()) {
+          monsters[i].display();
+        }
         monsters[i].update();
 
         if (monsters[i].dead) {
@@ -190,7 +336,9 @@ function draw() {
     }
 
     for (let i = 0; i < spawners.length; i++) {
-      spawners[i].display();
+      if (spawners[i].onScreen()) {
+        spawners[i].display();
+      }
       spawners[i].update();
     }
 
@@ -267,6 +415,14 @@ function draw() {
     } // Shadow
 
     UI.display();
+
+    strokeWeight(15);
+    stroke(0);
+    fill(255, 255, 0);
+    textAlign(LEFT, TOP);
+    textSize(50);
+    text("FPS:" + round(frameRate()), 10, 10);
+    noStroke();
   } else {
     background(50);
 
@@ -288,38 +444,42 @@ function draw() {
       windowWidth / 2 -
         250 +
         map(
-          constrain(totalLoadedSprites, 0, blocks.length + monsters.length),
+          constrain(
+            totalLoadedSprites,
+            0,
+            sprites.Blocks.floorTiles.length +
+              sprites.Blocks.wallTiles.length +
+              3
+          ),
           0,
-          blocks.length + monsters.length,
+          sprites.Blocks.floorTiles.length +
+            sprites.Blocks.wallTiles.length +
+            3,
           0,
           500
         ) /
           2,
       windowHeight / 2 + 100,
       map(
-        constrain(totalLoadedSprites, 0, blocks.length + monsters.length),
+        constrain(
+          totalLoadedSprites,
+          0,
+          sprites.Blocks.floorTiles.length + sprites.Blocks.wallTiles.length + 3
+        ),
         0,
-        blocks.length + monsters.length,
+        sprites.Blocks.floorTiles.length + sprites.Blocks.wallTiles.length + 3,
         0,
         500
       ),
       50
     );
 
-    for (let i = 0; i < blocks.length; i++) {
-      loadedSprites = true;
-      if (!blocks[i].loaded) {
-        loadedSprites = false;
-      } else {
-        totalLoadedSprites++;
-      }
+    loadedSprites = true;
+    if (!sprites.Blocks.loaded) {
+      loadedSprites = false;
     }
-    for (let i = 0; i < monsters.length; i++) {
-      if (!monsters[i].loaded) {
-        loadedSprites = false;
-      } else {
-        totalLoadedSprites++;
-      }
+    if (!sprites.Spider.loaded) {
+      loadedSprites = false;
     }
   }
 }

@@ -60,24 +60,15 @@ class Monster {
         };
         break;
     }
+
+    this.fakeHealth = this.stats.maxHealth;
+    this.hitTimer = 0;
   }
 
   loadImages() {
-    this.idleImg = loadImage(
-      "../../../sprites/Monsters/Spider/Idle.png",
-      () => (this.loaded = true),
-      () => (this.loaded = false)
-    );
-    this.walkGif = loadImage(
-      "../../../sprites/Monsters/Spider/Walk.gif",
-      () => (this.loaded = true),
-      () => (this.loaded = false)
-    );
-    this.idleAttackImg = loadImage(
-      "../../../sprites/Monsters/Spider/Attack.png",
-      () => (this.loaded = true),
-      () => (this.loaded = false)
-    );
+    this.idleImg = sprites.Spider.idleImg;
+    this.walkGif = sprites.Spider.walkGif;
+    this.idleAttackImg = sprites.Spider.idleAttackImg;
     this.attackGif = loadImage(
       "../../../sprites/Monsters/Spider/Attack.gif",
       () => (this.loaded = true),
@@ -99,21 +90,27 @@ class Monster {
     if (this.glow) {
       strokeWeight(5);
       stroke(0, 255, 0);
+      ellipse(
+        this.position.x + camera.x,
+        this.position.y + camera.y,
+        this.size,
+        this.size
+      );
     }
     push();
     translate(this.position.x + camera.x, this.position.y + camera.y);
     rotate(this.angle - 4.8);
     // rect(this.position.x + camera.x, this.position.y + camera.y, 50, 50);
     if (this.dying) {
-      image(this.deathGif, 0, 0);
+      image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
     } else {
       if (this.moving) {
-        image(this.walkGif, 0, 0);
+        image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
       } else {
         if (this.attacking) {
-          image(this.attackGif, 0, 0);
+          image(this.attackGif, 0, 0, this.size * 2, this.size * 2);
         } else {
-          image(this.idleAttackImg, 0, 0);
+          image(this.idleAttackImg, 0, 0, this.size * 2, this.size * 2);
         }
       }
     }
@@ -121,15 +118,69 @@ class Monster {
 
     if (this.dying) return;
 
-    noStroke();
-    textAlign(CENTER);
-    textSize(20);
-    fill(255);
-    text(
-      "Health: " + this.stats.health + "/" + this.stats.maxHealth,
-      this.position.x + camera.x,
-      this.position.y + camera.y - 50
-    );
+    if (this.hitTimer > 0) {
+      this.hitTimer--;
+
+      noStroke();
+      fill(200, 0, 0);
+      rect(
+        this.position.x + camera.x,
+        this.position.y + camera.y - this.size,
+        50,
+        10
+      );
+      fill(255);
+      rect(
+        this.position.x +
+          camera.x -
+          25 +
+          map(
+            constrain(this.fakeHealth, 0, this.stats.maxHealth),
+            0,
+            this.stats.maxHealth,
+            0,
+            50
+          ) /
+            2,
+        this.position.y + camera.y - this.size,
+        map(
+          constrain(this.fakeHealth, 0, this.stats.maxHealth),
+          0,
+          this.stats.maxHealth,
+          0,
+          50
+        ),
+        10
+      );
+      fill(0, 200, 0);
+      rect(
+        this.position.x +
+          camera.x -
+          25 +
+          map(
+            constrain(this.stats.health, 0, this.stats.maxHealth),
+            0,
+            this.stats.maxHealth,
+            0,
+            50
+          ) /
+            2,
+        this.position.y + camera.y - this.size,
+        map(
+          constrain(this.stats.health, 0, this.stats.maxHealth),
+          0,
+          this.stats.maxHealth,
+          0,
+          50
+        ),
+        10
+      );
+    }
+
+    if (this.fakeHealth > this.stats.health + 1) {
+      this.fakeHealth -= (this.fakeHealth - this.stats.health) / 6;
+      this.hitTimer = 60;
+    }
   }
 
   update() {
@@ -198,6 +249,15 @@ class Monster {
         this.repelTarget = null;
       }
     }
+  }
+
+  onScreen() {
+    return (
+      this.position.x > heroes[0].position.x - windowWidth / 2 &&
+      this.position.x < heroes[0].position.x + windowWidth / 2 &&
+      this.position.y > heroes[0].position.y - windowHeight / 1.5 &&
+      this.position.y < heroes[0].position.y + windowHeight / 1.5
+    );
   }
 
   move() {

@@ -59,4 +59,13 @@ class Spawner {
       this.spawnTimer = 0;
     }
   }
+
+  onScreen() {
+    return (
+      this.position.x > heroes[0].position.x - windowWidth / 2 &&
+      this.position.x < heroes[0].position.x + windowWidth / 2 &&
+      this.position.y > heroes[0].position.y - windowHeight / 1.5 &&
+      this.position.y < heroes[0].position.y + windowHeight / 1.5
+    );
+  }
 }
