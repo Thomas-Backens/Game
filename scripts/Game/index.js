@@ -24,7 +24,6 @@ let heroes = [];
 let monsters = [];
 let projectiles = [];
 let coins = [];
-let xp = [];
 let spawners = [];
 
 let UI;

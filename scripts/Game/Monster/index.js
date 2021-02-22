@@ -139,20 +139,26 @@ class Monster {
 
     if (this.dying) {
       if (this.deathTimer === 0) {
-        coins.push(
-          new Coin({
-            x: this.position.x,
-            y: this.position.y,
-            type: "Coin",
-          })
-        );
-        coins.push(
-          new Coin({
-            x: this.position.x,
-            y: this.position.y,
-            type: "XP",
-          })
-        );
+        let randomNum1 = round(random(0, 5));
+        let randomNum2 = round(random(0, 5));
+        for (let i = 0; i < randomNum1; i++) {
+          coins.push(
+            new Coin({
+              x: this.position.x,
+              y: this.position.y,
+              type: "Coin",
+            })
+          );
+        }
+        for (let i = 0; i < randomNum2; i++) {
+          coins.push(
+            new Coin({
+              x: this.position.x,
+              y: this.position.y,
+              type: "XP",
+            })
+          );
+        }
       }
       this.deathTimer++;
 
