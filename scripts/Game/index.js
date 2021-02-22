@@ -123,7 +123,7 @@ function setup() {
             new Hero({
               x: i * wallSize + wallSize / 2,
               y: j * wallSize + wallSize / 2,
-              character: "Rex",
+              character: "Arthur",
             })
           );
           break;
@@ -144,27 +144,6 @@ function setup() {
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].loadImages();
   }
-
-  // monsters.push(
-  //   new Monster({
-  //     x: 200,
-  //     y: 200,
-  //     speed: 1,
-  //     type: "Spider",
-  //   })
-  // );
-  // monsters.push(
-  //   new Monster({
-  //     x: 800,
-  //     y: 200,
-  //     speed: 1,
-  //     type: "Spider",
-  //   })
-  // );
-
-  // for (let i = 0; i < monsters.length; i++) {
-  //   monsters[i].loadImages();
-  // }
 
   UI = new Interface({
     character: heroes[0],
