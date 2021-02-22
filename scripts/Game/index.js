@@ -47,6 +47,7 @@ let blocks = [];
 let heroes = [];
 let monsters = [];
 let projectiles = [];
+let coins = [];
 let spawners = [];
 
 let UI;
@@ -340,6 +341,16 @@ function draw() {
         spawners[i].display();
       }
       spawners[i].update();
+    }
+
+    for (let i = 0; i < coins.length; i++) {
+      coins[i].display();
+      coins[i].update();
+
+      if (coins[i].dead) {
+        coins.splice(i, 1);
+        i--;
+      }
     }
 
     for (let i = 0; i < heroes.length; i++) {
