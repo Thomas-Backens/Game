@@ -486,7 +486,13 @@ function mouseReleased() {
   ) {
     heroes[0].attack();
   } else {
-    heroes[0].ability.RainFire.used = true;
-    heroes[0].ability.LightningStrike.used = true;
+    if (heroes[0].stats.energy >= heroes[0].ability.RainFire.energy) {
+      heroes[0].ability.RainFire.used = true;
+      heroes[0].stats.energy -= heroes[0].ability.RainFire.energy;
+    }
+    if (heroes[0].stats.energy >= heroes[0].ability.LightningStrike.energy) {
+      heroes[0].ability.LightningStrike.used = true;
+      heroes[0].stats.energy -= heroes[0].ability.LightningStrike.energy;
+    }
   }
 }
