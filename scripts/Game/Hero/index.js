@@ -15,6 +15,7 @@ class Hero {
       attackSpeed: 0,
       energy: 0,
       maxEnergy: 0,
+      energyRegen: 0,
       xp: 0,
       xpToNextLevel: 0,
       level: 0,
@@ -41,9 +42,15 @@ class Hero {
     ];
     this.abilities = [];
     this.ability = {
-      StaffSmash: { using: false, timeOut: 10, timer: 0 },
-      RainFire: { using: false, used: false, timeOut: 60, duration: 300 },
-      LightningStrike: { using: false, used: false, duration: 10 },
+      StaffSmash: { using: false, timeOut: 10, timer: 0, energy: 25 },
+      RainFire: {
+        using: false,
+        used: false,
+        timeOut: 60,
+        duration: 300,
+        energy: 75,
+      },
+      LightningStrike: { using: false, used: false, duration: 10, energy: 100 },
     };
     this.collidingWith = {
       top: false,
@@ -54,6 +61,7 @@ class Hero {
     this.closestEnemy = null;
     this.closestEnemysDistance = Infinity;
     this.attackTimer = 0;
+    this.energyRegenTimer = 0;
 
     this.idle;
     this.walk;
@@ -77,6 +85,7 @@ class Hero {
           attackSpeed: 0.5,
           energy: 100,
           maxEnergy: 100,
+          energyRegen: 1,
           xp: 0,
           xpToNextLevel: this.levels[this.stats.level],
           level: 0,
@@ -369,6 +378,15 @@ class Hero {
     } else {
       this.fakeEnergy = this.stats.energy;
     }
+
+    if (this.energyRegenTimer >= this.stats.energyRegen * 60) {
+      this.energyRegenTimer = 0;
+      if (this.stats.energy < this.stats.maxEnergy) {
+        this.stats.energy++;
+      }
+    } else {
+      this.energyRegenTimer++;
+    }
   }
 
   arthursAbilites() {
@@ -583,16 +601,23 @@ class Hero {
   useAbility(ability) {
     switch (ability) {
       case "Staff Smash":
-        this.ability.StaffSmash.using = true;
-        this.ability.StaffSmash.used = false;
+        if (this.stats.energy >= this.ability.StaffSmash.energy) {
+          this.ability.StaffSmash.using = true;
+          this.ability.StaffSmash.used = false;
+          this.stats.energy -= this.ability.StaffSmash.energy;
+        }
         break;
       case "Rain Fire":
-        this.ability.RainFire.using = true;
-        this.ability.RainFire.used = false;
+        if (this.stats.energy >= this.ability.RainFire.energy) {
+          this.ability.RainFire.using = true;
+          this.ability.RainFire.used = false;
+        }
         break;
       case "Lightning Strike":
-        this.ability.LightningStrike.using = true;
-        this.ability.LightningStrike.used = false;
+        if (this.stats.energy >= this.ability.LightningStrike.energy) {
+          this.ability.LightningStrike.using = true;
+          this.ability.LightningStrike.used = false;
+        }
         break;
     }
   }
