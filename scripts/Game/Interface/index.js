@@ -59,6 +59,31 @@ function Interface(config) {
 
     // Health
     noStroke();
+    fill(255);
+    rect(
+      windowWidth - 50,
+      windowHeight -
+        25 -
+        map(
+          constrain(heroes[0].fakeHealth, 0, heroes[0].stats.maxHealth),
+          0,
+          heroes[0].stats.maxHealth,
+          0,
+          250
+        ) /
+          2,
+      50,
+      map(
+        constrain(heroes[0].fakeHealth, 0, heroes[0].stats.maxHealth),
+        0,
+        heroes[0].stats.maxHealth,
+        0,
+        -250
+      ),
+      5
+    );
+
+    noStroke();
     fill(255, 0, 0);
     rect(
       windowWidth - 50,
@@ -89,6 +114,31 @@ function Interface(config) {
     rect(windowWidth - 50, windowHeight - 150, 50, 250, 5);
 
     // Energy
+    noStroke();
+    fill(0, 150, 255);
+    rect(
+      windowWidth - 125,
+      windowHeight -
+        25 -
+        map(
+          constrain(heroes[0].fakeEnergy, 0, heroes[0].stats.maxEnergy),
+          0,
+          heroes[0].stats.maxEnergy,
+          0,
+          225
+        ) /
+          2,
+      50,
+      map(
+        constrain(heroes[0].fakeEnergy, 0, heroes[0].stats.maxEnergy),
+        0,
+        heroes[0].stats.maxEnergy,
+        0,
+        -225
+      ),
+      5
+    );
+
     noStroke();
     fill(0, 150, 255);
     rect(

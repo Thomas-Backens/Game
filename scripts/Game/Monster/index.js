@@ -120,6 +120,11 @@ class Monster {
       );
     }
 
+    push();
+    if (this.fakeHealth > this.stats.health + 1) {
+      tint(255, 0, 0);
+    }
+
     switch (this.type) {
       case "Spider":
         push();
@@ -154,6 +159,10 @@ class Monster {
         fill(150, 0, 0);
         ellipse(-5, -40 - this.jabLength, 5, 5);
         ellipse(5, -40 - this.jabLength, 5, 5);
+        if (this.fakeHealth > this.stats.health + 1 && !this.dying) {
+          fill(255, 0, 0, 100);
+          rect(0, -(this.jabLength / 2), 25, 100 + this.jabLength, 10);
+        }
         pop();
 
         if (this.hasShed) {
@@ -177,6 +186,7 @@ class Monster {
         }
         break;
     }
+    pop();
 
     if (this.dying) return;
 
@@ -237,11 +247,6 @@ class Monster {
         ),
         10
       );
-    }
-
-    if (this.fakeHealth > this.stats.health + 1) {
-      this.fakeHealth -= (this.fakeHealth - this.stats.health) / 6;
-      this.hitTimer = 60;
     }
   }
 
@@ -409,6 +414,11 @@ class Monster {
         this.repelDuration = 0;
         this.repelTarget = null;
       }
+    }
+
+    if (this.fakeHealth > this.stats.health + 1) {
+      this.fakeHealth -= (this.fakeHealth - this.stats.health) / 6;
+      this.hitTimer = 60;
     }
   }
 
