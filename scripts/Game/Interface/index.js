@@ -119,7 +119,6 @@ function Interface(config) {
     noFill();
     rect(windowWidth - 125, windowHeight - 137.5, 50, 225, 5);
 
-    //TODO add xp bar and xp functionality
     // XP
     noStroke();
     fill(0, 255, 0);
