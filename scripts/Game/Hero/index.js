@@ -13,9 +13,32 @@ class Hero {
       defense: 0,
       attackRange: 0,
       attackSpeed: 0,
+      energy: 0,
+      maxEnergy: 0,
+      xp: 0,
+      xpToNextLevel: 0,
+      level: 0,
       speed: 0,
       visionRange: 0,
     };
+    this.levels = [
+      500,
+      800,
+      1200,
+      1600,
+      2000,
+      2500,
+      3200,
+      4000,
+      5000,
+      6500,
+      8000,
+      10000,
+      12500,
+      15000,
+      19000,
+      25000,
+    ];
     this.abilities = [];
     this.ability = {
       StaffSmash: { using: false, timeOut: 10, timer: 0 },
@@ -52,6 +75,11 @@ class Hero {
           defense: 10,
           attackRange: 10,
           attackSpeed: 0.5,
+          energy: 100,
+          maxEnergy: 100,
+          xp: 0,
+          xpToNextLevel: this.levels[this.stats.level],
+          level: 0,
           speed: 4,
           visionRange: 16,
         };
@@ -148,13 +176,15 @@ class Hero {
           {
             name: "Gas Orb",
             damage: "Medium",
-            description: "Places an orb that shoots gas at monsters for the next 10 seconds",
+            description:
+              "Places an orb that shoots gas at monsters for the next 10 seconds",
             key: "f",
           },
           {
             name: "Rapid Fire",
             damage: "High",
-            description: "For the next 5 seconds, you have a 500% attack speed boost",
+            description:
+              "For the next 5 seconds, you have a 500% attack speed boost",
             key: "c",
           },
         ];
@@ -197,15 +227,6 @@ class Hero {
         100
       );
     }
-
-    textAlign(CENTER);
-    textSize(20);
-    fill(255);
-    text(
-      "Health: " + this.stats.health + "/" + this.stats.maxHealth,
-      this.position.x + camera.x,
-      this.position.y + camera.y - 50
-    );
   }
 
   displayProjectileLength() {
@@ -319,6 +340,14 @@ class Hero {
       case "Arthur":
         this.arthursAbilites();
         break;
+    }
+
+    if (this.stats.xp >= this.stats.xpToNextLevel) {
+      this.stats.xp = this.stats.xp - this.stats.xpToNextLevel;
+      this.stats.xpToNextLevel = this.levels[this.stats.level];
+      if (this.stats.level < this.levels.length - 1) {
+        this.stats.level++;
+      }
     }
   }
 

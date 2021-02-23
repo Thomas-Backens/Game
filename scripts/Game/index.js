@@ -510,6 +510,10 @@ function keyReleased() {
       heroes[0].useAbility(heroes[0].abilities[i].name);
     }
   }
+
+  if (keyCode === 53) {
+    UI.isToggled = !UI.isToggled;
+  }
 }
 
 function mouseReleased() {

@@ -6,6 +6,15 @@ class Coin {
     this.dead = false;
     this.velocity = new p5.Vector(0, 0);
     this.xpSpeed = 0;
+    this.amount = 0;
+
+    switch (this.type) {
+      case "Coin":
+        this.amount = round(random(1, 10));
+        break;
+      case "XP":
+        this.amount = round(random(1, 3));
+    }
   }
 
   display() {
@@ -43,18 +52,19 @@ class Coin {
       this.speed.y = 0;
     }
 
-    if (this.type === "XP") {
-      let destination = p5.Vector.sub(heroes[0].position, this.position);
-      destination.normalize();
-      destination.mult(10);
+    let destination = p5.Vector.sub(heroes[0].position, this.position);
+    destination.normalize();
+    destination.mult(10);
 
-      this.velocity.add(destination);
-      this.velocity.limit(this.xpSpeed);
-      this.position.add(this.velocity);
-      this.xpSpeed += 0.1;
-    }
+    this.velocity.add(destination);
+    this.velocity.limit(this.xpSpeed);
+    this.position.add(this.velocity);
+    this.xpSpeed += 0.1;
 
     if (this.collideWithPlayer()) {
+      if (this.type === "XP") {
+        heroes[0].stats.xp += this.amount;
+      }
       this.dead = true;
     }
   }
