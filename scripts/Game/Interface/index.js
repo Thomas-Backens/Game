@@ -115,7 +115,7 @@ function Interface(config) {
 
     // Energy
     noStroke();
-    fill(0, 150, 255);
+    fill(255);
     rect(
       windowWidth - 125,
       windowHeight -
