@@ -29,15 +29,15 @@ function draw() {
   strokeWeight(10);
   stroke(100, 100, 100);
   fill(70, 70, 70);
-  rect(windowWidth / 2, 200, 800, 150, 20);
+  rect(windowWidth / 2, 175, 500, 200, 20);
 
   noStroke();
   textAlign(CENTER);
-  textSize(80);
+  textSize(150);
   fill(100);
-  text("Monster Slayer", windowWidth / 2 + 5, 230);
+  text("Slain", windowWidth / 2 + 5, 230);
   fill(200);
-  text("Monster Slayer", windowWidth / 2, 225);
+  text("Slain", windowWidth / 2, 225);
 
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].display();
