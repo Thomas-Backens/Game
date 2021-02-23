@@ -253,7 +253,7 @@ class Monster {
     if (this.dying) {
       if (this.deathTimer === 0) {
         let randomNum1 = round(random(0, 5));
-        let randomNum2 = round(random(0, 5));
+        let randomNum2 = round(random(0, 3));
         for (let i = 0; i < randomNum1; i++) {
           coins.push(
             new Coin({
