@@ -190,6 +190,9 @@ class Hero {
         ];
         break;
     }
+
+    this.fakeHealth = this.stats.health;
+    this.fakeEnergy = this.stats.energy;
   }
 
   display() {
@@ -210,6 +213,11 @@ class Hero {
       40
     );
 
+    push();
+    if (this.fakeHealth > this.stats.health + 1) {
+      tint(255, 0, 0);
+    }
+
     if (this.running) {
       image(
         this.walk,
@@ -227,6 +235,7 @@ class Hero {
         100
       );
     }
+    pop();
   }
 
   displayProjectileLength() {
@@ -348,6 +357,17 @@ class Hero {
       if (this.stats.level < this.levels.length - 1) {
         this.stats.level++;
       }
+    }
+
+    if (this.fakeHealth > this.stats.health + 1) {
+      this.fakeHealth -= (this.fakeHealth - this.stats.health) / 6;
+    } else {
+      this.fakeHealth = this.stats.health;
+    }
+    if (this.fakeEnergy > this.stats.energy + 1) {
+      this.fakeEnergy -= (this.fakeEnergy - this.stats.energy) / 6;
+    } else {
+      this.fakeEnergy = this.stats.energy;
     }
   }
 
