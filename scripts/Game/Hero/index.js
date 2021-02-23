@@ -86,7 +86,7 @@ class Hero {
           damage: 20,
           defense: 25,
           attackRange: 1.5,
-          attackSpeed: 1,
+          attackSpeed: 0.5,
           speed: 3,
           visionRange: 16,
         };
@@ -122,7 +122,7 @@ class Hero {
           defense: 15,
           attackRange: 8,
           splashRange: 3,
-          attackSpeed: 2,
+          attackSpeed: 1.5,
           speed: 4,
           visionRange: 16,
         };
@@ -148,13 +148,15 @@ class Hero {
           {
             name: "Gas Orb",
             damage: "Medium",
-            description: "Places an orb that shoots gas at monsters for the next 10 seconds",
+            description:
+              "Places an orb that shoots gas at monsters for the next 10 seconds",
             key: "f",
           },
           {
             name: "Rapid Fire",
             damage: "High",
-            description: "For the next 5 seconds, you have a 500% attack speed boost",
+            description:
+              "For the next 5 seconds, you have a 500% attack speed boost",
             key: "c",
           },
         ];

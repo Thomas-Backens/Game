@@ -22,6 +22,9 @@ class Monster {
     this.dying = false;
     this.dead = false;
     this.deathTimer = 0;
+    this.hurtTimer = 0;
+    this.flee = false;
+    this.speedOffset = 0;
 
     this.burnTime = 30;
     this.burnTimer = 0;
@@ -33,6 +36,13 @@ class Monster {
     this.repelDuration = 0;
     this.repelTarget = null;
     this.repelTimer = 0;
+
+    this.jabLength = 0;
+    this.hasShed = false;
+    this.shedAlpha = 255;
+    this.shedAngle = 0;
+    this.shedX = 0;
+    this.shedY = 0;
 
     this.idleImg;
     this.walkGif;
@@ -57,6 +67,18 @@ class Monster {
           attackSpeed: 2,
           speed: 3,
           visionRange: 10,
+        };
+        break;
+      case "Snake":
+        this.stats = {
+          maxHealth: 85,
+          health: 85,
+          damage: 15,
+          defense: 8,
+          attackRange: 2,
+          attackSpeed: 3,
+          speed: 2,
+          visionRange: 15,
         };
         break;
     }
@@ -86,10 +108,10 @@ class Monster {
       this.angle = this.velocity.heading();
     }
 
-    noStroke();
     if (this.glow) {
-      strokeWeight(5);
-      stroke(0, 255, 0);
+      noFill();
+      strokeWeight(3);
+      stroke(255, 0, 0, 150);
       ellipse(
         this.position.x + camera.x,
         this.position.y + camera.y,
@@ -97,24 +119,64 @@ class Monster {
         this.size
       );
     }
-    push();
-    translate(this.position.x + camera.x, this.position.y + camera.y);
-    rotate(this.angle - 4.8);
-    // rect(this.position.x + camera.x, this.position.y + camera.y, 50, 50);
-    if (this.dying) {
-      image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
-    } else {
-      if (this.moving) {
-        image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
-      } else {
-        if (this.attacking) {
-          image(this.attackGif, 0, 0, this.size * 2, this.size * 2);
+
+    switch (this.type) {
+      case "Spider":
+        push();
+        noStroke();
+        translate(this.position.x + camera.x, this.position.y + camera.y);
+        rotate(this.angle - 4.8);
+        if (this.dying) {
+          image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
         } else {
-          image(this.idleAttackImg, 0, 0, this.size * 2, this.size * 2);
+          if (this.moving) {
+            image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+          } else {
+            if (this.attacking) {
+              image(this.attackGif, 0, 0, this.size * 2, this.size * 2);
+            } else {
+              image(this.idleAttackImg, 0, 0, this.size * 2, this.size * 2);
+            }
+          }
         }
-      }
+        pop();
+        break;
+      case "Snake":
+        push();
+        noStroke();
+        translate(this.position.x + camera.x, this.position.y + camera.y);
+        rotate(this.angle - 4.8);
+        fill(0, 150, 0);
+        if (this.dying) {
+          fill(80, 100, 0);
+        }
+        rect(0, -(this.jabLength / 2), 25, 100 + this.jabLength, 10);
+        fill(150, 0, 0);
+        ellipse(-5, -40 - this.jabLength, 5, 5);
+        ellipse(5, -40 - this.jabLength, 5, 5);
+        pop();
+
+        if (this.hasShed) {
+          if (this.shedAlpha > 0) {
+            this.shedAlpha -= 3;
+            push();
+            noStroke();
+            translate(this.shedX + camera.x, this.shedY + camera.y);
+            rotate(this.shedAngle);
+            fill(0, 150, 0, this.shedAlpha);
+            rect(0, 0, 25, 100, 10);
+            fill(150, 0, 0, this.shedAlpha);
+            ellipse(-5, -40, 5, 5);
+            ellipse(5, -40, 5, 5);
+            pop();
+          }
+        } else {
+          this.shedAngle = this.angle - 4.8;
+          this.shedX = this.position.x;
+          this.shedY = this.position.y;
+        }
+        break;
     }
-    pop();
 
     if (this.dying) return;
 
@@ -221,7 +283,84 @@ class Monster {
     if (this.dying) return;
 
     this.move();
-    this.attack();
+
+    switch (this.type) {
+      case "Spider":
+        this.bite();
+
+        if (this.fakeHealth <= this.stats.health + 1) {
+          this.hurtTimer++;
+        } else {
+          this.hurtTimer = 0;
+        }
+
+        if (this.hurtTimer >= 300) {
+          if (this.stats.health < this.stats.maxHealth) {
+            this.stats.health += 2;
+          } else {
+            this.stats.health = this.stats.maxHealth;
+          }
+          this.fakeHealth = this.stats.health;
+        }
+
+        if (this.stats.health <= this.stats.maxHealth / 4) {
+          this.flee = true;
+        } else {
+          this.flee = false;
+        }
+        break;
+      case "Snake":
+        this.jab();
+
+        if (this.attacking) {
+          if (this.jabLength < 80) {
+            this.jabLength += 20;
+          }
+        } else {
+          if (this.jabLength > 0) {
+            this.jabLength -= 5;
+          }
+        }
+
+        if (
+          this.stats.health <= this.stats.maxHealth / (100 / 15) &&
+          !this.hasShed
+        ) {
+          this.shed();
+        }
+
+        if (
+          dist(
+            this.position.x,
+            this.position.y,
+            this.target.position.x,
+            this.target.position.y
+          ) <
+            this.stats.attackRange * 90 &&
+          this.jabLength <= 0
+        ) {
+          this.flee = true;
+        }
+        if (
+          dist(
+            this.position.x,
+            this.position.y,
+            this.target.position.x,
+            this.target.position.y
+          ) >
+            this.stats.attackRange * 150 &&
+          this.flee
+        ) {
+          this.flee = false;
+        }
+        break;
+    }
+
+    if (this.flee) {
+      this.attacking = false;
+      this.moving = true;
+      this.speedOffset = this.stats.speed / 2;
+    }
 
     if (this.burning) {
       this.burnTimer++;
@@ -284,11 +423,18 @@ class Monster {
 
   move() {
     let destination = p5.Vector.sub(this.target.position, this.position);
+    if (this.flee) {
+      destination = p5.Vector.sub(this.position, this.target.position);
+    }
     destination.normalize();
-    destination.mult(10);
+    if (this.type === "Spider") {
+      destination.mult(0.5);
+    } else if (this.type === "Snake") {
+      destination.mult(0.25);
+    }
 
     this.velocity.add(destination);
-    this.velocity.limit(this.stats.speed);
+    this.velocity.limit(this.stats.speed + this.speedOffset);
 
     if (
       dist(
@@ -301,7 +447,9 @@ class Monster {
     ) {
       this.moving = true;
     } else {
-      this.moving = false;
+      if (!this.flee) {
+        this.moving = false;
+      }
     }
 
     if (this.moving && !this.attacking) {
@@ -309,12 +457,13 @@ class Monster {
     }
   }
 
-  attack() {
+  bite() {
     if (this.target === null) {
       return;
     }
 
     this.attacking = false;
+    this.attackTimer++;
     if (
       dist(
         this.position.x,
@@ -324,7 +473,6 @@ class Monster {
       ) <
       this.stats.attackRange * 100
     ) {
-      this.attackTimer++;
       // if (this.attackTimer >= this.stats.attackSpeed * 30) {
       this.attacking = true;
       // }
@@ -337,6 +485,43 @@ class Monster {
         this.attackTimer = 0;
       }
     }
+  }
+
+  jab() {
+    if (this.target === null) {
+      return;
+    }
+
+    this.attackTimer++;
+    if (
+      dist(
+        this.position.x,
+        this.position.y,
+        this.target.position.x,
+        this.target.position.y
+      ) <
+        this.stats.attackRange * 100 &&
+      !this.flee
+    ) {
+      if (this.attackTimer >= this.stats.attackSpeed * 60) {
+        this.attacking = true;
+      }
+    }
+    if (this.jabLength >= 80) {
+      this.target.stats.health -= calculateDefense(
+        this.target.stats.defense,
+        this.stats.damage
+      );
+      this.attackTimer = 0;
+      this.attacking = false;
+    }
+  }
+
+  shed() {
+    this.stats.health = this.stats.maxHealth;
+    this.burning = false;
+    this.burnTimer = 0;
+    this.hasShed = true;
   }
 
   repelling(target, duration) {

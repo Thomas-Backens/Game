@@ -1,22 +1,10 @@
 let keys = [];
-// let bitMap = [
-//   "1111111111",
-//   "1   1 s  1",
-//   "1       11",
-//   "1        1",
-//   "1 p  11  1",
-//   "1    11  1",
-//   "1        1",
-//   "1s11  1  1",
-//   "1      1s1",
-//   "1111111111",
-// ];
 let bitMap = [
   "11111111111111111111",
   "1  1               1",
-  "1               s  1",
+  "1                 s1",
   "1          1       1",
-  "1s    1            1",
+  "1S    1            1",
   "1             1    1",
   "1                  1",
   "1                  1",
@@ -29,7 +17,7 @@ let bitMap = [
   "1  1       1       1",
   "1                  1",
   "1                  1",
-  "1  11              1",
+  "1  11             S1",
   "1  s           1   1",
   "11111111111111111111",
 ];
@@ -135,6 +123,16 @@ function setup() {
               y: j * wallSize + wallSize / 2,
               size: wallSize,
               type: "Spider",
+            })
+          );
+          break;
+        case "S":
+          spawners.push(
+            new Spawner({
+              x: i * wallSize + wallSize / 2,
+              y: j * wallSize + wallSize / 2,
+              size: wallSize,
+              type: "Snake",
             })
           );
           break;
@@ -258,20 +256,6 @@ let timer = 0;
 function draw() {
   if (loadedSprites) {
     background(0);
-
-    if (timer >= 120) {
-      monsters.push(
-        new Monster({
-          x: 200,
-          y: 200,
-          speed: 1,
-          type: "Spider",
-        })
-      );
-      timer = 0;
-    } else {
-      // timer++;
-    }
 
     push();
     translate(camera.offsetX, camera.offsetY);

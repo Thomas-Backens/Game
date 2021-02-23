@@ -33,6 +33,23 @@ class Spawner {
           this.size
         );
         break;
+      case "Snake":
+        noStroke();
+        fill(50);
+        rect(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.size,
+          this.size
+        );
+        fill(0);
+        ellipse(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.size,
+          this.size
+        );
+        break;
     }
 
     textAlign(CENTER, CENTER);
@@ -53,7 +70,7 @@ class Spawner {
           x: this.position.x,
           y: this.position.y,
           speed: 1,
-          type: "Spider",
+          type: this.type,
         })
       );
       this.spawnTimer = 0;
