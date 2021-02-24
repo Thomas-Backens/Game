@@ -467,6 +467,7 @@ class Hero {
       this.closestEnemy.glow = true;
 
       if (this.ability.LightningStrike.used) {
+        console.log("HEY!");
         projectiles.push(
           new Projectile({
             startObj: this,
@@ -614,9 +615,11 @@ class Hero {
         }
         break;
       case "Lightning Strike":
-        if (this.stats.energy >= this.ability.LightningStrike.energy) {
-          this.ability.LightningStrike.using = true;
-          this.ability.LightningStrike.used = false;
+        if (monsters.length >= 1) {
+          if (this.stats.energy >= this.ability.LightningStrike.energy) {
+            this.ability.LightningStrike.using = true;
+            this.ability.LightningStrike.used = false;
+          }
         }
         break;
     }
