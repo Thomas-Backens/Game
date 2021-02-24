@@ -295,6 +295,22 @@ class Projectile {
             );
           }
         }
+        for (let i = 0; i < spawners.length; i++) {
+          if (
+            dist(
+              this.position.x,
+              this.position.y,
+              spawners[i].position.x,
+              spawners[i].position.y
+            ) <
+            this.attackRange * 50
+          ) {
+            spawners[i].stats.health -= calculateDefense(
+              spawners[i].stats.defense,
+              this.damage
+            );
+          }
+        }
         this.exploded = true;
       }
 
@@ -310,6 +326,20 @@ class Projectile {
         ) {
           monsters[i].burning = true;
           monsters[i].burningTimer = 0;
+        }
+      }
+      for (let i = 0; i < spawners.length; i++) {
+        if (
+          dist(
+            this.position.x,
+            this.position.y,
+            spawners[i].position.x,
+            spawners[i].position.y
+          ) <
+          this.attackRange * 50
+        ) {
+          spawners[i].burning = true;
+          spawners[i].burningTimer = 0;
         }
       }
 

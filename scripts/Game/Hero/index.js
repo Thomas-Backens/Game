@@ -464,6 +464,21 @@ class Hero {
 
         monsters[i].glow = false;
       }
+
+      for (let i = 0; i < spawners.length; i++) {
+        if (
+          Math.pow(spawners[i].position.x - (mouseX - camera.x), 2) +
+            Math.pow(spawners[i].position.y - (mouseY - camera.y), 2) <
+          this.closestEnemysDistance
+        ) {
+          this.closestEnemy = spawners[i];
+          this.closestEnemysDistance =
+            Math.pow(spawners[i].position.x - (mouseX - camera.x), 2) +
+            Math.pow(spawners[i].position.y - (mouseY - camera.y), 2);
+        }
+
+        spawners[i].glow = false;
+      }
       this.closestEnemy.glow = true;
 
       if (this.ability.LightningStrike.used) {

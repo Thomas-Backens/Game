@@ -486,12 +486,19 @@ function mouseReleased() {
   ) {
     heroes[0].attack();
   } else {
-    if (heroes[0].stats.energy >= heroes[0].ability.RainFire.energy) {
+    if (
+      heroes[0].stats.energy >= heroes[0].ability.RainFire.energy &&
+      heroes[0].ability.RainFire.using
+    ) {
       heroes[0].ability.RainFire.used = true;
       heroes[0].stats.energy -= heroes[0].ability.RainFire.energy;
     }
-    if (heroes[0].stats.energy >= heroes[0].ability.LightningStrike.energy) {
+    if (
+      heroes[0].stats.energy >= heroes[0].ability.LightningStrike.energy &&
+      heroes[0].ability.LightningStrike.using
+    ) {
       heroes[0].ability.LightningStrike.used = true;
+      console.log(heroes[0].ability.LightningStrike.used);
       heroes[0].stats.energy -= heroes[0].ability.LightningStrike.energy;
     }
   }
