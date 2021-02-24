@@ -3,13 +3,14 @@ class Spawner {
     this.position = new p5.Vector(config.x, config.y);
     this.size = config.size;
     this.type = config.type;
-    this.health = 1000;
-    this.spawnTime = 2;
+
+    this.spawnTime = 5;
     this.spawnTimer = 0;
+    this.dead = false;
 
     this.stats = {
-      health: 1000,
-      maxHealth: 1000,
+      health: 100,
+      maxHealth: 100,
       defense: 50,
     };
   }
@@ -63,13 +64,30 @@ class Spawner {
   }
 
   update() {
+    if (this.stats.health <= 0) {
+      this.dead = true;
+      monsters.push(
+        new Monster({
+          x: this.position.x,
+          y: this.position.y,
+          type: this.type,
+          isBoss: true,
+        })
+      );
+    }
+
+    for (let i = 0; i < monsters.length; i++) {
+      if (monsters[i].isBoss) {
+        return;
+      }
+    }
+    
     this.spawnTimer++;
     if (this.spawnTimer >= this.spawnTime * 60) {
       monsters.push(
         new Monster({
           x: this.position.x,
           y: this.position.y,
-          speed: 1,
           type: this.type,
         })
       );
