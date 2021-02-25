@@ -51,6 +51,23 @@ class Spawner {
           this.size
         );
         break;
+      case "Bear":
+        noStroke();
+        fill(50);
+        rect(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.size,
+          this.size
+        );
+        fill(0);
+        ellipse(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.size,
+          this.size
+        );
+        break;
     }
 
     textAlign(CENTER, CENTER);
@@ -81,7 +98,7 @@ class Spawner {
         return;
       }
     }
-    
+
     this.spawnTimer++;
     if (this.spawnTimer >= this.spawnTime * 60) {
       monsters.push(

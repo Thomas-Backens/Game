@@ -2,7 +2,7 @@ let keys = [];
 let bitMap = [
   "11111111111111111111",
   "1  1               1",
-  "1                 s1",
+  "1                 b1",
   "1          1       1",
   "1     1            1",
   "1             1    1",
@@ -151,6 +151,25 @@ function setup() {
               y: j * wallSize + wallSize / 2,
               size: wallSize,
               type: "Snake",
+            })
+          );
+          break;
+        case "b":
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "floor"
+            )
+          );
+
+          spawners.push(
+            new Spawner({
+              x: i * wallSize + wallSize / 2,
+              y: j * wallSize + wallSize / 2,
+              size: wallSize,
+              type: "Bear",
             })
           );
           break;
