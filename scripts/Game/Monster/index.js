@@ -109,7 +109,7 @@ class Monster {
             defense: 20,
             attackRange: 2,
             attackSpeed: 3,
-            speed: 5,
+            speed: 4,
             visionRange: 10,
           };
           this.size = 100;
@@ -347,7 +347,7 @@ class Monster {
       }
       this.deathTimer++;
 
-      if (this.deathTimer >= 90) {
+      if (this.deathTimer >= 80) {
         this.dead = true;
       }
     }

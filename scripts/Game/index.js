@@ -11,7 +11,7 @@ let bitMap = [
   "1    1                   1   1",
   "1    11                  1   1",
   "1                      111   1",
-  "1     1    11   11       1   1",
+  "1          11   11       1   1",
   "1     1    1     1       1   1",
   "1     1                      1",
   "1             p     111      1",
@@ -183,6 +183,16 @@ function setup() {
             })
           );
           break;
+        case "l":
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "light"
+            )
+          );
+          break;
       }
     }
   }
@@ -299,7 +309,6 @@ function setup() {
 }
 
 let done = false;
-let timer = 0;
 function draw() {
   if (loadedSprites) {
     background(0);
@@ -382,6 +391,10 @@ function draw() {
         i--;
       }
     }
+
+    // for (let i = 0; i < blocks.length; i++) {
+    //   blocks[i].displayShadow();
+    // }
 
     for (let i = 0; i < heroes.length; i++) {
       heroes[i].display();
@@ -547,26 +560,37 @@ function keyReleased() {
 }
 
 function mouseReleased() {
-  if (
-    !heroes[0].ability.RainFire.using &&
-    !heroes[0].ability.LightningStrike.using
-  ) {
-    heroes[0].attack();
-  } else {
+  if (mouseButton === LEFT) {
     if (
-      heroes[0].stats.energy >= heroes[0].ability.RainFire.energy &&
-      heroes[0].ability.RainFire.using
+      !heroes[0].ability.RainFire.using &&
+      !heroes[0].ability.LightningStrike.using
     ) {
-      heroes[0].ability.RainFire.used = true;
-      heroes[0].stats.energy -= heroes[0].ability.RainFire.energy;
+      heroes[0].attack();
+    } else {
+      if (
+        heroes[0].stats.energy >= heroes[0].ability.RainFire.energy &&
+        heroes[0].ability.RainFire.using
+      ) {
+        heroes[0].ability.RainFire.used = true;
+        heroes[0].stats.energy -= heroes[0].ability.RainFire.energy;
+      }
+      if (
+        heroes[0].stats.energy >= heroes[0].ability.LightningStrike.energy &&
+        heroes[0].ability.LightningStrike.using
+      ) {
+        heroes[0].ability.LightningStrike.used = true;
+        console.log(heroes[0].ability.LightningStrike.used);
+        heroes[0].stats.energy -= heroes[0].ability.LightningStrike.energy;
+      }
     }
-    if (
-      heroes[0].stats.energy >= heroes[0].ability.LightningStrike.energy &&
-      heroes[0].ability.LightningStrike.using
-    ) {
-      heroes[0].ability.LightningStrike.used = true;
-      console.log(heroes[0].ability.LightningStrike.used);
-      heroes[0].stats.energy -= heroes[0].ability.LightningStrike.energy;
+  }
+  if (mouseButton === RIGHT) {
+    console.log("HEY!");
+    if (heroes[0].ability.RainFire.using) {
+      heroes[0].ability.RainFire.using = false;
+    }
+    if (heroes[0].ability.LightningStrike.using) {
+      heroes[0].ability.LightningStrike.using = false;
     }
   }
 }
