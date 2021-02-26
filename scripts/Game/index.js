@@ -4,7 +4,7 @@ let bitMap = [
   "1  1               1",
   "1                 s1",
   "1          1       1",
-  "1S    1            1",
+  "1     1            1",
   "1             1    1",
   "1                  1",
   "1                  1",
@@ -17,7 +17,7 @@ let bitMap = [
   "1  1       1       1",
   "1                  1",
   "1                  1",
-  "1  11             S1",
+  "1  11              1",
   "1  s           1   1",
   "11111111111111111111",
 ];
@@ -117,6 +117,15 @@ function setup() {
           );
           break;
         case "s":
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "floor"
+            )
+          );
+
           spawners.push(
             new Spawner({
               x: i * wallSize + wallSize / 2,
@@ -127,6 +136,15 @@ function setup() {
           );
           break;
         case "S":
+          blocks.push(
+            new Block(
+              i * wallSize + wallSize / 2,
+              j * wallSize + wallSize / 2,
+              wallSize,
+              "floor"
+            )
+          );
+
           spawners.push(
             new Spawner({
               x: i * wallSize + wallSize / 2,
@@ -280,7 +298,9 @@ function draw() {
         monsters[i].loadImages();
       } else {
         if (monsters[i].onScreen()) {
-          monsters[i].display();
+          if (!monsters[i].isBoss) {
+            monsters[i].display();
+          }
         }
         monsters[i].update();
 
@@ -292,9 +312,22 @@ function draw() {
     }
 
     for (let i = 0; i < monsters.length; i++) {
+      if (!monsters[i].loaded) {
+        monsters[i].loadImages();
+      } else {
+        if (monsters[i].onScreen()) {
+          if (monsters[i].isBoss) {
+            monsters[i].display();
+          }
+        }
+      }
+    }
+
+    for (let i = 0; i < monsters.length; i++) {
       if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
-        monsters[i].attackGif.delay(1400, 0);
+        // monsters[i].attackGif.delay(1400, 0);
         monsters[i].deathGif.delay(10000, 13);
+        monsters[i].attackGif.pause();
         monsters[i].setDelays = true;
       }
     }
@@ -304,6 +337,11 @@ function draw() {
         spawners[i].display();
       }
       spawners[i].update();
+
+      if (spawners[i].dead) {
+        spawners.splice(i, 1);
+        i--;
+      }
     }
 
     for (let i = 0; i < coins.length; i++) {

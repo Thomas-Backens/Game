@@ -4,6 +4,7 @@ class Monster {
     this.velocity = new p5.Vector(0, 0);
     this.repelVelocity = new p5.Vector(0, 0);
     this.type = config.type;
+    this.isBoss = config.isBoss || false;
 
     this.stats = {
       maxHealth: 0,
@@ -17,7 +18,7 @@ class Monster {
     };
     this.target = heroes[0];
     this.attackTimer = 0;
-    this.size = 50;
+    this.size = 0;
     this.glow = false;
     this.dying = false;
     this.dead = false;
@@ -68,6 +69,7 @@ class Monster {
           speed: 3,
           visionRange: 10,
         };
+        this.size = 50;
         break;
       case "Snake":
         this.stats = {
@@ -80,7 +82,39 @@ class Monster {
           speed: 2,
           visionRange: 15,
         };
+        this.size = 50;
         break;
+    }
+
+    if (this.isBoss) {
+      switch (this.type) {
+        case "Spider":
+          this.stats = {
+            maxHealth: 1000,
+            health: 1000,
+            damage: 75,
+            defense: 20,
+            attackRange: 2,
+            attackSpeed: 3,
+            speed: 5,
+            visionRange: 10,
+          };
+          this.size = 100;
+          break;
+        case "Snake":
+          this.stats = {
+            maxHealth: 1500,
+            health: 1500,
+            damage: 125,
+            defense: 35,
+            attackRange: 4,
+            attackSpeed: 5,
+            speed: 5,
+            visionRange: 15,
+          };
+          this.size = 100;
+          break;
+      }
     }
 
     this.fakeHealth = this.stats.maxHealth;
@@ -121,7 +155,7 @@ class Monster {
     }
 
     push();
-    if (this.fakeHealth > this.stats.health + 1) {
+    if (this.fakeHealth > this.stats.health + 1 && !this.dying) {
       tint(255, 0, 0);
     }
 
@@ -160,7 +194,7 @@ class Monster {
         ellipse(-5, -40 - this.jabLength, 5, 5);
         ellipse(5, -40 - this.jabLength, 5, 5);
         if (this.fakeHealth > this.stats.health + 1 && !this.dying) {
-          fill(255, 0, 0, 100);
+          fill(255, 0, 0, 200);
           rect(0, -(this.jabLength / 2), 25, 100 + this.jabLength, 10);
         }
         pop();
@@ -291,7 +325,9 @@ class Monster {
 
     switch (this.type) {
       case "Spider":
-        this.bite();
+        if (!this.flee) {
+          this.bite();
+        }
 
         if (this.fakeHealth <= this.stats.health + 1) {
           this.hurtTimer++;
@@ -315,7 +351,9 @@ class Monster {
         }
         break;
       case "Snake":
-        this.jab();
+        if (!this.flee) {
+          this.jab();
+        }
 
         if (this.attacking) {
           if (this.jabLength < 80) {
@@ -364,7 +402,9 @@ class Monster {
     if (this.flee) {
       this.attacking = false;
       this.moving = true;
-      this.speedOffset = this.stats.speed / 2;
+      // this.speedOffset = this.stats.speed / 2;
+    } else {
+      // this.speedOffset = 0;
     }
 
     if (this.burning) {
@@ -472,8 +512,9 @@ class Monster {
       return;
     }
 
-    this.attacking = false;
-    this.attackTimer++;
+    if (this.attackTimer < this.stats.attackSpeed * 48) {
+      this.attackTimer++;
+    }
     if (
       dist(
         this.position.x,
@@ -483,9 +524,21 @@ class Monster {
       ) <
       this.stats.attackRange * 100
     ) {
-      // if (this.attackTimer >= this.stats.attackSpeed * 30) {
-      this.attacking = true;
-      // }
+      if (this.attackTimer >= this.stats.attackSpeed * 48) {
+        this.attackTimer++;
+      }
+      if (
+        this.attackTimer >= 0 &&
+        this.attackTimer < this.stats.attackSpeed * 42
+      ) {
+        this.attacking = false;
+        this.attackGif.reset();
+        this.attackGif.pause();
+      }
+      if (this.attackTimer >= this.stats.attackSpeed * 48) {
+        this.attacking = true;
+        this.attackGif.play();
+      }
 
       if (this.attackTimer >= this.stats.attackSpeed * 60) {
         this.target.stats.health -= calculateDefense(
@@ -494,6 +547,10 @@ class Monster {
         );
         this.attackTimer = 0;
       }
+    } else {
+      this.attacking = false;
+      // this.attackGif.pause();
+      this.attackGif.reset();
     }
   }
 

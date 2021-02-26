@@ -369,10 +369,9 @@ class Projectile {
     destination.normalize();
     destination.mult(10);
 
-    if (!this.foundRotation) {
+    if (!this.atTheEnd) {
       this.velocity.add(destination);
-      this.velocity.limit(15);
-      this.foundRotation = true;
+      this.velocity.limit(25);
     }
     this.position.add(this.velocity);
 
@@ -383,7 +382,7 @@ class Projectile {
     }
 
     if (this.atTheEnd) {
-      this.size -= 3;
+      this.size -= 5;
 
       if (this.size <= 0) {
         this.dead = true;
@@ -427,7 +426,8 @@ class Projectile {
           0,
           this.position.x,
           this.position.y,
-          this.size / 2
+          this.size / 2,
+          "CENTER"
         )
       ) {
         spawners[i].stats.health -= calculateDefense(
@@ -455,7 +455,8 @@ class Projectile {
               0,
               this.position.x,
               this.position.y,
-              this.size / 2
+              this.size / 2,
+              "CENTER"
             )
           ) {
             this.dead = true;
@@ -475,7 +476,8 @@ class Projectile {
               0,
               this.position.x,
               this.position.y,
-              this.size / 2
+              this.size / 2,
+              "CENTER"
             )
           ) {
             this.dead = true;
@@ -496,7 +498,8 @@ class Projectile {
               0,
               this.position.x,
               this.position.y,
-              this.size / 2
+              this.size / 2,
+              "CENTER"
             )
           ) {
             this.dead = true;

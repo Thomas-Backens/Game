@@ -6,6 +6,7 @@ class Spawner {
     this.spawnTime = 2;
     this.spawnTimer = 0;
     this.glow = false;
+    this.dead = false;
 
     this.stats = {
       health: 300,
@@ -81,13 +82,30 @@ class Spawner {
   }
 
   update() {
+    if (this.stats.health <= 0) {
+      this.dead = true;
+      monsters.push(
+        new Monster({
+          x: this.position.x,
+          y: this.position.y,
+          type: this.type,
+          isBoss: true,
+        })
+      );
+    }
+
+    for (let i = 0; i < monsters.length; i++) {
+      if (monsters[i].isBoss) {
+        return;
+      }
+    }
+    
     this.spawnTimer++;
     if (this.spawnTimer >= this.spawnTime * 60) {
       monsters.push(
         new Monster({
           x: this.position.x,
           y: this.position.y,
-          speed: 1,
           type: this.type,
         })
       );
