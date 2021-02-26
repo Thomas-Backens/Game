@@ -362,10 +362,10 @@ class Hero {
 
     if (this.stats.xp >= this.stats.xpToNextLevel) {
       this.stats.xp = this.stats.xp - this.stats.xpToNextLevel;
-      this.stats.xpToNextLevel = this.levels[this.stats.level];
       if (this.stats.level < this.levels.length - 1) {
         this.stats.level++;
       }
+      this.stats.xpToNextLevel = this.levels[this.stats.level];
     }
 
     if (this.fakeHealth > this.stats.health + 1) {

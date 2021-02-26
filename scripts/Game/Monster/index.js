@@ -25,6 +25,7 @@ class Monster {
     this.deathTimer = 0;
     this.hurtTimer = 0;
     this.flee = false;
+    this.enrage = false;
     this.speedOffset = 0;
 
     this.burnTime = 30;
@@ -86,13 +87,13 @@ class Monster {
         break;
       case "Bear":
         this.stats = {
-          maxHealth: 110,
-          health: 110,
-          damage: 20,
+          maxHealth: 255,
+          health: 255,
+          damage: 70,
           defense: 10,
-          attackRange: 1,
-          attackSpeed: 5,
-          speed: 1,
+          attackRange: 1.5,
+          attackSpeed: 3,
+          speed: 3,
           visionRange: 12,
         };
         this.size = 75;
@@ -242,13 +243,21 @@ class Monster {
         if (this.dying) {
           fill(100, 50, 0);
         }
-        ellipse(0, 0, 75, 50);
+        ellipse(-30, 20, 25, 25);
+        ellipse(30, 20, 25, 25);
+        ellipse(-30, 50, 25, 25);
+        ellipse(30, 50, 25, 25);
+        ellipse(0, 50, 75, 100);
         ellipse(15, 19, 10, 15);
         ellipse(-15, 19, 10, 15);
         ellipse(0, 7, 50, 40);
         fill(0);
+        if (this.enrage) {
+          fill(255, 0, 0);
+        }
         ellipse(7, -2, 3, 6);
         ellipse(-7, -2, 3, 6);
+        fill(0);
         ellipse(0, -10, 8, 5);
         pop();
         break;
@@ -324,14 +333,58 @@ class Monster {
 
     if (this.dying) {
       if (this.deathTimer === 0) {
-        let randomNum1 = round(random(0, 5));
-        let randomNum2 = round(random(0, 3));
+        let randomNum1;
+        let randomNum2;
+        let coinAmount;
+        let xpAmount;
+        switch (this.type) {
+          case "Spider":
+            if (this.isBoss) {
+              randomNum1 = round(random(5, 15));
+              randomNum2 = round(random(10, 20));
+              coinAmount = round(random(30, 50));
+              xpAmount = round(random(50, 100));
+            } else {
+              randomNum1 = round(random(0, 5));
+              randomNum2 = round(random(0, 3));
+              coinAmount = round(random(1, 10));
+              xpAmount = round(random(1, 5));
+            }
+            break;
+          case "Snake":
+            if (this.isBoss) {
+              randomNum1 = round(random(5, 15));
+              randomNum2 = round(random(10, 20));
+              coinAmount = round(random(50, 100));
+              xpAmount = round(random(150, 250));
+            } else {
+              randomNum1 = round(random(0, 5));
+              randomNum2 = round(random(0, 3));
+              coinAmount = round(random(1, 30));
+              xpAmount = round(random(1, 20));
+            }
+            break;
+          case "Bear":
+            if (this.isBoss) {
+              randomNum1 = round(random(5, 15));
+              randomNum2 = round(random(10, 20));
+              coinAmount = round(random(150, 300));
+              xpAmount = round(random(300, 500));
+            } else {
+              randomNum1 = round(random(0, 5));
+              randomNum2 = round(random(0, 3));
+              coinAmount = round(random(15, 50));
+              xpAmount = round(random(10, 30));
+            }
+            break;
+        }
         for (let i = 0; i < randomNum1; i++) {
           coins.push(
             new Coin({
               x: this.position.x,
               y: this.position.y,
               type: "Coin",
+              amount: coinAmount,
             })
           );
         }
@@ -341,6 +394,7 @@ class Monster {
               x: this.position.x,
               y: this.position.y,
               type: "XP",
+              amount: xpAmount,
             })
           );
         }
@@ -356,6 +410,15 @@ class Monster {
 
     this.move();
 
+    if (this.hurtTimer >= 300 && !this.isBoss) {
+      if (this.stats.health < this.stats.maxHealth) {
+        this.stats.health++;
+      } else {
+        this.stats.health = this.stats.maxHealth;
+      }
+      this.fakeHealth = this.stats.health;
+    }
+
     switch (this.type) {
       case "Spider":
         if (!this.flee) {
@@ -368,9 +431,9 @@ class Monster {
           this.hurtTimer = 0;
         }
 
-        if (this.hurtTimer >= 300) {
+        if (this.hurtTimer >= 600 && this.isBoss) {
           if (this.stats.health < this.stats.maxHealth) {
-            this.stats.health += 2;
+            this.stats.health += 10;
           } else {
             this.stats.health = this.stats.maxHealth;
           }
@@ -432,6 +495,19 @@ class Monster {
         break;
       case "Bear":
         this.bite();
+
+        if (
+          this.stats.health < this.stats.maxHealth / (100 / 30) &&
+          this.enrage === false
+        ) {
+          this.enrage = true;
+        }
+
+        if (this.enrage) {
+          this.stats.speed = 5;
+          this.stats.attackSpeed = 0.5;
+          this.stats.damage = 105;
+        }
         break;
     }
 
@@ -518,7 +594,7 @@ class Monster {
     } else if (this.type === "Snake") {
       destination.mult(0.25);
     } else if (this.type === "Bear") {
-      destination.mult(0.125);
+      destination.mult(0.5);
     }
 
     this.velocity.add(destination);
