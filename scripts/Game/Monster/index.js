@@ -84,6 +84,19 @@ class Monster {
         };
         this.size = 50;
         break;
+      case "Bear":
+        this.stats = {
+          maxHealth: 110,
+          health: 110,
+          damage: 20,
+          defense: 10,
+          attackRange: 1,
+          attackSpeed: 5,
+          speed: 1,
+          visionRange: 12,
+        };
+        this.size = 75;
+        break;
     }
 
     if (this.isBoss) {
@@ -218,6 +231,26 @@ class Monster {
           this.shedX = this.position.x;
           this.shedY = this.position.y;
         }
+        break;
+      case "Bear":
+        push();
+        strokeWeight(1);
+        stroke(0);
+        translate(this.position.x + camera.x, this.position.y + camera.y);
+        rotate(this.angle - 4.8);
+        fill(130, 70, 0);
+        if (this.dying) {
+          fill(100, 50, 0);
+        }
+        ellipse(0, 0, 75, 50);
+        ellipse(15, 19, 10, 15);
+        ellipse(-15, 19, 10, 15);
+        ellipse(0, 7, 50, 40);
+        fill(0);
+        ellipse(7, -2, 3, 6);
+        ellipse(-7, -2, 3, 6);
+        ellipse(0, -10, 8, 5);
+        pop();
         break;
     }
     pop();
@@ -397,6 +430,9 @@ class Monster {
           this.flee = false;
         }
         break;
+      case "Bear":
+        this.bite();
+        break;
     }
 
     if (this.flee) {
@@ -481,6 +517,8 @@ class Monster {
       destination.mult(0.5);
     } else if (this.type === "Snake") {
       destination.mult(0.25);
+    } else if (this.type === "Bear") {
+      destination.mult(0.125);
     }
 
     this.velocity.add(destination);
