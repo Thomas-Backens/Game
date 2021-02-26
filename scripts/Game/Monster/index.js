@@ -86,13 +86,13 @@ class Monster {
         break;
       case "Bear":
         this.stats = {
-          maxHealth: 110,
-          health: 110,
-          damage: 20,
+          maxHealth: 255,
+          health: 255,
+          damage: 105,
           defense: 10,
           attackRange: 1,
-          attackSpeed: 5,
-          speed: 1,
+          attackSpeed: 3,
+          speed: 3,
           visionRange: 12,
         };
         this.size = 75;
@@ -518,7 +518,7 @@ class Monster {
     } else if (this.type === "Snake") {
       destination.mult(0.25);
     } else if (this.type === "Bear") {
-      destination.mult(0.125);
+      destination.mult(0.5);
     }
 
     this.velocity.add(destination);
