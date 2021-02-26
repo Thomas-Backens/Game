@@ -3,7 +3,7 @@ class Spawner {
     this.position = new p5.Vector(config.x, config.y);
     this.size = config.size;
     this.type = config.type;
-    this.spawnTime = 2;
+    this.spawnTime = 5;
     this.spawnTimer = 0;
     this.glow = false;
     this.dead = false;

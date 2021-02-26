@@ -4,11 +4,18 @@ class Block {
     this.size = size;
     this.type = type;
 
+    this.shadows = [
+      { x: 0, y: 0, alpha: 0, size: this.size / 2 },
+      { x: 0, y: 0, alpha: 0, size: this.size / 2 },
+      { x: 0, y: 0, alpha: 0, size: this.size / 2 },
+      { x: 0, y: 0, alpha: 0, size: this.size / 2 },
+    ];
+    this.shadowTimer = 0;
+
     this.floorTiles = [];
     this.floorTile = 0;
     this.wallTiles = [];
     this.wallTile;
-    // this.pillarTile;
 
     this.loaded = false;
 
@@ -167,13 +174,95 @@ class Block {
           this.size
         );
         break;
+      case "light":
+        noStroke();
+        fill(50);
+        rect(
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.size,
+          this.size
+        );
+        break;
+    }
+  }
+
+  displayShadow() {
+    this.shadows[0].x = this.position.x - this.size / 4;
+    this.shadows[0].y = this.position.y - this.size / 4;
+
+    this.shadows[1].x = this.position.x + this.size / 4;
+    this.shadows[1].y = this.position.y - this.size / 4;
+
+    this.shadows[2].x = this.position.x - this.size / 4;
+    this.shadows[2].y = this.position.y + this.size / 4;
+
+    this.shadows[3].x = this.position.x + this.size / 4;
+    this.shadows[3].y = this.position.y + this.size / 4;
+
+    if (this.shadowTimer >= 30) {
+      for (let i = 0; i < this.shadows.length; i++) {
+        let distToHero = dist(
+          heroes[0].position.x,
+          heroes[0].position.y,
+          this.shadows[i].x,
+          this.shadows[i].y
+        );
+        this.shadows[i].alpha = 0;
+        for (let j = 300; j < 600; j += 50) {
+          if (distToHero >= j && distToHero < j + 50) {
+            this.shadows[i].alpha = j - 300;
+          }
+        }
+        if (distToHero >= 600) {
+          this.shadows[i].alpha = 255;
+        }
+
+        for (let j = 0; j < blocks.length; j++) {
+          if (blocks[j].type === "light") {
+            let distToBlock = dist(
+              blocks[j].position.x,
+              blocks[j].position.y,
+              this.shadows[i].x,
+              this.shadows[i].y
+            );
+
+            if (distToBlock < 300) {
+              this.shadows[i].alpha = 0;
+            }
+            // for (let j = 300; j < 600; j += 50) {
+            //   if (
+            //     distToBlock >= j &&
+            //     distToBlock < j + 50 &&
+            //     distToHero > 300
+            //   ) {
+            //     this.shadows[i].alpha = j - 300;
+            //   }
+            // }
+          }
+        }
+      }
+      this.shadowTimer = 0;
+    } else {
+      this.shadowTimer++;
+    }
+
+    for (let i = 0; i < this.shadows.length; i++) {
+      noStroke();
+      fill(0, 0, 0, this.shadows[i].alpha);
+      rect(
+        this.shadows[i].x + camera.x,
+        this.shadows[i].y + camera.y,
+        this.shadows[i].size,
+        this.shadows[i].size
+      );
     }
   }
 
   onScreen() {
     return (
-      this.position.x > heroes[0].position.x - windowWidth / 2 &&
-      this.position.x < heroes[0].position.x + windowWidth / 2 &&
+      this.position.x > heroes[0].position.x - windowWidth / 1.5 &&
+      this.position.x < heroes[0].position.x + windowWidth / 1.5 &&
       this.position.y > heroes[0].position.y - windowHeight / 1.5 &&
       this.position.y < heroes[0].position.y + windowHeight / 1.5
     );
