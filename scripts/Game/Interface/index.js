@@ -212,5 +212,12 @@ function Interface(config) {
     text(heroes[0].stats.xp, windowWidth - 200, windowHeight - 125);
     text(heroes[0].stats.energy, windowWidth - 125, windowHeight - 137.5);
     text(heroes[0].stats.health, windowWidth - 50, windowHeight - 150);
+
+    noFill();
+    if (heroes[0].levelUp) {
+      fill(255);
+    }
+    text("You gained a point!", windowWidth - 150, windowHeight - 350);
+    text("Press 'P' to upgrade", windowWidth - 150, windowHeight - 350 + 25);
   };
 }
