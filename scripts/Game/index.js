@@ -48,7 +48,8 @@ let projectiles = [];
 let coins = [];
 let spawners = [];
 
-let buttons = [];
+let statsButtons = [];
+let deathButtons = [];
 
 let UI;
 let shadow;
@@ -203,7 +204,7 @@ function setup() {
     blocks[i].loadImages();
   }
 
-  buttons.push(
+  statsButtons.push(
     new Button(
       windowWidth - 150,
       windowHeight - 175,
@@ -218,7 +219,7 @@ function setup() {
       }
     )
   );
-  buttons.push(
+  statsButtons.push(
     new Button(
       windowWidth - 150,
       windowHeight - 100,
@@ -232,7 +233,7 @@ function setup() {
       }
     )
   );
-  buttons.push(
+  statsButtons.push(
     new Button(
       windowWidth / 3,
       windowHeight / 2,
@@ -249,7 +250,7 @@ function setup() {
       }
     )
   );
-  buttons.push(
+  statsButtons.push(
     new Button(
       windowWidth / 2,
       windowHeight / 2,
@@ -266,7 +267,7 @@ function setup() {
       }
     )
   );
-  buttons.push(
+  statsButtons.push(
     new Button(
       windowWidth / 1.5,
       windowHeight / 2,
@@ -279,6 +280,39 @@ function setup() {
         if (heroes[0].stats.points > 0) {
           heroes[0].stats.points--;
           heroes[0].stats.maxHealth += heroes[0].stats.maxHealth * 0.2;
+        }
+      }
+    )
+  );
+
+  deathButtons.push(
+    new Button(
+      windowWidth / 2,
+      windowHeight - 300,
+      200,
+      50,
+      25,
+      40,
+      "Retry",
+      function () {
+        if (scene === "death") {
+          window.location.reload();
+        }
+      }
+    )
+  );
+  deathButtons.push(
+    new Button(
+      windowWidth / 2,
+      windowHeight - 225,
+      200,
+      50,
+      25,
+      40,
+      "Return to Menu",
+      function () {
+        if (scene === "death") {
+          window.location.href = "/html";
         }
       }
     )
@@ -394,10 +428,23 @@ function setup() {
 let scene = "game";
 let paused = false;
 function draw() {
+  if (scene === "death") {
+    background(255, 0, 0, 1);
+    for (let i = 0; i < deathButtons.length; i++) {
+      deathButtons[i].display();
+    }
+    strokeWeight(5);
+    stroke(0);
+    textAlign(CENTER, CENTER);
+    textSize(75);
+    fill(255);
+    text("You Died!", windowWidth / 2, windowHeight / 2 - 100);
+  }
   if (scene === "stats") {
     background(50);
-    for (let i = 0; i < buttons.length; i++) {
-      buttons[i].display();
+    noStroke();
+    for (let i = 0; i < statsButtons.length; i++) {
+      statsButtons[i].display();
     }
     textAlign(CENTER);
     textSize(30);
@@ -643,7 +690,7 @@ function windowResized() {
 }
 
 function keyPressed() {
-  if (paused) {
+  if (paused || scene === "death") {
     return;
   }
   keys[keyCode] = true;
@@ -653,7 +700,7 @@ function keyReleased() {
     paused = false;
     scene = "game";
   }
-  if (paused) {
+  if (paused || scene === "death") {
     return;
   }
   keys[keyCode] = false;
@@ -675,22 +722,32 @@ function keyReleased() {
 }
 
 function mousePressed() {
-  for (let i = 0; i < buttons.length; i++) {
-    if (buttons[i].mouseHover()) {
-      buttons[i].pressed = true;
+  for (let i = 0; i < statsButtons.length; i++) {
+    if (statsButtons[i].mouseHover()) {
+      statsButtons[i].pressed = true;
     }
   }
-  if (paused) {
+  for (let i = 0; i < deathButtons.length; i++) {
+    if (deathButtons[i].mouseHover()) {
+      deathButtons[i].pressed = true;
+    }
+  }
+  if (paused || scene === "death") {
     return;
   }
 }
 function mouseReleased() {
-  for (let i = 0; i < buttons.length; i++) {
-    if (buttons[i].mouseHover() && buttons[i].pressed === true) {
-      buttons[i].onClick();
+  for (let i = 0; i < statsButtons.length; i++) {
+    if (statsButtons[i].mouseHover() && statsButtons[i].pressed === true) {
+      statsButtons[i].onClick();
     }
   }
-  if (paused) {
+  for (let i = 0; i < deathButtons.length; i++) {
+    if (deathButtons[i].mouseHover() && deathButtons[i].pressed === true) {
+      deathButtons[i].onClick();
+    }
+  }
+  if (paused || scene === "death") {
     return;
   }
   if (mouseButton === LEFT) {

@@ -130,7 +130,7 @@ class Monster {
           break;
         case "Bear":
           this.stats = {
-            maxHealth: 2500,
+            maxHealth: 2000,
             health: 2500,
             damage: 195,
             defense: 50,
@@ -139,7 +139,7 @@ class Monster {
             speed: 4,
             visionRange: 12,
           };
-          this.size = 200;
+          this.size = 150;
           break;
       }
     }

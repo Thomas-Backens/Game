@@ -4,6 +4,9 @@ function Interface(config) {
   this.y = 0;
 
   this.display = function () {
+    if (paused) {
+      return;
+    }
     if (this.isToggled) {
       if (this.y < 500) {
         this.y += 10;

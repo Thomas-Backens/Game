@@ -72,6 +72,7 @@ class Hero {
     this.character = config.character;
 
     this.running = false;
+    this.dead = false;
 
     switch (this.character) {
       case "Arthur":
@@ -348,12 +349,16 @@ class Hero {
     this.attackTimer++;
     this.displayPointTimer++;
 
+    if (this.stats.health <= 0) {
+      this.dead = true;
+      scene = "death";
+      paused = true;
+    }
     switch (this.character) {
       case "Arthur":
         this.arthursAbilites();
         break;
     }
-
     if (this.displayPointTimer < 300 && this.stats.points > 0) {
       this.levelUp = true;
     } else {
