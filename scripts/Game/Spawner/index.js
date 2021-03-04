@@ -3,7 +3,7 @@ class Spawner {
     this.position = new p5.Vector(config.x, config.y);
     this.size = config.size;
     this.type = config.type;
-    this.spawnTime = 5;
+    this.spawnTime = 0;
     this.spawnTimer = 0;
     this.glow = false;
     this.dead = false;
@@ -19,6 +19,21 @@ class Spawner {
     this.burning = false;
     this.burningTime = 300;
     this.burningTimer = 0;
+
+    switch (this.type) {
+      case "Spider":
+        this.spawnTime = 7;
+        break;
+      case "Snake":
+        this.spawnTime = 10;
+        break;
+      case "Bear":
+        this.spawnTime = 15;
+        break;
+      default:
+        this.spawnTime = 5;
+        break;
+    }
   }
 
   display() {
