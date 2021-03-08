@@ -11,7 +11,6 @@ function setup() {
       200,
       50,
       30,
-      5,
       "Play",
       function () {
         window.location.href = "/html/game.html";
@@ -19,7 +18,7 @@ function setup() {
     )
   );
   buttons.push(
-    new Button(windowWidth / 2, windowHeight / 2 + 60, 200, 50, 30, 5, "Quit")
+    new Button(windowWidth / 2, windowHeight / 2 + 60, 200, 50, 30, "Quit")
   );
 }
 
@@ -36,9 +35,9 @@ function draw() {
   textAlign(CENTER);
   textSize(150);
   fill(100);
-  text("Slain", windowWidth / 2 + 5, 230);
+  text("Slain", windowWidth / 2 + 5, 185);
   fill(200);
-  text("Slain", windowWidth / 2, 225);
+  text("Slain", windowWidth / 2, 180);
 
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].display();
