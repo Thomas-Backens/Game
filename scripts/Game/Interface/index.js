@@ -57,7 +57,7 @@ function Interface(config) {
     text("Press 5 to toggle UI", windowWidth / 2, windowHeight - 50);
 
     fill(200, 100, 0);
-    rect(50, windowHeight - 50, 100, 100);
+    // rect(50, windowHeight - 50, 100, 100);
     rect(windowWidth - 150, windowHeight - 150, 300, 300);
 
     // Health

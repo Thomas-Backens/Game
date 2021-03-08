@@ -1,20 +1,9 @@
-function Button(
-  x,
-  y,
-  width,
-  height,
-  fontSize,
-  textDivisor,
-  message,
-  onClick,
-  scene
-) {
+function Button(x, y, width, height, fontSize, message, onClick, scene) {
   this.x = x;
   this.y = y;
   this.width = width;
   this.height = height;
   this.fontSize = fontSize;
-  this.textDivisor = textDivisor;
   this.message = message;
   this.onClick = onClick || function () {};
   this.scene = scene || null;
@@ -25,12 +14,12 @@ function Button(
     noStroke();
     fill(100);
     rect(this.x, this.y, this.width, this.height, 10);
-    textAlign(CENTER);
+    textAlign(CENTER, CENTER);
     textSize(this.fontSize);
     fill(50);
-    text(this.message, this.x + 2, this.y + this.height / this.textDivisor + 2);
+    text(this.message, this.x + 2, this.y + 2);
     fill(200);
-    text(this.message, this.x, this.y + this.height / this.textDivisor);
+    text(this.message, this.x, this.y);
 
     if (this.mouseHover()) {
       fill(0, 50);
