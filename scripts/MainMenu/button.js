@@ -1,4 +1,14 @@
-function Button(x, y, width, height, fontSize, textDivisor, message, onClick) {
+function Button(
+  x,
+  y,
+  width,
+  height,
+  fontSize,
+  textDivisor,
+  message,
+  onClick,
+  scene
+) {
   this.x = x;
   this.y = y;
   this.width = width;
@@ -7,6 +17,7 @@ function Button(x, y, width, height, fontSize, textDivisor, message, onClick) {
   this.textDivisor = textDivisor;
   this.message = message;
   this.onClick = onClick || function () {};
+  this.scene = scene || null;
 
   this.pressed = false;
 
