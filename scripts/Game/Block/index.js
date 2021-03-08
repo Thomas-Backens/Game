@@ -34,7 +34,6 @@ class Block {
 
     this.floorTiles = sprites.Blocks.floorTiles;
     this.wallTiles = sprites.Blocks.wallTiles;
-    // this.pillarTile = loadImage("../../../sprites/Tiles/Pillar.png");
 
     this.floorTile = round(random(0, this.floorTiles.length - 2));
     this.wallTile = round(random(0, 1));
@@ -230,15 +229,6 @@ class Block {
             if (distToBlock < 300) {
               this.shadows[i].alpha = 0;
             }
-            // for (let j = 300; j < 600; j += 50) {
-            //   if (
-            //     distToBlock >= j &&
-            //     distToBlock < j + 50 &&
-            //     distToHero > 300
-            //   ) {
-            //     this.shadows[i].alpha = j - 300;
-            //   }
-            // }
           }
         }
       }

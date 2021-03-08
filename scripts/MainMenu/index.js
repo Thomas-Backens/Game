@@ -11,6 +11,7 @@ function setup() {
       200,
       50,
       30,
+      5,
       "Play",
       function () {
         window.location.href = "/html/game.html";
@@ -18,7 +19,7 @@ function setup() {
     )
   );
   buttons.push(
-    new Button(windowWidth / 2, windowHeight / 2 + 60, 200, 50, 30, "Quit")
+    new Button(windowWidth / 2, windowHeight / 2 + 60, 200, 50, 30, 5, "Quit")
   );
 }
 

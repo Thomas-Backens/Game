@@ -2,7 +2,6 @@ class Hero {
   constructor(config) {
     this.position = new p5.Vector(config.x, config.y);
     this.velocity = new p5.Vector(0, 0);
-    // this.projectileVelocity = new p5.Vector(0, 0);
     this.endPoint = new p5.Vector(0, 0);
     this.angle = 0;
 
@@ -18,6 +17,7 @@ class Hero {
       energyRegen: 0,
       xp: 0,
       xpToNextLevel: 0,
+      points: 0,
       level: 0,
       speed: 0,
       visionRange: 0,
@@ -62,6 +62,8 @@ class Hero {
     this.closestEnemysDistance = Infinity;
     this.attackTimer = 0;
     this.energyRegenTimer = 0;
+    this.displayPointTimer = 0;
+    this.levelUp = false;
 
     this.idle;
     this.walk;
@@ -70,6 +72,7 @@ class Hero {
     this.character = config.character;
 
     this.running = false;
+    this.dead = false;
 
     switch (this.character) {
       case "Arthur":
@@ -88,6 +91,7 @@ class Hero {
           energyRegen: 1,
           xp: 0,
           xpToNextLevel: this.levels[this.stats.level],
+          points: 0,
           level: 0,
           speed: 4,
           visionRange: 16,
@@ -248,13 +252,11 @@ class Hero {
   }
 
   displayProjectileLength() {
-    // let angle = this.projectileVelocity.heading();
     this.angle = atan2(
       mouseY - camera.y - this.position.y,
       mouseX - camera.x - this.position.x
     );
 
-    // let newPosition = new p5.Vector(this.position.x, this.position.y);
     this.endPoint = calculateEndPosition(
       this.position,
       this.stats.attackRange * 50,
@@ -338,14 +340,6 @@ class Hero {
         }
         break;
     }
-
-    // let mouse = new p5.Vector(mouseX - camera.x, mouseY - camera.y);
-    // let destination = p5.Vector.sub(mouse, this.position);
-    // destination.normalize();
-    // destination.mult(100);
-
-    // this.projectileVelocity.add(destination);
-    // this.projectileVelocity.limit(10);
   }
 
   update() {
@@ -353,11 +347,22 @@ class Hero {
     this.collideWithBlock();
 
     this.attackTimer++;
+    this.displayPointTimer++;
 
+    if (this.stats.health <= 0) {
+      this.dead = true;
+      scene = "death";
+      paused = true;
+    }
     switch (this.character) {
       case "Arthur":
         this.arthursAbilites();
         break;
+    }
+    if (this.displayPointTimer < 300 && this.stats.points > 0) {
+      this.levelUp = true;
+    } else {
+      this.levelUp = false;
     }
 
     if (this.stats.xp >= this.stats.xpToNextLevel) {
@@ -366,6 +371,8 @@ class Hero {
         this.stats.level++;
       }
       this.stats.xpToNextLevel = this.levels[this.stats.level];
+      this.displayPointTimer = 0;
+      this.stats.points += 2;
     }
 
     if (this.fakeHealth > this.stats.health + 1) {
@@ -482,7 +489,6 @@ class Hero {
       this.closestEnemy.glow = true;
 
       if (this.ability.LightningStrike.used) {
-        console.log("HEY!");
         projectiles.push(
           new Projectile({
             startObj: this,
@@ -570,7 +576,6 @@ class Hero {
                 this.stats.damage
               );
               monsters[i].repelling(this, 5);
-              // monsters[i].repel(this, 1500);
             }
           }
         }

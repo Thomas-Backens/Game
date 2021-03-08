@@ -59,6 +59,8 @@ let projectiles = [];
 let coins = [];
 let spawners = [];
 
+let buttons = [];
+
 let UI;
 let shadow;
 
@@ -78,6 +80,9 @@ let sprites = {
 
 let totalLoadedSprites = 0;
 let loadedSprites = false;
+
+let scene;
+let paused;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -212,6 +217,126 @@ function setup() {
     blocks[i].loadImages();
   }
 
+  buttons.push(
+    new Button(
+      windowWidth - 150,
+      windowHeight - 175,
+      200,
+      50,
+      30,
+      -3.5,
+      "Back to Game",
+      function () {
+        scene = "game";
+        paused = false;
+      },
+      "stats"
+    )
+  );
+  buttons.push(
+    new Button(
+      windowWidth - 150,
+      windowHeight - 100,
+      150,
+      50,
+      30,
+      -3.5,
+      "Quit Game",
+      function () {
+        window.location.href = "/html";
+      },
+      "stats"
+    )
+  );
+  buttons.push(
+    new Button(
+      windowWidth / 3,
+      windowHeight / 2,
+      150,
+      50,
+      25,
+      -4,
+      "Damage",
+      function () {
+        if (heroes[0].stats.points > 0) {
+          heroes[0].stats.points--;
+          heroes[0].stats.damage += heroes[0].stats.damage * 0.1;
+        }
+      },
+      "stats"
+    )
+  );
+  buttons.push(
+    new Button(
+      windowWidth / 2,
+      windowHeight / 2,
+      200,
+      50,
+      25,
+      -4,
+      "Energy Speed",
+      function () {
+        if (heroes[0].stats.points > 0) {
+          heroes[0].stats.points--;
+          heroes[0].stats.energyRegen -= heroes[0].stats.energyRegen * 0.1;
+        }
+      },
+      "stats"
+    )
+  );
+  buttons.push(
+    new Button(
+      windowWidth / 1.5,
+      windowHeight / 2,
+      150,
+      50,
+      25,
+      -4,
+      "HP",
+      function () {
+        if (heroes[0].stats.points > 0) {
+          heroes[0].stats.points--;
+          heroes[0].stats.maxHealth += heroes[0].stats.maxHealth * 0.2;
+        }
+      },
+      "stats"
+    )
+  );
+  buttons.push(
+    new Button(
+      windowWidth / 2,
+      windowHeight - 300,
+      200,
+      50,
+      25,
+      40,
+      "Retry",
+      function () {
+        if (scene === "death") {
+          window.location.reload();
+        }
+      },
+      "death"
+    )
+  );
+  buttons.push(
+    new Button(
+      windowWidth / 2,
+      windowHeight - 225,
+      200,
+      50,
+      25,
+      40,
+      "Return to Menu",
+      function () {
+        if (scene === "death") {
+          window.location.href = "/html";
+        }
+      },
+      "death"
+    )
+  );
+
   UI = new Interface({
     character: heroes[0],
   });
@@ -319,8 +444,43 @@ function setup() {
   } // Block Images
 }
 
-let done = false;
+scene = "game";
+paused = false;
 function draw() {
+  if (scene === "death") {
+    background(255, 0, 0, 1);
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i].scene === scene) buttons[i].display();
+    }
+    strokeWeight(5);
+    stroke(0);
+    textAlign(CENTER, CENTER);
+    textSize(75);
+    fill(255);
+    text("You Died!", windowWidth / 2, windowHeight / 2 - 100);
+  }
+  if (scene === "stats") {
+    background(50);
+    noStroke();
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i].scene === scene) buttons[i].display();
+    }
+    textAlign(CENTER);
+    textSize(30);
+    fill(200);
+    text(`points: ${heroes[0].stats.points}`, 100, 50);
+    textSize(15);
+    fill(0, 255, 255);
+    text("Increase damage by 10%", windowWidth / 3, windowHeight / 2 + 50);
+    text("for 1 point!", windowWidth / 3, windowHeight / 2 + 75);
+    text("Decrease energy regen speed", windowWidth / 2, windowHeight / 2 + 50);
+    text("by 10% for 1 point!", windowWidth / 2, windowHeight / 2 + 75);
+    text("Increase HP by 20%", windowWidth / 1.5, windowHeight / 2 + 50);
+    text("for 1 point!", windowWidth / 1.5, windowHeight / 2 + 75);
+  }
+  if (paused) {
+    return;
+  }
   if (loadedSprites) {
     background(0);
 
@@ -374,7 +534,6 @@ function draw() {
 
     for (let i = 0; i < monsters.length; i++) {
       if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
-        // monsters[i].attackGif.delay(1400, 0);
         monsters[i].deathGif.delay(10000, 13);
         monsters[i].attackGif.pause();
         monsters[i].setDelays = true;
@@ -402,10 +561,6 @@ function draw() {
         i--;
       }
     }
-
-    // for (let i = 0; i < blocks.length; i++) {
-    //   blocks[i].displayShadow();
-    // }
 
     for (let i = 0; i < heroes.length; i++) {
       heroes[i].display();
@@ -554,9 +709,19 @@ function windowResized() {
 }
 
 function keyPressed() {
+  if (paused) {
+    return;
+  }
   keys[keyCode] = true;
 }
 function keyReleased() {
+  if (keyCode === 27) {
+    paused = false;
+    scene = "game";
+  }
+  if (paused) {
+    return;
+  }
   keys[keyCode] = false;
 
   for (let i = 0; i < heroes[0].abilities.length; i++) {
@@ -568,9 +733,32 @@ function keyReleased() {
   if (keyCode === 53) {
     UI.isToggled = !UI.isToggled;
   }
+
+  if (keyCode === 80) {
+    paused = true;
+    scene = "stats";
+  }
 }
 
+function mousePressed() {
+  for (let i = 0; i < buttons.length; i++) {
+    if (buttons[i].mouseHover()) {
+      buttons[i].pressed = true;
+    }
+  }
+  if (paused) {
+    return;
+  }
+}
 function mouseReleased() {
+  for (let i = 0; i < buttons.length; i++) {
+    if (buttons[i].mouseHover() && buttons[i].pressed === true) {
+      buttons[i].onClick();
+    }
+  }
+  if (paused) {
+    return;
+  }
   if (mouseButton === LEFT) {
     if (
       !heroes[0].ability.RainFire.using &&
@@ -590,13 +778,11 @@ function mouseReleased() {
         heroes[0].ability.LightningStrike.using
       ) {
         heroes[0].ability.LightningStrike.used = true;
-        console.log(heroes[0].ability.LightningStrike.used);
         heroes[0].stats.energy -= heroes[0].ability.LightningStrike.energy;
       }
     }
   }
   if (mouseButton === RIGHT) {
-    console.log("HEY!");
     if (heroes[0].ability.RainFire.using) {
       heroes[0].ability.RainFire.using = false;
     }

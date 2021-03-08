@@ -128,6 +128,19 @@ class Monster {
           };
           this.size = 100;
           break;
+        case "Bear":
+          this.stats = {
+            maxHealth: 2000,
+            health: 2500,
+            damage: 195,
+            defense: 50,
+            attackRange: 3,
+            attackSpeed: 5,
+            speed: 4,
+            visionRange: 12,
+          };
+          this.size = 150;
+          break;
       }
     }
 
@@ -514,9 +527,6 @@ class Monster {
     if (this.flee) {
       this.attacking = false;
       this.moving = true;
-      // this.speedOffset = this.stats.speed / 2;
-    } else {
-      // this.speedOffset = 0;
     }
 
     if (this.burning) {
@@ -663,7 +673,6 @@ class Monster {
       }
     } else {
       this.attacking = false;
-      // this.attackGif.pause();
       this.attackGif.reset();
     }
   }

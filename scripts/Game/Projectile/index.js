@@ -72,12 +72,6 @@ class Projectile {
         noStroke();
         fill(random(100, 255), random(100, 200), 0, 50);
         if (this.waitingTimer >= this.waitingTime) {
-          // ellipse(
-          //   this.position.x + camera.x,
-          //   this.position.y + camera.y,
-          //   this.attackRange * 100,
-          //   this.attackRange * 100
-          // );
           image(
             this.fireRing_still,
             this.position.x + camera.x,
@@ -113,7 +107,6 @@ class Projectile {
           this.r += 0.25;
           rotate(this.r);
           rect(0, 0, this.size, this.size / 2, 5);
-          // ellipse(0, 0, this.size, this.size);
           pop();
         } else {
           noStroke();
