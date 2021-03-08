@@ -6,15 +6,7 @@ class Coin {
     this.dead = false;
     this.velocity = new p5.Vector(0, 0);
     this.xpSpeed = 0;
-    this.amount = 0;
-
-    switch (this.type) {
-      case "Coin":
-        this.amount = round(random(1, 10));
-        break;
-      case "XP":
-        this.amount = round(random(1, 3));
-    }
+    this.amount = config.amount;
   }
 
   display() {
