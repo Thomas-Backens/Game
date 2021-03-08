@@ -421,9 +421,8 @@ class Monster {
       if (this.deathTimer >= 80) {
         this.dead = true;
       }
+      return;
     }
-
-    if (this.dying) return;
 
     this.move();
 
