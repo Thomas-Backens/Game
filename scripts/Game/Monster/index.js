@@ -16,6 +16,10 @@ class Monster {
       speed: 0,
       visionRange: 0,
     };
+    this.abilities = {
+      jump: {},
+      webSlinger: {},
+    };
     this.target = heroes[0];
     this.attackTimer = 0;
     this.size = 0;
@@ -627,6 +631,11 @@ class Monster {
     this.burning = false;
     this.burnTimer = 0;
     this.hasShed = true;
+  }
+
+  spidersAbilities() {
+    if (this.abilities.webSlinger.using) {
+    }
   }
 
   repelling(target, duration) {
