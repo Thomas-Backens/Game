@@ -272,8 +272,8 @@ function setup() {
         "Damage",
         function () {
           if (heroes[0].stats.points > 0) {
-            heroes[0].stats.points--;
-            heroes[0].stats.damage += heroes[0].stats.damage * 0.1;
+            heroes[0].stats.points -= 2;
+            heroes[0].stats.damage += heroes[0].stats.damage * 0.05;
           }
         },
         "stats"
@@ -289,8 +289,8 @@ function setup() {
         "Energy Speed",
         function () {
           if (heroes[0].stats.points > 0) {
-            heroes[0].stats.points--;
-            heroes[0].stats.energyRegen -= heroes[0].stats.energyRegen * 0.1;
+            heroes[0].stats.points -= 3;
+            heroes[0].stats.energyRegen /= 1.5;
           }
         },
         "stats"
@@ -307,7 +307,9 @@ function setup() {
         function () {
           if (heroes[0].stats.points > 0) {
             heroes[0].stats.points--;
-            heroes[0].stats.maxHealth += heroes[0].stats.maxHealth * 0.2;
+            let healthIncrease = heroes[0].stats.maxHealth * 0.2;
+            heroes[0].stats.maxHealth += healthIncrease;
+            heroes[0].stats.health += healthIncrease;
           }
         },
         "stats"
@@ -455,6 +457,7 @@ function setup() {
 }
 
 function draw() {
+  cursor("default");
   switch (scene) {
     case "death":
       background(255, 0, 0, 1);
@@ -728,7 +731,7 @@ function draw() {
       }
       break;
     case "paused":
-      background(0, 1);
+      background(0, 2);
       for (let i = 0; i < buttons.length; i++) {
         if (buttons[i].scene === "game") {
           if (buttons[i].message === "Pause") {

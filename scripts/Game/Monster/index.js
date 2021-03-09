@@ -17,8 +17,8 @@ class Monster {
       visionRange: 0,
     };
     this.abilities = {
-      jump: {},
-      webSlinger: {},
+      jump: { timer: 0, timeOut: 18, using: false, damage: 100 },
+      webSlinger: { timer: 0, timeOut: 10, using: false, duration: 5 },
     };
     this.target = heroes[0];
     this.attackTimer = 0;
@@ -431,6 +431,7 @@ class Monster {
         this.stats.health++;
       } else {
         this.stats.health = this.stats.maxHealth;
+        this.hurtTimer = 0;
       }
       this.fakeHealth = this.stats.health;
     }
@@ -440,11 +441,19 @@ class Monster {
         if (!this.flee) {
           this.bite();
         }
+        if (this.isBoss) {
+          this.spidersAbilities();
+        }
 
         if (this.fakeHealth <= this.stats.health + 1) {
+          this.fakeHealth = this.stats.health;
+        }
+        if (this.stats.health < this.stats.maxHealth) {
           this.hurtTimer++;
-        } else {
-          this.hurtTimer = 0;
+
+          if (this.fakeHealth > this.stats.health + 1) {
+            this.hurtTimer = 0;
+          }
         }
 
         if (this.hurtTimer >= 600 && this.isBoss) {
@@ -718,7 +727,51 @@ class Monster {
   }
 
   spidersAbilities() {
+    if (
+      this.abilities.webSlinger.timer >=
+      this.abilities.webSlinger.timeOut * 60
+    ) {
+      if (!this.abilities.jump.using) {
+        this.abilities.webSlinger.using = true;
+        this.abilities.webSlinger.timer = 0;
+      }
+    } else {
+      this.abilities.webSlinger.timer++;
+    }
+
+    if (this.abilities.jump.using) {
+      this.abilities.jump.using = false;
+    }
     if (this.abilities.webSlinger.using) {
+      projectiles.push(
+        new Projectile({
+          x: this.position.x,
+          y: this.position.y,
+          target: heroes[0].position,
+          duration: this.abilities.webSlinger.duration * 60,
+          type: "Web",
+        })
+      );
+      projectiles.push(
+        new Projectile({
+          x: this.position.x,
+          y: this.position.y,
+          target: heroes[0].position,
+          duration: this.abilities.webSlinger.duration * 60,
+          type: "Web",
+        })
+      );
+      projectiles.push(
+        new Projectile({
+          x: this.position.x,
+          y: this.position.y,
+          target: heroes[0].position,
+          duration: this.abilities.webSlinger.duration * 60,
+          type: "Web",
+        })
+      );
+      this.abilities.webSlinger.using = false;
+      this.abilities.webSlinger.timer = 0;
     }
   }
 

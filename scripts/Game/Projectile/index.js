@@ -16,7 +16,12 @@ class Projectile {
       this.position.x = this.startObj.position.x;
       this.position.y = this.startObj.position.y;
     }
+    this.newTarget = new p5.Vector(0, 0);
+    this.offset = {
+      web: new p5.Vector(random(-300, 300), random(-300, 300)),
+    };
 
+    this.angle = 0;
     this.foundRotation = false;
     this.size = 50;
     this.atTheEnd = false;
@@ -28,6 +33,7 @@ class Projectile {
     this.curveNum = this.speed / 2;
     this.splashed = false;
     this.splashTimer = 0;
+    this.alpha = 50;
 
     this.magicBall = loadImage("../../../sprites/Projectiles/MagicBall.gif");
     this.fireBall = loadImage("../../../sprites/Projectiles/FireBall.gif");
@@ -60,11 +66,11 @@ class Projectile {
           this.size * 3
         );
 
-        let angle = this.velocity.heading();
+        this.angle = this.velocity.heading();
 
         push();
         translate(this.position.x + camera.x, this.position.y + camera.y);
-        rotate(angle);
+        rotate(this.angle);
         image(this.magicBall, 0, 0, this.size * 2, this.size * 2);
         pop();
         break;
@@ -125,6 +131,27 @@ class Projectile {
           }
         }
         break;
+      case "Web":
+        if (!this.atTheEnd) {
+          this.angle = this.velocity.heading();
+
+          push();
+          translate(this.position.x + camera.x, this.position.y + camera.y);
+          rotate(this.angle);
+          fill(200);
+          ellipse(0, 0, this.size, this.size / 2);
+          pop();
+        } else {
+          noStroke();
+          fill(255, this.alpha);
+          ellipse(
+            this.position.x + camera.x,
+            this.position.y + camera.y,
+            200,
+            200
+          );
+        }
+        break;
     }
   }
 
@@ -133,6 +160,14 @@ class Projectile {
       case "Bullet":
         this.move();
         this.hitObjects();
+
+        if (this.atTheEnd) {
+          this.size -= 5;
+
+          if (this.size <= 0) {
+            this.dead = true;
+          }
+        }
         break;
       case "Fire Ball":
         this.rain();
@@ -214,6 +249,25 @@ class Projectile {
           this.size += this.curveNum / 2;
           this.position.y -= this.curveNum;
           this.curveNum -= this.speed / 200;
+        }
+        break;
+      case "Web":
+        if (!this.atTheEnd) this.move();
+
+        if (this.atTheEnd) {
+          this.durationTimer++;
+
+          if (this.durationTimer >= this.duration) {
+            this.dying = true;
+          }
+        }
+
+        if (this.dying) {
+          this.alpha--;
+
+          if (this.alpha <= 0) {
+            this.dead = true;
+          }
         }
         break;
     }
@@ -358,7 +412,15 @@ class Projectile {
   }
 
   move() {
-    let destination = p5.Vector.sub(this.target, this.position);
+    let destination;
+    if (this.type === "Web") {
+      this.newTarget.x = this.target.x + this.offset.web.x;
+      this.newTarget.y = this.target.y + this.offset.web.y;
+      destination = p5.Vector.sub(this.newTarget, this.position);
+    } else {
+      destination = p5.Vector.sub(this.target, this.position);
+    }
+
     destination.normalize();
     destination.mult(10);
 
@@ -368,17 +430,23 @@ class Projectile {
     }
     this.position.add(this.velocity);
 
-    if (
-      dist(this.position.x, this.position.y, this.target.x, this.target.y) < 30
-    ) {
-      this.atTheEnd = true;
-    }
-
-    if (this.atTheEnd) {
-      this.size -= 5;
-
-      if (this.size <= 0) {
-        this.dead = true;
+    if (this.type === "Web") {
+      if (
+        dist(
+          this.position.x,
+          this.position.y,
+          this.newTarget.x,
+          this.newTarget.y
+        ) < 30
+      ) {
+        this.atTheEnd = true;
+      }
+    } else {
+      if (
+        dist(this.position.x, this.position.y, this.target.x, this.target.y) <
+        30
+      ) {
+        this.atTheEnd = true;
       }
     }
   }

@@ -69,6 +69,7 @@ class Hero {
     this.walk;
     this.staffSmash;
     this.size = 70;
+    this.speedOffset = 0;
     this.character = config.character;
 
     this.running = false;
@@ -394,6 +395,22 @@ class Hero {
     } else {
       this.energyRegenTimer++;
     }
+
+    this.speedOffset = 0;
+    for (let i = 0; i < projectiles.length; i++) {
+      if (projectiles[i].type === "Web" && projectiles[i].atTheEnd) {
+        if (
+          dist(
+            this.position.x,
+            this.position.y,
+            projectiles[i].position.x,
+            projectiles[i].position.y
+          ) < 100
+        ) {
+          this.speedOffset = -(this.stats.speed / 2);
+        }
+      }
+    }
   }
 
   arthursAbilites() {
@@ -507,18 +524,62 @@ class Hero {
 
   move() {
     this.running = false;
-    if (keys[87] && this.collidingWith.bottom === false) {
-      this.position.y -= this.stats.speed;
+    if (keys[87]) {
+      if (!keys[68] && !keys[65]) {
+        if (!this.collidingWith.bottom) {
+          this.position.y -= this.stats.speed + this.speedOffset;
+        }
+      }
+      if (keys[68]) {
+        if (!this.collidingWith.bottom) {
+          this.position.y -= this.stats.speed / 1.2 + this.speedOffset;
+        }
+        if (!this.collidingWith.left) {
+          this.position.x += this.stats.speed / 1.2 + this.speedOffset;
+        }
+      }
+      if (keys[65]) {
+        if (!this.collidingWith.bottom) {
+          this.position.y -= this.stats.speed / 1.2 + this.speedOffset;
+        }
+        if (!this.collidingWith.right) {
+          this.position.x -= this.stats.speed / 1.2 + this.speedOffset;
+        }
+      }
     }
-    if (keys[83] && this.collidingWith.top === false) {
-      this.position.y += this.stats.speed;
+    if (keys[83]) {
       this.running = true;
+      if (!keys[68] && !keys[65]) {
+        if (!this.collidingWith.top) {
+          this.position.y += this.stats.speed + this.speedOffset;
+        }
+      }
+      if (keys[68]) {
+        if (!this.collidingWith.top) {
+          this.position.y += this.stats.speed / 1.2 + this.speedOffset;
+        }
+        if (!this.collidingWith.left) {
+          this.position.x += this.stats.speed / 1.2 + this.speedOffset;
+        }
+      }
+      if (keys[65]) {
+        if (!this.collidingWith.top) {
+          this.position.y += this.stats.speed / 1.2 + this.speedOffset;
+        }
+        if (!this.collidingWith.right) {
+          this.position.x -= this.stats.speed / 1.2 + this.speedOffset;
+        }
+      }
     }
-    if (keys[68] && this.collidingWith.left === false) {
-      this.position.x += this.stats.speed;
+    if (keys[68] && !this.collidingWith.left) {
+      if (!keys[87] && !keys[83]) {
+        this.position.x += this.stats.speed + this.speedOffset;
+      }
     }
-    if (keys[65] && this.collidingWith.right === false) {
-      this.position.x -= this.stats.speed;
+    if (keys[65] && !this.collidingWith.right) {
+      if (!keys[87] && !keys[83]) {
+        this.position.x -= this.stats.speed + this.speedOffset;
+      }
     }
   }
 
