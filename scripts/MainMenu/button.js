@@ -17,7 +17,7 @@ function Button(
   this.message = message;
   this.onClick = onClick || function () {};
   this.scene = scene || null;
-  this.borderRadius = borderRadius || null;
+  this.borderRadius = borderRadius || 0;
 
   this.pressed = false;
 

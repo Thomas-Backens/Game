@@ -81,8 +81,8 @@ let sprites = {
 let totalLoadedSprites = 0;
 let loadedSprites = false;
 
-let scene = "stats";
-let paused = true;
+let scene = "game";
+let paused = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
