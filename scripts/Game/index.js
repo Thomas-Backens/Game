@@ -268,7 +268,7 @@ function setup() {
     buttons.push(
       new Button(
         windowWidth / 2 - 340,
-        windowHeight / 2 - 100,
+        windowHeight / 2 - 200,
         150,
         50,
         25,
@@ -280,7 +280,30 @@ function setup() {
           ) {
             heroes[0].stats.points -= 2;
             heroes[0].stats.upgrades.damage++;
-            heroes[0].stats.damage += heroes[0].stats.upgrades.damage * 0.1;
+            heroes[0].stats.damage += heroes[0].stats.damage * 0.1;
+          }
+        },
+        "stats"
+      )
+    );
+    buttons.push(
+      new Button(
+        windowWidth / 2 - 340,
+        windowHeight / 2 - 100,
+        150,
+        50,
+        20,
+        "Energy Speed",
+        function () {
+          if (
+            heroes[0].stats.points >= 3 &&
+            heroes[0].stats.upgrades.energy <
+              heroes[0].stats.upgrades.energyLimit
+          ) {
+            heroes[0].stats.points -= 3;
+            heroes[0].stats.upgrades.energy++;
+            heroes[0].stats.energyRegen -=
+              heroes[0].stats.upgrades.energy * 0.05;
           }
         },
         "stats"
@@ -293,16 +316,17 @@ function setup() {
         150,
         50,
         20,
-        "Energy Speed",
+        "Max Energy",
         function () {
           if (
-            heroes[0].stats.points >= 3 &&
-            heroes[0].stats.upgrades.energy < heroes[0].stats.upgrades.maxEnergy
+            heroes[0].stats.points >= 1 &&
+            heroes[0].stats.upgrades.maxEnergy <
+              heroes[0].stats.upgrades.maxEnergyLimit
           ) {
-            heroes[0].stats.points -= 3;
-            heroes[0].stats.upgrades.energy++;
-            heroes[0].stats.energyRegen -=
-              heroes[0].stats.upgrades.energy * 0.05;
+            heroes[0].stats.points -= 1;
+            heroes[0].stats.upgrades.maxEnergy++;
+            heroes[0].stats.maxEnergy += 10;
+            heroes[0].stats.energy += 10;
           }
         },
         "stats"
@@ -509,7 +533,7 @@ function draw() {
             530
           ) /
             2,
-        windowHeight / 2 - 100,
+        windowHeight / 2 - 200,
         map(
           heroes[0].stats.upgrades.damage,
           0,
@@ -526,8 +550,44 @@ function draw() {
             265 +
             530 / heroes[0].stats.upgrades.maxDamage / 2 +
             (530 / heroes[0].stats.upgrades.maxDamage) * i,
-          windowHeight / 2 - 100,
+          windowHeight / 2 - 200,
           530 / heroes[0].stats.upgrades.maxDamage,
+          35
+        );
+      }
+      noFill();
+      rect(windowWidth / 2, windowHeight / 2 - 200, 530, 35);
+      fill(0, 255, 0);
+      rect(
+        windowWidth / 2 -
+          265 +
+          map(
+            heroes[0].stats.upgrades.energy,
+            0,
+            heroes[0].stats.upgrades.energyLimit,
+            0,
+            530
+          ) /
+            2,
+        windowHeight / 2 - 100,
+        map(
+          heroes[0].stats.upgrades.energy,
+          0,
+          heroes[0].stats.upgrades.energyLimit,
+          0,
+          -530
+        ),
+        35
+      );
+      noFill();
+      for (let i = 0; i < heroes[0].stats.upgrades.energyLimit; i++) {
+        rect(
+          windowWidth / 2 -
+            265 +
+            530 / heroes[0].stats.upgrades.energyLimit / 2 +
+            (530 / heroes[0].stats.upgrades.energyLimit) * i,
+          windowHeight / 2 - 100,
+          530 / heroes[0].stats.upgrades.energyLimit,
           35
         );
       }
@@ -538,32 +598,32 @@ function draw() {
         windowWidth / 2 -
           265 +
           map(
-            heroes[0].stats.upgrades.energy,
-            0,
             heroes[0].stats.upgrades.maxEnergy,
+            0,
+            heroes[0].stats.upgrades.maxEnergyLimit,
             0,
             530
           ) /
             2,
         windowHeight / 2,
         map(
-          heroes[0].stats.upgrades.energy,
-          0,
           heroes[0].stats.upgrades.maxEnergy,
+          0,
+          heroes[0].stats.upgrades.maxEnergyLimit,
           0,
           -530
         ),
         35
       );
       noFill();
-      for (let i = 0; i < heroes[0].stats.upgrades.maxEnergy; i++) {
+      for (let i = 0; i < heroes[0].stats.upgrades.maxEnergyLimit; i++) {
         rect(
           windowWidth / 2 -
             265 +
-            530 / heroes[0].stats.upgrades.maxEnergy / 2 +
-            (530 / heroes[0].stats.upgrades.maxEnergy) * i,
+            530 / heroes[0].stats.upgrades.maxEnergyLimit / 2 +
+            (530 / heroes[0].stats.upgrades.maxEnergyLimit) * i,
           windowHeight / 2,
-          530 / heroes[0].stats.upgrades.maxEnergy,
+          530 / heroes[0].stats.upgrades.maxEnergyLimit,
           35
         );
       }
@@ -607,26 +667,34 @@ function draw() {
       rect(windowWidth / 2, windowHeight / 2 + 100, 530, 35);
       noStroke();
       fill(20);
+      rect(windowWidth / 2 + 290, windowHeight / 2 - 200, 50, 50);
       rect(windowWidth / 2 + 290, windowHeight / 2 - 100, 50, 50);
       rect(windowWidth / 2 + 290, windowHeight / 2, 50, 50);
       rect(windowWidth / 2 + 290, windowHeight / 2 + 100, 50, 50);
       fill(200);
       textSize(12);
-      text("2", windowWidth / 2 + 290, windowHeight / 2 - 112);
+      text("2", windowWidth / 2 + 290, windowHeight / 2 - 212);
+      text("Points", windowWidth / 2 + 290, windowHeight / 2 - 198);
+      text("3", windowWidth / 2 + 290, windowHeight / 2 - 112);
       text("Points", windowWidth / 2 + 290, windowHeight / 2 - 98);
-      text("3", windowWidth / 2 + 290, windowHeight / 2 - 12);
-      text("Points", windowWidth / 2 + 290, windowHeight / 2 + 2);
-      text("1", windowWidth / 2 + 290, windowHeight / 2 + 87);
-      text("Point", windowWidth / 2 + 290, windowHeight / 2 + 101);
+      text("1", windowWidth / 2 + 290, windowHeight / 2 - 12);
+      text("Point", windowWidth / 2 + 290, windowHeight / 2 + 2);
+      text("1", windowWidth / 2 + 290, windowHeight / 2 + 88);
+      text("Point", windowWidth / 2 + 290, windowHeight / 2 + 102);
       textSize(15);
       fill(0, 255, 255);
       text(
         "Increase damage by 10%",
         windowWidth / 2 - 340,
-        windowHeight / 2 - 65
+        windowHeight / 2 - 165
       );
       text(
         "Increase energy speed by 5%",
+        windowWidth / 2 - 340,
+        windowHeight / 2 - 65
+      );
+      text(
+        "Increase max energy speed by 10",
         windowWidth / 2 - 340,
         windowHeight / 2 + 35
       );
@@ -638,10 +706,16 @@ function draw() {
       if (
         heroes[0].stats.upgrades.damage >= heroes[0].stats.upgrades.maxDamage
       ) {
+        text("Max level", windowWidth / 2, windowHeight / 2 - 240);
+      }
+      if (
+        heroes[0].stats.upgrades.energy >= heroes[0].stats.upgrades.energyLimit
+      ) {
         text("Max level", windowWidth / 2, windowHeight / 2 - 140);
       }
       if (
-        heroes[0].stats.upgrades.energy >= heroes[0].stats.upgrades.maxEnergy
+        heroes[0].stats.upgrades.maxEnergy >=
+        heroes[0].stats.upgrades.maxEnergyLimit
       ) {
         text("Max level", windowWidth / 2, windowHeight / 2 - 40);
       }

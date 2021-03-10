@@ -22,9 +22,11 @@ class Hero {
         damage: 0,
         health: 0,
         energy: 0,
+        maxEnergy: 0,
         maxDamage: 0,
         maxHealth: 0,
-        maxEnergy: 0,
+        energyLimit: 0,
+        maxEnergyLimit: 0,
       },
       level: 0,
       speed: 0,
@@ -102,12 +104,14 @@ class Hero {
           xpToNextLevel: this.levels[this.stats.level],
           points: 0,
           upgrades: {
-            damage: 1,
-            health: 1,
-            energy: 1,
+            damage: 0,
+            health: 0,
+            energy: 0,
+            maxEnergy: 0,
             maxDamage: 10,
             maxHealth: 20,
-            maxEnergy: 5,
+            energyLimit: 5,
+            maxEnergyLimit: 20,
           },
           level: 0,
           speed: 4,
@@ -475,7 +479,7 @@ class Hero {
           new Projectile({
             x: mouseX - camera.x,
             y: mouseY - camera.y,
-            damage: 100,
+            damage: (this.stats.upgrades.damage + 1) * (this.stats.damage * 3),
             waitingTime: this.ability.RainFire.timeOut,
             duration: this.ability.RainFire.duration,
             attackRange: 3,
@@ -494,7 +498,8 @@ class Hero {
         if (
           Math.pow(monsters[i].position.x - (mouseX - camera.x), 2) +
             Math.pow(monsters[i].position.y - (mouseY - camera.y), 2) <
-          this.closestEnemysDistance
+            this.closestEnemysDistance &&
+          !monsters[i].dying
         ) {
           this.closestEnemy = monsters[i];
           this.closestEnemysDistance =
@@ -525,7 +530,7 @@ class Hero {
         projectiles.push(
           new Projectile({
             startObj: this,
-            damage: 100,
+            damage: (this.stats.upgrades.damage + 1) * this.stats.damage,
             duration: this.ability.LightningStrike.duration,
             target: this.closestEnemy,
             type: "Lazer",

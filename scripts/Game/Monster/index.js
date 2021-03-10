@@ -125,8 +125,8 @@ class Monster {
             health: 1500,
             damage: 125,
             defense: 35,
-            attackRange: 4,
-            attackSpeed: 5,
+            attackRange: 3,
+            attackSpeed: 2,
             speed: 5,
             visionRange: 15,
           };
@@ -220,13 +220,35 @@ class Monster {
         if (this.dying) {
           fill(80, 100, 0);
         }
-        rect(0, -(this.jabLength / 2), 25, 100 + this.jabLength, 10);
+        rect(
+          0,
+          -(this.jabLength / 2),
+          this.size / 2,
+          this.size * 2 + this.jabLength,
+          this.size / 5
+        );
         fill(150, 0, 0);
-        ellipse(-5, -40 - this.jabLength, 5, 5);
-        ellipse(5, -40 - this.jabLength, 5, 5);
+        ellipse(
+          -this.size / 10,
+          -this.size + this.size / 5 - this.jabLength,
+          this.size / 10,
+          this.size / 10
+        );
+        ellipse(
+          this.size / 10,
+          -this.size + this.size / 5 - this.jabLength,
+          this.size / 10,
+          this.size / 10
+        );
         if (this.fakeHealth > this.stats.health + 1 && !this.dying) {
           fill(255, 0, 0, 200);
-          rect(0, -(this.jabLength / 2), 25, 100 + this.jabLength, 10);
+          rect(
+            0,
+            -(this.jabLength / 2),
+            this.size / 2,
+            this.size * 2 + this.jabLength,
+            this.size / 5
+          );
         }
         pop();
 
@@ -493,29 +515,31 @@ class Monster {
           this.shed();
         }
 
-        if (
-          dist(
-            this.position.x,
-            this.position.y,
-            this.target.position.x,
-            this.target.position.y
-          ) <
-            this.stats.attackRange * 90 &&
-          this.jabLength <= 0
-        ) {
-          this.flee = true;
-        }
-        if (
-          dist(
-            this.position.x,
-            this.position.y,
-            this.target.position.x,
-            this.target.position.y
-          ) >
-            this.stats.attackRange * 150 &&
-          this.flee
-        ) {
-          this.flee = false;
+        if (!this.isBoss) {
+          if (
+            dist(
+              this.position.x,
+              this.position.y,
+              this.target.position.x,
+              this.target.position.y
+            ) <
+              this.stats.attackRange * 90 &&
+            this.jabLength <= 0
+          ) {
+            this.flee = true;
+          }
+          if (
+            dist(
+              this.position.x,
+              this.position.y,
+              this.target.position.x,
+              this.target.position.y
+            ) >
+              this.stats.attackRange * 150 &&
+            this.flee
+          ) {
+            this.flee = false;
+          }
         }
         break;
       case "Bear":
@@ -721,6 +745,7 @@ class Monster {
 
   shed() {
     this.stats.health = this.stats.maxHealth;
+    this.fakeHealth = this.stats.maxHealth;
     this.burning = false;
     this.burnTimer = 0;
     this.hasShed = true;
