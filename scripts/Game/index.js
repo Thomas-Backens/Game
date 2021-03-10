@@ -473,6 +473,7 @@ function setup() {
 }
 
 function draw() {
+  cursor("default");
   switch (scene) {
     case "death":
       background(255, 0, 0, 1);
@@ -889,7 +890,7 @@ function draw() {
       }
       break;
     case "paused":
-      background(0, 1);
+      background(0, 2);
       for (let i = 0; i < buttons.length; i++) {
         if (buttons[i].scene === "game") {
           if (buttons[i].message === "Pause") {
