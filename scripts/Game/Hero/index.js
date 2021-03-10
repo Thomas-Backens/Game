@@ -100,7 +100,7 @@ class Hero {
           energyRegen: 1,
           xp: 0,
           xpToNextLevel: this.levels[this.stats.level],
-          points: 0,
+          points: 100,
           upgrades: {
             damage: 1,
             health: 1,
