@@ -230,7 +230,8 @@ function setup() {
           paused = true;
           scene = "paused";
         },
-        "game"
+        "game",
+        10
       )
     );
     buttons.push(
@@ -245,35 +246,41 @@ function setup() {
           scene = "game";
           paused = false;
         },
-        "stats"
+        "stats",
+        10
       )
     );
     buttons.push(
       new Button(
         windowWidth - 150,
         windowHeight - 100,
-        150,
+        200,
         50,
         30,
         "Quit Game",
         function () {
           window.location.href = "/html";
         },
-        "stats"
+        "stats",
+        10
       )
     );
     buttons.push(
       new Button(
-        windowWidth / 3,
-        windowHeight / 2,
+        windowWidth / 2 - 340,
+        windowHeight / 2 - 100,
         150,
         50,
         25,
         "Damage",
         function () {
-          if (heroes[0].stats.points > 0) {
+          if (
+            heroes[0].stats.points >= 2 &&
+            heroes[0].stats.upgrades.damage < heroes[0].stats.upgrades.maxDamage
+          ) {
             heroes[0].stats.points -= 2;
-            heroes[0].stats.damage += heroes[0].stats.damage * 0.05;
+            heroes[0].stats.upgrades.damage++;
+            heroes[0].stats.damage += heroes[0].stats.upgrades.damage * 0.1;
           }
         },
         "stats"
@@ -281,16 +288,21 @@ function setup() {
     );
     buttons.push(
       new Button(
-        windowWidth / 2,
+        windowWidth / 2 - 340,
         windowHeight / 2,
-        200,
+        150,
         50,
-        25,
+        20,
         "Energy Speed",
         function () {
-          if (heroes[0].stats.points > 0) {
+          if (
+            heroes[0].stats.points >= 3 &&
+            heroes[0].stats.upgrades.energy < heroes[0].stats.upgrades.maxEnergy
+          ) {
             heroes[0].stats.points -= 3;
-            heroes[0].stats.energyRegen /= 1.5;
+            heroes[0].stats.upgrades.energy++;
+            heroes[0].stats.energyRegen -=
+              heroes[0].stats.upgrades.energy * 0.1;
           }
         },
         "stats"
@@ -298,18 +310,20 @@ function setup() {
     );
     buttons.push(
       new Button(
-        windowWidth / 1.5,
-        windowHeight / 2,
+        windowWidth / 2 - 340,
+        windowHeight / 2 + 100,
         150,
         50,
         25,
         "HP",
         function () {
-          if (heroes[0].stats.points > 0) {
+          if (
+            heroes[0].stats.points >= 1 &&
+            heroes[0].stats.upgrades.health < heroes[0].stats.upgrades.maxHealth
+          ) {
             heroes[0].stats.points--;
-            let healthIncrease = heroes[0].stats.maxHealth * 0.2;
-            heroes[0].stats.maxHealth += healthIncrease;
-            heroes[0].stats.health += healthIncrease;
+            heroes[0].stats.upgrades.health++;
+            heroes[0].stats.health += heroes[0].stats.upgrades.health * 0.4;
           }
         },
         "stats"
@@ -328,7 +342,8 @@ function setup() {
             window.location.reload();
           }
         },
-        "death"
+        "death",
+        10
       )
     );
     buttons.push(
@@ -344,7 +359,8 @@ function setup() {
             window.location.href = "/html";
           }
         },
-        "death"
+        "death",
+        10
       )
     );
   } // buttons
@@ -474,25 +490,168 @@ function draw() {
     case "stats":
       background(50);
       noStroke();
-      for (let i = 0; i < buttons.length; i++) {
-        if (buttons[i].scene === scene) buttons[i].display();
-      }
       textAlign(CENTER);
       textSize(30);
       fill(200);
-      text(`points: ${heroes[0].stats.points}`, 100, 50);
+      text(`points: ${heroes[0].stats.points}`, windowWidth / 2, 50);
+      strokeWeight(3);
+      stroke(20);
+      fill(0, 255, 0);
+      rect(
+        windowWidth / 2 -
+          265 +
+          map(
+            heroes[0].stats.upgrades.damage,
+            0,
+            heroes[0].stats.upgrades.maxDamage,
+            0,
+            530
+          ) /
+            2,
+        windowHeight / 2 - 100,
+        map(
+          heroes[0].stats.upgrades.damage,
+          0,
+          heroes[0].stats.upgrades.maxDamage,
+          0,
+          -530
+        ),
+        35
+      );
+      noFill();
+      for (let i = 0; i < heroes[0].stats.upgrades.maxDamage; i++) {
+        rect(
+          windowWidth / 2 -
+            265 +
+            530 / heroes[0].stats.upgrades.maxDamage / 2 +
+            (530 / heroes[0].stats.upgrades.maxDamage) * i,
+          windowHeight / 2 - 100,
+          530 / heroes[0].stats.upgrades.maxDamage,
+          35
+        );
+      }
+      noFill();
+      rect(windowWidth / 2, windowHeight / 2 - 100, 530, 35);
+      fill(0, 255, 0);
+      rect(
+        windowWidth / 2 -
+          265 +
+          map(
+            heroes[0].stats.upgrades.energy,
+            0,
+            heroes[0].stats.upgrades.maxEnergy,
+            0,
+            530
+          ) /
+            2,
+        windowHeight / 2,
+        map(
+          heroes[0].stats.upgrades.energy,
+          0,
+          heroes[0].stats.upgrades.maxEnergy,
+          0,
+          -530
+        ),
+        35
+      );
+      noFill();
+      for (let i = 0; i < heroes[0].stats.upgrades.maxEnergy; i++) {
+        rect(
+          windowWidth / 2 -
+            265 +
+            530 / heroes[0].stats.upgrades.maxEnergy / 2 +
+            (530 / heroes[0].stats.upgrades.maxEnergy) * i,
+          windowHeight / 2,
+          530 / heroes[0].stats.upgrades.maxEnergy,
+          35
+        );
+      }
+      noFill();
+      rect(windowWidth / 2, windowHeight / 2, 530, 35);
+      fill(0, 255, 0);
+      rect(
+        windowWidth / 2 -
+          265 +
+          map(
+            heroes[0].stats.upgrades.health,
+            0,
+            heroes[0].stats.upgrades.maxHealth,
+            0,
+            530
+          ) /
+            2,
+        windowHeight / 2 + 100,
+        map(
+          heroes[0].stats.upgrades.health,
+          0,
+          heroes[0].stats.upgrades.maxHealth,
+          0,
+          -530
+        ),
+        35
+      );
+      noFill();
+      for (let i = 0; i < heroes[0].stats.upgrades.maxHealth; i++) {
+        rect(
+          windowWidth / 2 -
+            265 +
+            530 / heroes[0].stats.upgrades.maxHealth / 2 +
+            (530 / heroes[0].stats.upgrades.maxHealth) * i,
+          windowHeight / 2 + 100,
+          530 / heroes[0].stats.upgrades.maxHealth,
+          35
+        );
+      }
+      noFill();
+      rect(windowWidth / 2, windowHeight / 2 + 100, 530, 35);
+      noStroke();
+      fill(20);
+      rect(windowWidth / 2 + 290, windowHeight / 2 - 100, 50, 50);
+      rect(windowWidth / 2 + 290, windowHeight / 2, 50, 50);
+      rect(windowWidth / 2 + 290, windowHeight / 2 + 100, 50, 50);
+      fill(200);
+      textSize(12);
+      text("2", windowWidth / 2 + 290, windowHeight / 2 - 112);
+      text("Points", windowWidth / 2 + 290, windowHeight / 2 - 98);
+      text("3", windowWidth / 2 + 290, windowHeight / 2 - 12);
+      text("Points", windowWidth / 2 + 290, windowHeight / 2 + 2);
+      text("1", windowWidth / 2 + 290, windowHeight / 2 + 87);
+      text("Point", windowWidth / 2 + 290, windowHeight / 2 + 101);
       textSize(15);
       fill(0, 255, 255);
-      text("Increase damage by 10%", windowWidth / 3, windowHeight / 2 + 50);
-      text("for 1 point!", windowWidth / 3, windowHeight / 2 + 75);
       text(
-        "Decrease energy regen speed",
-        windowWidth / 2,
-        windowHeight / 2 + 50
+        "Increase damage by 10%",
+        windowWidth / 2 - 340,
+        windowHeight / 2 - 65
       );
-      text("by 10% for 1 point!", windowWidth / 2, windowHeight / 2 + 75);
-      text("Increase HP by 20%", windowWidth / 1.5, windowHeight / 2 + 50);
-      text("for 1 point!", windowWidth / 1.5, windowHeight / 2 + 75);
+      text(
+        "Increase energy speed by 10%",
+        windowWidth / 2 - 340,
+        windowHeight / 2 + 35
+      );
+      text(
+        "Regain some of your HP",
+        windowWidth / 2 - 340,
+        windowHeight / 2 + 135
+      );
+      if (
+        heroes[0].stats.upgrades.damage >= heroes[0].stats.upgrades.maxDamage
+      ) {
+        text("Max level", windowWidth / 2, windowHeight / 2 - 140);
+      }
+      if (
+        heroes[0].stats.upgrades.energy >= heroes[0].stats.upgrades.maxEnergy
+      ) {
+        text("Max level", windowWidth / 2, windowHeight / 2 - 40);
+      }
+      if (
+        heroes[0].stats.upgrades.health >= heroes[0].stats.upgrades.maxHealth
+      ) {
+        text("Max level", windowWidth / 2, windowHeight / 2 + 60);
+      }
+      for (let i = 0; i < buttons.length; i++) {
+        if (buttons[i].scene === scene) buttons[i].display();
+      }
       break;
     case "game":
       if (!paused) {

@@ -1,4 +1,14 @@
-function Button(x, y, width, height, fontSize, message, onClick, scene) {
+function Button(
+  x,
+  y,
+  width,
+  height,
+  fontSize,
+  message,
+  onClick,
+  scene,
+  borderRadius
+) {
   this.x = x;
   this.y = y;
   this.width = width;
@@ -7,13 +17,14 @@ function Button(x, y, width, height, fontSize, message, onClick, scene) {
   this.message = message;
   this.onClick = onClick || function () {};
   this.scene = scene || null;
+  this.borderRadius = borderRadius || 0;
 
   this.pressed = false;
 
   this.display = function () {
     noStroke();
     fill(100);
-    rect(this.x, this.y, this.width, this.height, 10);
+    rect(this.x, this.y, this.width, this.height, this.borderRadius);
     textAlign(CENTER, CENTER);
     textSize(this.fontSize);
     fill(50);
@@ -23,7 +34,7 @@ function Button(x, y, width, height, fontSize, message, onClick, scene) {
 
     if (this.mouseHover()) {
       fill(0, 50);
-      rect(this.x, this.y, this.width, this.height, 10);
+      rect(this.x, this.y, this.width, this.height, this.borderRadius);
       cursor("pointer");
     }
   };
