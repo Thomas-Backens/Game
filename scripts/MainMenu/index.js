@@ -14,11 +14,23 @@ function setup() {
       "Play",
       function () {
         window.location.href = "/html/game.html";
-      }
+      },
+      null,
+      10
     )
   );
   buttons.push(
-    new Button(windowWidth / 2, windowHeight / 2 + 60, 200, 50, 30, "Quit")
+    new Button(
+      windowWidth / 2,
+      windowHeight / 2 + 60,
+      200,
+      50,
+      30,
+      "Quit",
+      null,
+      null,
+      10
+    )
   );
 }
 

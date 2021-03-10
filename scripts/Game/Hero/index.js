@@ -18,6 +18,14 @@ class Hero {
       xp: 0,
       xpToNextLevel: 0,
       points: 0,
+      upgrades: {
+        damage: 0,
+        health: 0,
+        energy: 0,
+        maxDamage: 0,
+        maxHealth: 0,
+        maxEnergy: 0,
+      },
       level: 0,
       speed: 0,
       visionRange: 0,
@@ -92,6 +100,14 @@ class Hero {
           xp: 0,
           xpToNextLevel: this.levels[this.stats.level],
           points: 0,
+          upgrades: {
+            damage: 1,
+            health: 1,
+            energy: 1,
+            maxDamage: 10,
+            maxHealth: 20,
+            maxEnergy: 5,
+          },
           level: 0,
           speed: 4,
           visionRange: 16,
@@ -343,6 +359,7 @@ class Hero {
   }
 
   update() {
+    this.stats.points = 10;
     this.move();
     this.collideWithBlock();
 
