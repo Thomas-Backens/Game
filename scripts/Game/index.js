@@ -302,7 +302,7 @@ function setup() {
             heroes[0].stats.points -= 3;
             heroes[0].stats.upgrades.energy++;
             heroes[0].stats.energyRegen -=
-              heroes[0].stats.upgrades.energy * 0.2;
+              heroes[0].stats.upgrades.energy * 0.05;
           }
         },
         "stats"
@@ -626,7 +626,7 @@ function draw() {
         windowHeight / 2 - 65
       );
       text(
-        "Increase energy speed by 20%",
+        "Increase energy speed by 5%",
         windowWidth / 2 - 340,
         windowHeight / 2 + 35
       );
