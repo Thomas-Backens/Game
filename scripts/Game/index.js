@@ -626,12 +626,12 @@ function draw() {
         windowHeight / 2 - 65
       );
       text(
-        "Increase energy speed by 10%",
+        "Increase energy speed by 20%",
         windowWidth / 2 - 340,
         windowHeight / 2 + 35
       );
       text(
-        "Regain some of your HP",
+        "Increase health by 5%",
         windowWidth / 2 - 340,
         windowHeight / 2 + 135
       );
