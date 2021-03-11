@@ -3,7 +3,7 @@ let bitMap = [
   "11111111111111111111111111111111111111111",
   "1                   1            1      1",
   "1        11111       1                  1",
-  "1  b             11     1 11  11     s  1",
+  "1  S             11     1 11  11     s  1",
   "1                                       1",
   "1      1111                             1",
   "1            1            1           111",
@@ -69,6 +69,11 @@ let sprites = {
     idleImg: null,
     walkGif: null,
     idleAttackImg: null,
+    loaded: false,
+  },
+  Snake: {
+    idleImg: null,
+    walkGif: null,
     loaded: false,
   },
   Blocks: {
@@ -413,6 +418,19 @@ function setup() {
       () => (sprites.Spider.loaded = false)
     );
   } // Spider Images
+
+  {
+    sprites.Snake.idleImg = loadImage(
+      "../../../sprites/Monsters/Snake/Idle.png",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+    sprites.Snake.walkGif = loadImage(
+      "../../../sprites/Monsters/Snake/Walk.gif",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+  } // Snake Images
 
   {
     sprites.Blocks.floorTiles = [
@@ -782,10 +800,17 @@ function draw() {
           }
 
           for (let i = 0; i < monsters.length; i++) {
-            if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
-              monsters[i].deathGif.delay(10000, 13);
-              monsters[i].attackGif.pause();
-              monsters[i].setDelays = true;
+            switch (monsters[i].type) {
+              case "Spider":
+                if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
+                  monsters[i].deathGif.delay(10000, 13);
+                  monsters[i].attackGif.pause();
+                  monsters[i].setDelays = true;
+                }
+                break;
+              case "Snake":
+                monsters[i].setDelays = true;
+                break;
             }
           }
 
@@ -947,6 +972,9 @@ function draw() {
             loadedSprites = false;
           }
           if (!sprites.Spider.loaded) {
+            loadedSprites = false;
+          }
+          if (!sprites.Snake.loaded) {
             loadedSprites = false;
           }
         }

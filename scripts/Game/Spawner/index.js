@@ -34,6 +34,9 @@ class Spawner {
         this.spawnTime = 5;
         break;
     }
+
+    this.fakeHealth = this.stats.maxHealth;
+    this.hitTimer = 0;
   }
 
   display() {
@@ -103,14 +106,64 @@ class Spawner {
       );
     }
 
-    textAlign(CENTER, CENTER);
-    textSize(20);
-    fill(255);
-    text(
-      "Health: " + this.stats.health + "/" + this.stats.maxHealth,
-      this.position.x + camera.x,
-      this.position.y + camera.y - this.size / 1.5
-    );
+    if (this.hitTimer > 0) {
+      this.hitTimer--;
+
+      noStroke();
+      fill(200, 0, 0);
+      rect(
+        this.position.x + camera.x,
+        this.position.y + camera.y - this.size,
+        50,
+        10
+      );
+      fill(255);
+      rect(
+        this.position.x +
+          camera.x -
+          25 +
+          map(
+            constrain(this.fakeHealth, 0, this.stats.maxHealth),
+            0,
+            this.stats.maxHealth,
+            0,
+            50
+          ) /
+            2,
+        this.position.y + camera.y - this.size,
+        map(
+          constrain(this.fakeHealth, 0, this.stats.maxHealth),
+          0,
+          this.stats.maxHealth,
+          0,
+          50
+        ),
+        10
+      );
+      fill(0, 200, 0);
+      rect(
+        this.position.x +
+          camera.x -
+          25 +
+          map(
+            constrain(this.stats.health, 0, this.stats.maxHealth),
+            0,
+            this.stats.maxHealth,
+            0,
+            50
+          ) /
+            2,
+        this.position.y + camera.y - this.size,
+        map(
+          constrain(this.stats.health, 0, this.stats.maxHealth),
+          0,
+          this.stats.maxHealth,
+          0,
+          50
+        ),
+        10
+      );
+    }
   }
 
   update() {
@@ -157,6 +210,11 @@ class Spawner {
         this.burning = false;
         this.burnTimer = 0;
       }
+    }
+
+    if (this.fakeHealth > this.stats.health + 1) {
+      this.fakeHealth -= (this.fakeHealth - this.stats.health) / 6;
+      this.hitTimer = 60;
     }
   }
 

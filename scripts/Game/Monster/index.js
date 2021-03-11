@@ -153,19 +153,39 @@ class Monster {
   }
 
   loadImages() {
-    this.idleImg = sprites.Spider.idleImg;
-    this.walkGif = sprites.Spider.walkGif;
-    this.idleAttackImg = sprites.Spider.idleAttackImg;
-    this.attackGif = loadImage(
-      "../../../sprites/Monsters/Spider/Attack.gif",
-      () => (this.loaded = true),
-      () => (this.loaded = false)
-    );
-    this.deathGif = loadImage(
-      "../../../sprites/Monsters/Spider/Death.gif",
-      () => (this.loaded = true),
-      () => (this.loaded = false)
-    );
+    switch (this.type) {
+      case "Spider":
+        this.idleImg = sprites.Spider.idleImg;
+        this.walkGif = sprites.Spider.walkGif;
+        this.idleAttackImg = sprites.Spider.idleAttackImg;
+        this.attackGif = loadImage(
+          "../../../sprites/Monsters/Spider/Attack.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
+        this.deathGif = loadImage(
+          "../../../sprites/Monsters/Spider/Death.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
+        break;
+      case "Snake":
+        this.idleImg = sprites.Snake.idleImg;
+        this.walkGif = sprites.Snake.walkGif;
+        this.loaded = true;
+        // this.idleAttackImg = sprites.Snake.idleAttackImg;
+        // this.attackGif = loadImage(
+        //   "../../../sprites/Monsters/Spider/Attack.gif",
+        //   () => (this.loaded = true),
+        //   () => (this.loaded = false)
+        // );
+        // this.deathGif = loadImage(
+        //   "../../../sprites/Monsters/Spider/Death.gif",
+        //   () => (this.loaded = true),
+        //   () => (this.loaded = false)
+        // );
+        break;
+    }
   }
 
   display() {
@@ -212,46 +232,6 @@ class Monster {
         pop();
         break;
       case "Snake":
-        push();
-        noStroke();
-        translate(this.position.x + camera.x, this.position.y + camera.y);
-        rotate(this.angle - 4.8);
-        fill(0, 150, 0);
-        if (this.dying) {
-          fill(80, 100, 0);
-        }
-        rect(
-          0,
-          -(this.jabLength / 2),
-          this.size / 2,
-          this.size * 2 + this.jabLength,
-          this.size / 5
-        );
-        fill(150, 0, 0);
-        ellipse(
-          -this.size / 10,
-          -this.size + this.size / 5 - this.jabLength,
-          this.size / 10,
-          this.size / 10
-        );
-        ellipse(
-          this.size / 10,
-          -this.size + this.size / 5 - this.jabLength,
-          this.size / 10,
-          this.size / 10
-        );
-        if (this.fakeHealth > this.stats.health + 1 && !this.dying) {
-          fill(255, 0, 0, 200);
-          rect(
-            0,
-            -(this.jabLength / 2),
-            this.size / 2,
-            this.size * 2 + this.jabLength,
-            this.size / 5
-          );
-        }
-        pop();
-
         if (this.hasShed) {
           if (this.shedAlpha > 0) {
             this.shedAlpha -= 3;
@@ -259,11 +239,8 @@ class Monster {
             noStroke();
             translate(this.shedX + camera.x, this.shedY + camera.y);
             rotate(this.shedAngle);
-            fill(0, 150, 0, this.shedAlpha);
-            rect(0, 0, 25, 100, 10);
-            fill(150, 0, 0, this.shedAlpha);
-            ellipse(-5, -40, 5, 5);
-            ellipse(5, -40, 5, 5);
+            tint(50, 100, 0);
+            image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
             pop();
           }
         } else {
@@ -271,6 +248,16 @@ class Monster {
           this.shedX = this.position.x;
           this.shedY = this.position.y;
         }
+        push();
+        noStroke();
+        translate(this.position.x + camera.x, this.position.y + camera.y);
+        rotate(this.angle - 4.8);
+        if (this.moving) {
+          image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+        } else {
+          image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+        }
+        pop();
         break;
       case "Bear":
         push();
