@@ -58,7 +58,6 @@ let monsters = [];
 let projectiles = [];
 let coins = [];
 let spawners = [];
-
 let buttons = [];
 
 let UI;
@@ -809,7 +808,11 @@ function draw() {
                 }
                 break;
               case "Snake":
-                monsters[i].setDelays = true;
+                if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
+                  monsters[i].deathGif.delay(10000, 9);
+                  monsters[i].attackGif.pause();
+                  monsters[i].setDelays = true;
+                }
                 break;
             }
           }
