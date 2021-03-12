@@ -59,6 +59,7 @@ class Monster {
     this.idleAttackImg;
     this.attackGif;
     this.deathGif;
+    this.holeImg;
     this.loaded = false;
     this.loadDelay = 0;
     this.setDelays = false;
@@ -162,6 +163,7 @@ class Monster {
         this.idleImg = sprites.Spider.idleImg;
         this.walkGif = sprites.Spider.walkGif;
         this.idleAttackImg = sprites.Spider.idleAttackImg;
+        this.holeImg = sprites.Spawners.Spider;
         this.attackGif = loadImage(
           "../../../sprites/Monsters/Spider/Attack.gif",
           () => (this.loaded = true),
@@ -176,6 +178,7 @@ class Monster {
       case "Snake":
         this.idleImg = sprites.Snake.idleImg;
         this.walkGif = sprites.Snake.walkGif;
+        this.holeImg = sprites.Spawners.Spider;
         this.attackGif = loadImage(
           "../../../sprites/Monsters/Snake/Attack.gif",
           () => (this.loaded = true),
@@ -208,7 +211,11 @@ class Monster {
     }
 
     push();
-    if (this.fakeHealth > this.stats.health + 1 && !this.dying) {
+    if (
+      this.fakeHealth > this.stats.health + 1 &&
+      !this.dying &&
+      !this.burrowed
+    ) {
       tint(255, 0, 0);
     }
 
@@ -218,16 +225,18 @@ class Monster {
         noStroke();
         translate(this.position.x + camera.x, this.position.y + camera.y);
         rotate(this.angle - 4.8);
-        if (this.dying) {
-          image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
-        } else {
-          if (this.moving) {
-            image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+        if (!this.burrowed) {
+          if (this.dying) {
+            image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
           } else {
-            if (this.attacking) {
-              image(this.attackGif, 0, 0, this.size * 2, this.size * 2);
+            if (this.moving) {
+              image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
             } else {
-              image(this.idleAttackImg, 0, 0, this.size * 2, this.size * 2);
+              if (this.attacking) {
+                image(this.attackGif, 0, 0, this.size * 2, this.size * 2);
+              } else {
+                image(this.idleAttackImg, 0, 0, this.size * 2, this.size * 2);
+              }
             }
           }
         }
@@ -254,16 +263,18 @@ class Monster {
         noStroke();
         translate(this.position.x + camera.x, this.position.y + camera.y);
         rotate(this.angle - 4.8);
-        if (this.dying) {
-          image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
-        } else {
-          if (this.moving) {
-            image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+        if (this.burrowed) {
+          if (this.dying) {
+            image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
           } else {
-            if (this.attacking) {
-              image(this.attackGif, 0, 0, this.size * 4, this.size * 4);
+            if (this.moving) {
+              image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
             } else {
-              image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+              if (this.attacking) {
+                image(this.attackGif, 0, 0, this.size * 4, this.size * 4);
+              } else {
+                image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+              }
             }
           }
         }
@@ -298,14 +309,13 @@ class Monster {
         pop();
         break;
     }
-    noStroke();
     if (this.burrowed) {
-      fill(0);
-      ellipse(
+      image(
+        this.holeImg,
         this.position.x + camera.x,
         this.position.y + camera.y,
-        this.size + 25,
-        this.size + 25
+        this.size,
+        this.size
       );
     }
     pop();
