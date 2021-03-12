@@ -28,7 +28,10 @@ class Monster {
     this.dead = false;
     this.deathTimer = 0;
     this.hurtTimer = 0;
+    this.burrowed = false;
+    this.burrowTimer = 0;
     this.flee = false;
+    this.fleeHit = false;
     this.enrage = false;
     this.speedOffset = 0;
 
@@ -294,6 +297,16 @@ class Monster {
         pop();
         break;
     }
+    noStroke();
+    if (this.burrowed) {
+      fill(0);
+      ellipse(
+        this.position.x + camera.x,
+        this.position.y + camera.y,
+        this.size + 25,
+        this.size + 25
+      );
+    }
     pop();
 
     if (this.dying) return;
@@ -480,10 +493,16 @@ class Monster {
           this.fakeHealth = this.stats.health;
         }
 
-        if (this.stats.health <= this.stats.maxHealth / 4) {
+        if (this.stats.health <= this.stats.maxHealth / 2) {
           this.flee = true;
         } else {
           this.flee = false;
+        }
+
+        if (this.burrowed) {
+          this.stats.defense = 80;
+        } else {
+          this.stats.defense = 2;
         }
         break;
       case "Snake":
@@ -493,7 +512,8 @@ class Monster {
 
         if (
           this.stats.health <= this.stats.maxHealth / (100 / 15) &&
-          !this.hasShed
+          !this.hasShed &&
+          !this.burrowed
         ) {
           this.shed();
         }
@@ -524,6 +544,12 @@ class Monster {
             this.flee = false;
           }
         }
+
+        if (this.burrowed) {
+          this.stats.defense = 90;
+        } else {
+          this.stats.defense = 8;
+        }
         break;
       case "Bear":
         this.bite();
@@ -546,6 +572,22 @@ class Monster {
     if (this.flee) {
       this.attacking = false;
       this.moving = true;
+      if (this.hurtTimer > 0 && !this.isBoss) {
+        this.moving = false;
+      }
+      if (this.fleeHit && !this.isBoss) {
+        this.burrowed = true;
+        this.fleeHit = false;
+      }
+    }
+
+    if (this.burrowed) {
+      this.burrowTimer++;
+
+      if (this.burrowTimer >= 300) {
+        this.burrowed = false;
+        this.burrowTimer = 0;
+      }
     }
 
     if (this.burning) {
@@ -645,7 +687,7 @@ class Monster {
       }
     }
 
-    if (this.moving && !this.attacking) {
+    if (this.moving && !this.attacking && !this.burrowed) {
       this.position.add(this.velocity);
     }
   }
