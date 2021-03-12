@@ -204,13 +204,56 @@ class Spawner {
 
     this.spawnTimer++;
     if (this.spawnTimer >= this.spawnTime * 60) {
-      monsters.push(
-        new Monster({
-          x: this.position.x,
-          y: this.position.y,
-          type: this.type,
-        })
-      );
+      switch (this.type) {
+        case "Spider":
+          monsters.push(
+            new Monster({
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+            })
+          );
+          monsters.push(
+            new Monster({
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+            })
+          );
+          monsters.push(
+            new Monster({
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+            })
+          );
+          break;
+        case "Snake":
+          monsters.push(
+            new Monster({
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+            })
+          );
+          monsters.push(
+            new Monster({
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+            })
+          );
+          break;
+        case "Bear":
+          monsters.push(
+            new Monster({
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+            })
+          );
+          break;
+      }
       this.spawnTimer = 0;
     }
 
