@@ -26,6 +26,7 @@ class Monster {
     this.glow = false;
     this.dying = false;
     this.dead = false;
+    this.spawnTimer = 0;
     this.deathTimer = 0;
     this.hurtTimer = 0;
     this.burrowed = false;
@@ -471,6 +472,20 @@ class Monster {
         }
         if (this.isBoss) {
           this.spidersAbilities();
+          this.spawnTimer++;
+          if (this.spawnTimer >= 600) {
+            this.spawnTimer = 0;
+            let randonNum = round(random(2, 4));
+            for (let i = 0; i < randonNum; i++) {
+              monsters.push(
+                new Monster({
+                  x: this.position.x + random(-100, 100),
+                  y: this.position.y + random(-100, 100),
+                  type: "Spider",
+                })
+              );
+            }
+          }
         }
 
         if (this.fakeHealth <= this.stats.health + 1) {
@@ -508,6 +523,23 @@ class Monster {
       case "Snake":
         if (!this.flee) {
           this.jab();
+        }
+
+        if (this.isBoss) {
+          this.spawnTimer++;
+          if (this.spawnTimer >= 600) {
+            this.spawnTimer = 0;
+            let randonNum = round(random(2, 4));
+            for (let i = 0; i < randonNum; i++) {
+              monsters.push(
+                new Monster({
+                  x: this.position.x + random(-100, 100),
+                  y: this.position.y + random(-100, 100),
+                  type: "Spider",
+                })
+              );
+            }
+          }
         }
 
         if (
