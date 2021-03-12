@@ -176,11 +176,18 @@ class Projectile {
         this.position.x = this.startObj.position.x;
         this.position.y = this.startObj.position.y;
 
-        if (!this.target.burrowed) {
+        if (this.target.spawnTime >= 0) {
           this.target.stats.health -= calculateDefense(
             this.target.stats.defense,
             this.damage
           );
+        } else {
+          if (!this.target.burrowed) {
+            this.target.stats.health -= calculateDefense(
+              this.target.stats.defense,
+              this.damage
+            );
+          }
         }
 
         this.durationTimer++;
@@ -469,13 +476,15 @@ class Projectile {
           monsters[i].position.x,
           monsters[i].position.y
         ) < this.size &&
-        !monsters[i].dying &&
-        !monsters[i].burrowed
+        !monsters[i].dying
       ) {
         monsters[i].stats.health -= calculateDefense(
           monsters[i].stats.defense,
           this.damage
         );
+        if (monsters[i].flee) {
+          monsters[i].fleeHit = true;
+        }
         this.dead = true;
       }
     }
