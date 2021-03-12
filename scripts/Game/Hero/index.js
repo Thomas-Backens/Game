@@ -364,7 +364,6 @@ class Hero {
   }
 
   update() {
-    this.stats.points = 10;
     this.move();
     this.collideWithBlock();
 
