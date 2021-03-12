@@ -102,7 +102,7 @@ class Hero {
           energyRegen: 1,
           xp: 0,
           xpToNextLevel: this.levels[this.stats.level],
-          points: 100,
+          points: 0,
           upgrades: {
             damage: 0,
             health: 0,
@@ -364,6 +364,7 @@ class Hero {
   }
 
   update() {
+    this.stats.points = 10;
     this.move();
     this.collideWithBlock();
 
@@ -499,7 +500,8 @@ class Hero {
           Math.pow(monsters[i].position.x - (mouseX - camera.x), 2) +
             Math.pow(monsters[i].position.y - (mouseY - camera.y), 2) <
             this.closestEnemysDistance &&
-          !monsters[i].dying
+          !monsters[i].dying &&
+          !monsters[i].burrowed
         ) {
           this.closestEnemy = monsters[i];
           this.closestEnemysDistance =
@@ -632,7 +634,7 @@ class Hero {
             50 + this.stats.attackRange * 100
           ) {
             if (
-              rectCircleCollide(
+              (rectCircleCollide(
                 this.position.x + camera.x,
                 this.position.y + camera.y,
                 200,
@@ -641,8 +643,9 @@ class Hero {
                 monsters[i].position.x + camera.x,
                 monsters[i].position.y + camera.y,
                 5
-              ) ||
-              rectCircleCollide(
+              ) &&
+                monsters[i].burrowed) ||
+              (rectCircleCollide(
                 this.position.x + camera.x,
                 this.position.y + camera.y,
                 200,
@@ -651,7 +654,8 @@ class Hero {
                 monsters[i].position.x + camera.x,
                 monsters[i].position.y + camera.y,
                 5
-              )
+              ) &&
+                monsters[i].burrowed)
             ) {
               monsters[i].stats.health -= calculateDefense(
                 monsters[i].stats.defense,

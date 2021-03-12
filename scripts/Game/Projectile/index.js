@@ -176,10 +176,12 @@ class Projectile {
         this.position.x = this.startObj.position.x;
         this.position.y = this.startObj.position.y;
 
-        this.target.stats.health -= calculateDefense(
-          this.target.stats.defense,
-          this.damage
-        );
+        if (!this.target.burrowed) {
+          this.target.stats.health -= calculateDefense(
+            this.target.stats.defense,
+            this.damage
+          );
+        }
 
         this.durationTimer++;
         if (this.durationTimer >= this.duration) {
@@ -334,7 +336,8 @@ class Projectile {
               monsters[i].position.x,
               monsters[i].position.y
             ) <
-            this.attackRange * 50
+              this.attackRange * 50 &&
+            !monsters[i].burrowed
           ) {
             monsters[i].stats.health -= calculateDefense(
               monsters[i].stats.defense,
@@ -466,7 +469,8 @@ class Projectile {
           monsters[i].position.x,
           monsters[i].position.y
         ) < this.size &&
-        !monsters[i].dying
+        !monsters[i].dying &&
+        !monsters[i].burrowed
       ) {
         monsters[i].stats.health -= calculateDefense(
           monsters[i].stats.defense,

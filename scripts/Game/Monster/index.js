@@ -28,6 +28,9 @@ class Monster {
     this.dead = false;
     this.deathTimer = 0;
     this.hurtTimer = 0;
+    this.isHit = false;
+    this.burrowed = false;
+    this.burrowTimer = 0;
     this.flee = false;
     this.enrage = false;
     this.speedOffset = 0;
@@ -173,17 +176,6 @@ class Monster {
         this.idleImg = sprites.Snake.idleImg;
         this.walkGif = sprites.Snake.walkGif;
         this.loaded = true;
-        // this.idleAttackImg = sprites.Snake.idleAttackImg;
-        // this.attackGif = loadImage(
-        //   "../../../sprites/Monsters/Spider/Attack.gif",
-        //   () => (this.loaded = true),
-        //   () => (this.loaded = false)
-        // );
-        // this.deathGif = loadImage(
-        //   "../../../sprites/Monsters/Spider/Death.gif",
-        //   () => (this.loaded = true),
-        //   () => (this.loaded = false)
-        // );
         break;
     }
   }
@@ -288,6 +280,18 @@ class Monster {
         pop();
         break;
     }
+    noStroke();
+    if (!this.burrowed) {
+      fill(0, 0);
+    } else {
+      fill(0);
+    }
+    ellipse(
+      this.position.x + camera.x,
+      this.position.y + camera.y,
+      this.size + 25,
+      this.size + 25
+    );
     pop();
 
     if (this.dying) return;
@@ -433,14 +437,19 @@ class Monster {
       return;
     }
 
-    this.move();
+    if (!this.burrowed) {
+      this.move();
+    }
 
     if (this.hurtTimer >= 300 && !this.isBoss) {
+      this.burrowed = false;
       if (this.stats.health < this.stats.maxHealth) {
         this.stats.health++;
+        this.isHit = true;
       } else {
         this.stats.health = this.stats.maxHealth;
         this.hurtTimer = 0;
+        this.isHit = false;
       }
       this.fakeHealth = this.stats.health;
     }
@@ -550,6 +559,19 @@ class Monster {
     if (this.flee) {
       this.attacking = false;
       this.moving = true;
+      if (this.hurtTimer > 0 && !this.isBoss) {
+        this.moving = false;
+        this.burrowed = true;
+      }
+    }
+
+    if (this.burrowed) {
+      this.burrowTimer++;
+
+      if (this.burrowTimer >= 300) {
+        this.burrowed = false;
+        this.burrowTimer = 0;
+      }
     }
 
     if (this.burning) {
