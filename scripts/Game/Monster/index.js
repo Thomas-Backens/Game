@@ -175,7 +175,16 @@ class Monster {
       case "Snake":
         this.idleImg = sprites.Snake.idleImg;
         this.walkGif = sprites.Snake.walkGif;
-        this.loaded = true;
+        this.attackGif = loadImage(
+          "../../../sprites/Monsters/Snake/Attack.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
+        this.deathGif = loadImage(
+          "../../../sprites/Monsters/Snake/Death.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
         break;
     }
   }
@@ -244,10 +253,18 @@ class Monster {
         noStroke();
         translate(this.position.x + camera.x, this.position.y + camera.y);
         rotate(this.angle - 4.8);
-        if (this.moving) {
-          image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+        if (this.dying) {
+          image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
         } else {
-          image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+          if (this.moving) {
+            image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+          } else {
+            if (this.attacking) {
+              image(this.attackGif, 0, 0, this.size * 4, this.size * 4);
+            } else {
+              image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+            }
+          }
         }
         pop();
         break;
@@ -494,16 +511,6 @@ class Monster {
           this.jab();
         }
 
-        if (this.attacking) {
-          if (this.jabLength < 80) {
-            this.jabLength += 20;
-          }
-        } else {
-          if (this.jabLength > 0) {
-            this.jabLength -= 5;
-          }
-        }
-
         if (
           this.stats.health <= this.stats.maxHealth / (100 / 15) &&
           !this.hasShed
@@ -727,7 +734,9 @@ class Monster {
       return;
     }
 
-    this.attackTimer++;
+    if (this.attackTimer < this.stats.attackSpeed * 48) {
+      this.attackTimer++;
+    }
     if (
       dist(
         this.position.x,
@@ -738,17 +747,34 @@ class Monster {
         this.stats.attackRange * 100 &&
       !this.flee
     ) {
-      if (this.attackTimer >= this.stats.attackSpeed * 60) {
-        this.attacking = true;
+      if (this.attackTimer >= this.stats.attackSpeed * 48) {
+        this.attackTimer++;
       }
-    }
-    if (this.jabLength >= 80) {
-      this.target.stats.health -= calculateDefense(
-        this.target.stats.defense,
-        this.stats.damage
-      );
-      this.attackTimer = 0;
+      if (
+        this.attackTimer >= 0 &&
+        this.attackTimer < this.stats.attackSpeed * 42
+      ) {
+        this.attacking = false;
+        this.attackGif.reset();
+        this.attackGif.pause();
+      }
+      if (this.attackTimer >= this.stats.attackSpeed * 48) {
+        this.attacking = true;
+        this.attackGif.play();
+      }
+
+      if (this.attackTimer === this.stats.attackSpeed * 54) {
+        this.target.stats.health -= calculateDefense(
+          this.target.stats.defense,
+          this.stats.damage
+        );
+      }
+      if (this.attackTimer >= this.stats.attackSpeed * 60) {
+        this.attackTimer = 0;
+      }
+    } else {
       this.attacking = false;
+      this.attackGif.reset();
     }
   }
 
