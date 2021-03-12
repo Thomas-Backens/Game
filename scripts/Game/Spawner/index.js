@@ -210,22 +210,22 @@ class Spawner {
         case "Spider":
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
@@ -233,15 +233,15 @@ class Spawner {
         case "Snake":
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
@@ -249,8 +249,8 @@ class Spawner {
         case "Bear":
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
