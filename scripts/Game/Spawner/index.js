@@ -20,6 +20,9 @@ class Spawner {
     this.burningTime = 300;
     this.burningTimer = 0;
 
+    this.spawnerImg;
+    this.loaded = false;
+
     switch (this.type) {
       case "Spider":
         this.spawnTime = 7;
@@ -39,60 +42,74 @@ class Spawner {
     this.hitTimer = 0;
   }
 
-  display() {
-    switch (this.type) {
-      case "Spider":
-        noStroke();
-        fill(50);
-        rect(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        fill(0);
-        ellipse(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        break;
-      case "Snake":
-        noStroke();
-        fill(50);
-        rect(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        fill(0);
-        ellipse(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        break;
-      case "Bear":
-        noStroke();
-        fill(50);
-        rect(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        fill(0);
-        ellipse(
-          this.position.x + camera.x,
-          this.position.y + camera.y,
-          this.size,
-          this.size
-        );
-        break;
+  loadImages() {
+    if (sprites.Spawners.loaded) {
+      this.spawnerImg = sprites.Spawners.Spider;
+      this.loaded = true;
     }
+  }
+
+  display() {
+    image(
+      this.spawnerImg,
+      this.position.x + camera.x,
+      this.position.y + camera.y,
+      this.size,
+      this.size
+    );
+    // switch (this.type) {
+    //   case "Spider":
+    //     noStroke();
+    //     fill(50);
+    //     rect(
+    //       this.position.x + camera.x,
+    //       this.position.y + camera.y,
+    //       this.size,
+    //       this.size
+    //     );
+    //     fill(0);
+    //     ellipse(
+    //       this.position.x + camera.x,
+    //       this.position.y + camera.y,
+    //       this.size,
+    //       this.size
+    //     );
+    //     break;
+    //   case "Snake":
+    //     noStroke();
+    //     fill(50);
+    //     rect(
+    //       this.position.x + camera.x,
+    //       this.position.y + camera.y,
+    //       this.size,
+    //       this.size
+    //     );
+    //     fill(0);
+    //     ellipse(
+    //       this.position.x + camera.x,
+    //       this.position.y + camera.y,
+    //       this.size,
+    //       this.size
+    //     );
+    //     break;
+    //   case "Bear":
+    //     noStroke();
+    //     fill(50);
+    //     rect(
+    //       this.position.x + camera.x,
+    //       this.position.y + camera.y,
+    //       this.size,
+    //       this.size
+    //     );
+    //     fill(0);
+    //     ellipse(
+    //       this.position.x + camera.x,
+    //       this.position.y + camera.y,
+    //       this.size,
+    //       this.size
+    //     );
+    //     break;
+    // }
 
     if (this.glow) {
       noFill();

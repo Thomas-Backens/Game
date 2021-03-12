@@ -2,42 +2,42 @@ let keys = [];
 let bitMap = [
   "11111111111111111111111111111111111111111",
   "1                   1            1      1",
-  "1        11111       1                  1",
+  "1        11111      !1                  1",
   "1  S             11     1 11  11     s  1",
   "1                                       1",
-  "1      1111                             1",
-  "1            1            1           111",
-  "1            1              1        1  1",
-  "1           1                11     1   1",
-  "1    11           11         1      1   1",
-  "1    1    11    11          1           1",
-  "1   1          1                        1",
+  "1      1111             11              1",
+  "1            1          111          1111",
+  "1           11              11       1  1",
+  "1           1                11     11  1",
+  "1    11          111         1      1   1",
+  "1    1    11   111          11          1",
+  "1   11        11                        1",
   "1             1      1111               1",
-  "1                              1   1    1",
+  "1                             11   1    1",
   "1     11                     11    1    1",
-  "1    1       1            111      1    1",
+  "1    11     11            1111     11   1",
   "1    1      1                       1   1",
   "1                11   11                1",
   "1                1     1        1       1",
-  "1        1                       1      1",
+  "1       11                      11      1",
   "1     111           p            1      1",
   "1                               11      1",
   "1         1      1     1                1",
   "1         1      11   11    1           1",
-  "1                           1      1    1",
-  "1                          1 1     1    1",
-  "1     11      1            1  1         1",
-  "1         1    11        111   1        1",
+  "1                          111     1    1",
+  "1                          1 11    1    1",
+  "1     11      11           1  11        1",
+  "1         1    111       111   1        1",
+  "1        11      1                  1   1",
   "1        1       1                  1   1",
-  "1        1       1                  1   1",
-  "1         1           111          1    1",
-  "1                  11            11     1",
+  "1        11           111          11   1",
+  "1                  11            111    1",
   "1                                       1",
-  "1    11                1      1         1",
-  "1        1              111    11  11   1",
-  "1        1                       1      1",
-  "1              1                        1",
-  "1  s            11111111 1           S  1",
+  "1    11                1      11        1",
+  "1        1             1111    11  11   1",
+  "1        1                      11      1",
+  "1              11                       1",
+  "1  s            1111111111           S  1",
   "1        11         1   1     111       1",
   "1                   1                   1",
   "11111111111111111111111111111111111111111",
@@ -78,6 +78,18 @@ let sprites = {
   Blocks: {
     floorTiles: [],
     wallTiles: [],
+    loaded: false,
+  },
+  Spawners: {
+    Spider: null,
+    loaded: false,
+  },
+  Projectiles: {
+    MagicBall: null,
+    FireBall: null,
+    FireRing: null,
+    Web: null,
+    WebShot: null,
     loaded: false,
   },
 };
@@ -219,6 +231,10 @@ function setup() {
 
   for (let i = 0; i < blocks.length; i++) {
     blocks[i].loadImages();
+  }
+
+  for (let i = 0; i < spawners.length; i++) {
+    spawners[i].loadImages();
   }
 
   {
@@ -512,6 +528,42 @@ function setup() {
       ),
     ];
   } // Block Images
+
+  {
+    sprites.Spawners.Spider = loadImage(
+      "../../sprites/Tiles/Spawner.png",
+      () => ((sprites.Spawners.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spawners.loaded = false)
+    );
+  } // Spawner Images
+
+  {
+    sprites.Projectiles.MagicBall = loadImage(
+      "../../../sprites/Projectiles/MagicBall.gif",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.FireBall = loadImage(
+      "../../../sprites/Projectiles/FireBall.gif",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.FireRing = loadImage(
+      "../../../sprites/Projectiles/FireRing_still.png",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.Web = loadImage(
+      "../../../sprites/Projectiles/Web.png",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.WebShot = loadImage(
+      "../../../sprites/Projectiles/WebShot.gif",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+  } // Projectile Images
 }
 
 function draw() {
@@ -768,6 +820,22 @@ function draw() {
             }
           }
 
+          for (let i = 0; i < spawners.length; i++) {
+            if (!spawners[i].loaded) {
+              spawners[i].loadImages();
+            } else {
+              if (spawners[i].onScreen()) {
+                spawners[i].display();
+              }
+              spawners[i].update();
+            }
+
+            if (spawners[i].dead) {
+              spawners.splice(i, 1);
+              i--;
+            }
+          }
+
           for (let i = 0; i < monsters.length; i++) {
             if (!monsters[i].loaded) {
               monsters[i].loadImages();
@@ -817,18 +885,6 @@ function draw() {
             }
           }
 
-          for (let i = 0; i < spawners.length; i++) {
-            if (spawners[i].onScreen()) {
-              spawners[i].display();
-            }
-            spawners[i].update();
-
-            if (spawners[i].dead) {
-              spawners.splice(i, 1);
-              i--;
-            }
-          }
-
           for (let i = 0; i < coins.length; i++) {
             coins[i].display();
             coins[i].update();
@@ -852,8 +908,16 @@ function draw() {
           }
 
           for (let i = 0; i < projectiles.length; i++) {
-            projectiles[i].display();
-            projectiles[i].update();
+            if (!projectiles[i].loaded) {
+              projectiles[i].loadImages();
+            }
+          }
+
+          for (let i = 0; i < projectiles.length; i++) {
+            if (projectiles[i].loaded) {
+              projectiles[i].display();
+              projectiles[i].update();
+            }
 
             if (projectiles[i].dead) {
               projectiles.splice(i, 1);
@@ -978,6 +1042,12 @@ function draw() {
             loadedSprites = false;
           }
           if (!sprites.Snake.loaded) {
+            loadedSprites = false;
+          }
+          if (!sprites.Spawners.loaded) {
+            loadedSprites = false;
+          }
+          if (!sprites.Projectiles.loaded) {
             loadedSprites = false;
           }
         }

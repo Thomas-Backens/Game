@@ -35,11 +35,23 @@ class Projectile {
     this.splashTimer = 0;
     this.alpha = 50;
 
-    this.magicBall = loadImage("../../../sprites/Projectiles/MagicBall.gif");
-    this.fireBall = loadImage("../../../sprites/Projectiles/FireBall.gif");
-    this.fireRing_still = loadImage(
-      "../../../sprites/Projectiles/FireRing_still.png"
-    );
+    this.magicBall;
+    this.fireBall;
+    this.fireRing_still;
+    this.web;
+    this.webShot;
+    this.loaded = false;
+  }
+
+  loadImages() {
+    if (sprites.Projectiles.loaded) {
+      this.magicBall = sprites.Projectiles.MagicBall;
+      this.fireBall = sprites.Projectiles.FireBall;
+      this.fireRing_still = sprites.Projectiles.FireRing;
+      this.web = sprites.Projectiles.Web;
+      this.webShot = sprites.Projectiles.WebShot;
+      this.loaded = true;
+    }
   }
 
   display() {
@@ -138,17 +150,23 @@ class Projectile {
           push();
           translate(this.position.x + camera.x, this.position.y + camera.y);
           rotate(this.angle);
-          fill(200);
-          ellipse(0, 0, this.size, this.size / 2);
+          // fill(200);
+          // ellipse(0, 0, this.size, this.size / 2);
+          image(this.webShot, 0, 0, this.size * 2, this.size * 2);
           pop();
         } else {
-          noStroke();
-          fill(255, this.alpha);
-          ellipse(
+          // noStroke();
+          // fill(255, this.alpha);
+          // ellipse(
+          //   this.position.x + camera.x,
+          //   this.position.y + camera.y,
+          //   200,
+          //   200
+          // );
+          image(
+            this.web,
             this.position.x + camera.x,
-            this.position.y + camera.y,
-            200,
-            200
+            this.position.y + camera.y
           );
         }
         break;
