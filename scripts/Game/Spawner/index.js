@@ -25,18 +25,20 @@ class Spawner {
 
     switch (this.type) {
       case "Spider":
-        this.spawnTime = 7;
+        this.spawnTime = 20;
         break;
       case "Snake":
-        this.spawnTime = 10;
+        this.spawnTime = 25;
         break;
       case "Bear":
-        this.spawnTime = 15;
+        this.spawnTime = 35;
         break;
       default:
         this.spawnTime = 5;
         break;
     }
+
+    this.spawnTimer = this.spawnTime * 60;
 
     this.fakeHealth = this.stats.maxHealth;
     this.hitTimer = 0;
@@ -155,22 +157,22 @@ class Spawner {
         case "Spider":
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
@@ -178,15 +180,15 @@ class Spawner {
         case "Snake":
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
@@ -194,8 +196,8 @@ class Spawner {
         case "Bear":
           monsters.push(
             new Monster({
-              x: this.position.x,
-              y: this.position.y,
+              x: this.position.x + random(-100, 100),
+              y: this.position.y + random(-100, 100),
               type: this.type,
             })
           );
