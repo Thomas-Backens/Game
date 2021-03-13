@@ -26,6 +26,8 @@ class Block {
       right: null,
       topLeft: null,
       topRight: null,
+      bottomLeft: null,
+      bottomRight: null,
     };
   }
 
@@ -35,7 +37,7 @@ class Block {
     this.floorTiles = sprites.Blocks.floorTiles;
     this.wallTiles = sprites.Blocks.wallTiles;
 
-    this.floorTile = round(random(0, this.floorTiles.length - 2));
+    this.floorTile = round(random(0, this.floorTiles.length - 4));
     this.wallTile = round(random(0, 1));
 
     for (let i = 0; i < blocks.length; i++) {
@@ -75,21 +77,54 @@ class Block {
       ) {
         this.walls.topLeft = blocks[i];
       }
+      if (
+        blocks[i].position.x === this.position.x + wallSize &&
+        blocks[i].position.y === this.position.y + wallSize
+      ) {
+        this.walls.bottomRight = blocks[i];
+      }
+      if (
+        blocks[i].position.x === this.position.x - wallSize &&
+        blocks[i].position.y === this.position.y + wallSize
+      ) {
+        this.walls.bottomLeft = blocks[i];
+      }
     }
 
     if (this.walls.above !== null) {
       if (this.walls.above.type === "wall") {
-        this.floorTile = this.floorTiles.length - 1;
+        if (this.type === "floor") {
+          if (
+            this.walls.topLeft.type === "wall" ||
+            this.walls.topRight.type === "wall"
+          ) {
+            this.floorTile = this.floorTiles.length - 3;
+          } else {
+            this.floorTile = this.floorTiles.length - 1;
+            if (this.walls.above.walls.topLeft !== null) {
+              if (
+                this.walls.above.walls.above.type === "wall" &&
+                this.walls.above.walls.topLeft.type === "wall"
+              ) {
+                this.floorTile = this.floorTiles.length - 2;
+              }
+            }
+          }
+        }
       }
     }
-    if (this.walls.left !== null) {
-      if (this.walls.left.type === "floor") {
-        this.wallTile = round(random(4, 5));
-      }
-    }
-    if (this.walls.right !== null) {
-      if (this.walls.right.type === "floor") {
-        this.wallTile = round(random(2, 3));
+    if (this.walls.below !== null) {
+      if (this.walls.below.type === "wall") {
+        if (this.walls.bottomLeft !== null) {
+          if (this.walls.bottomLeft.type === "wall") {
+            this.wallTile = round(random(4, 5));
+          }
+        }
+        if (this.walls.bottomRight !== null) {
+          if (this.walls.bottomRight.type === "wall") {
+            this.wallTile = round(random(2, 3));
+          }
+        }
       }
     }
     if (this.walls.below !== null) {
@@ -129,6 +164,20 @@ class Block {
           this.walls.topLeft.type === "wall"
         ) {
           this.wallTile = 9;
+        }
+      }
+      if (this.wallTile === 8) {
+        if (this.walls.below !== null) {
+          if (this.walls.below.type === "floor") {
+            this.wallTile = 10;
+          }
+        }
+      }
+      if (this.wallTile === 9) {
+        if (this.walls.below !== null) {
+          if (this.walls.below.type === "floor") {
+            this.wallTile = 11;
+          }
         }
       }
       if (this.walls.left !== null) {

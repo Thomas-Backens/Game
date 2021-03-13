@@ -470,7 +470,17 @@ function setup() {
         () => (sprites.Blocks.loaded = false)
       ),
       loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt_wall_top.png",
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top3.png",
         () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
         () => (sprites.Blocks.loaded = false)
       ),
@@ -523,6 +533,16 @@ function setup() {
       ),
       loadImage(
         "../../../sprites/Tiles/Stone/Stone_side_corner2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_end1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_end2.png",
         () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
         () => (sprites.Blocks.loaded = false)
       ),

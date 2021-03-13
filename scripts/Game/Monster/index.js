@@ -262,7 +262,7 @@ class Monster {
         noStroke();
         translate(this.position.x + camera.x, this.position.y + camera.y);
         rotate(this.angle - 4.8);
-        if (this.burrowed) {
+        if (!this.burrowed) {
           if (this.dying) {
             image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
           } else {

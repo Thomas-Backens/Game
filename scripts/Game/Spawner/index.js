@@ -57,59 +57,6 @@ class Spawner {
       this.size,
       this.size
     );
-    // switch (this.type) {
-    //   case "Spider":
-    //     noStroke();
-    //     fill(50);
-    //     rect(
-    //       this.position.x + camera.x,
-    //       this.position.y + camera.y,
-    //       this.size,
-    //       this.size
-    //     );
-    //     fill(0);
-    //     ellipse(
-    //       this.position.x + camera.x,
-    //       this.position.y + camera.y,
-    //       this.size,
-    //       this.size
-    //     );
-    //     break;
-    //   case "Snake":
-    //     noStroke();
-    //     fill(50);
-    //     rect(
-    //       this.position.x + camera.x,
-    //       this.position.y + camera.y,
-    //       this.size,
-    //       this.size
-    //     );
-    //     fill(0);
-    //     ellipse(
-    //       this.position.x + camera.x,
-    //       this.position.y + camera.y,
-    //       this.size,
-    //       this.size
-    //     );
-    //     break;
-    //   case "Bear":
-    //     noStroke();
-    //     fill(50);
-    //     rect(
-    //       this.position.x + camera.x,
-    //       this.position.y + camera.y,
-    //       this.size,
-    //       this.size
-    //     );
-    //     fill(0);
-    //     ellipse(
-    //       this.position.x + camera.x,
-    //       this.position.y + camera.y,
-    //       this.size,
-    //       this.size
-    //     );
-    //     break;
-    // }
 
     if (this.glow) {
       noFill();
