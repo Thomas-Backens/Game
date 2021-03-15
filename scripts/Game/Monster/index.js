@@ -477,7 +477,7 @@ class Monster {
 
     switch (this.type) {
       case "Spider":
-        if (!this.flee) {
+        if (!this.flee && !this.burrowed) {
           this.bite();
         }
         if (this.isBoss) {
@@ -617,7 +617,7 @@ class Monster {
       if (this.hurtTimer > 0 && !this.isBoss) {
         this.moving = false;
       }
-      if (this.fleeHit && !this.isBoss) {
+      if (this.fleeHit && !this.isBoss && this.type !== "Snake") {
         this.burrowed = true;
         this.fleeHit = false;
       }

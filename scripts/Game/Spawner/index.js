@@ -143,6 +143,17 @@ class Spawner {
           isBoss: true,
         })
       );
+      for (let i = 0; i < monsters.length; i++) {
+        if (monsters[i].isBoss && monsters[i].type !== "Snake") {
+          monsters[i].burrowed = true;
+          monsters[i].attacking = false;
+          if (monsters[i].burrowTimer >= 120) {
+            monsters[i].burrowed = false;
+            monsters[i].attacking = true;
+            monsters[i].burrowTimer = 0;
+          }
+        }
+      }
     }
 
     for (let i = 0; i < monsters.length; i++) {
