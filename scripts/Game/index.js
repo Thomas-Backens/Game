@@ -68,6 +68,8 @@ let sprites = {
     idleImg: null,
     walkGif: null,
     idleAttackImg: null,
+    // unburrowGif: null,
+    holeImg: null,
     loaded: false,
   },
   Snake: {
@@ -429,6 +431,16 @@ function setup() {
     );
     sprites.Spider.idleAttackImg = loadImage(
       "../../../sprites/Monsters/Spider/Attack.png",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    // sprites.Spider.unburrowGif = loadImage(
+    //   "../../../sprites/Monsters/Spider/Unburrow.gif",
+    //   () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+    //   () => (sprites.Spider.loaded = false)
+    // );
+    sprites.Spider.holeImg = loadImage(
+      "../../../sprites/Monsters/hole.png",
       () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
       () => (sprites.Spider.loaded = false)
     );
@@ -897,6 +909,7 @@ function draw() {
                 if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
                   monsters[i].deathGif.delay(10000, 13);
                   monsters[i].attackGif.pause();
+                  monsters[i].unburrowGif.delay(10000, 8);
                   monsters[i].setDelays = true;
                 }
                 break;

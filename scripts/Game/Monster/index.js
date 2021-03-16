@@ -32,6 +32,7 @@ class Monster {
     this.hurtTimer = 0;
     this.burrowed = false;
     this.burrowTimer = 0;
+    this.unburrow = false;
     this.flee = false;
     this.fleeHit = false;
     this.enrage = false;
@@ -61,6 +62,7 @@ class Monster {
     this.attackGif;
     this.deathGif;
     this.holeImg;
+    this.unburrowGif;
     this.loaded = false;
     this.loadDelay = 0;
     this.setDelays = false;
@@ -164,7 +166,7 @@ class Monster {
         this.idleImg = sprites.Spider.idleImg;
         this.walkGif = sprites.Spider.walkGif;
         this.idleAttackImg = sprites.Spider.idleAttackImg;
-        this.holeImg = sprites.Spawners.Spider;
+        this.holeImg = sprites.Spider.holeImg;
         this.attackGif = loadImage(
           "../../../sprites/Monsters/Spider/Attack.gif",
           () => (this.loaded = true),
@@ -172,6 +174,11 @@ class Monster {
         );
         this.deathGif = loadImage(
           "../../../sprites/Monsters/Spider/Death.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
+        this.unburrowGif = loadImage(
+          "../../../sprites/Monsters/Spider/Unburrow.gif",
           () => (this.loaded = true),
           () => (this.loaded = false)
         );
@@ -311,13 +318,33 @@ class Monster {
         break;
     }
     if (this.burrowed) {
-      image(
-        this.holeImg,
-        this.position.x + camera.x,
-        this.position.y + camera.y,
-        this.size,
-        this.size
-      );
+      if (this.type === "Spider") {
+        if (this.unburrow) {
+          image(
+            this.unburrowGif,
+            this.position.x + camera.x,
+            this.position.y + camera.y,
+            this.size * 2,
+            this.size * 2
+          );
+        } else {
+          image(
+            this.holeImg,
+            this.position.x + camera.x,
+            this.position.y + camera.y,
+            this.size * 2,
+            this.size * 2
+          );
+        }
+      } else {
+        image(
+          this.holeImg,
+          this.position.x + camera.x,
+          this.position.y + camera.y,
+          this.size * 2,
+          this.size * 2
+        );
+      }
     }
     pop();
 
@@ -613,8 +640,15 @@ class Monster {
     if (this.burrowed) {
       this.burrowTimer++;
 
+      if (!this.unburrow) {
+        this.unburrowGif.reset();
+      }
       if (this.burrowTimer >= 300) {
+        this.unburrow = true;
+      }
+      if (this.burrowTimer >= 400) {
         this.burrowed = false;
+        this.unburrow = false;
         this.burrowTimer = 0;
       }
     }
