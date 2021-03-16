@@ -658,7 +658,10 @@ class Monster {
       this.burningTimer++;
 
       if (this.burnTimer >= this.burnTime) {
-        this.stats.health -= calculateDefense(this.stats.defense, 30);
+        this.stats.health -= calculateDefense(
+          this.stats.defense,
+          heroes[0].stats.damage / 2
+        );
         this.burnTimer = 0;
       }
 

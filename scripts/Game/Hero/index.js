@@ -77,6 +77,10 @@ class Hero {
     this.displayPointTimer = 0;
     this.levelUp = false;
 
+    this.burning = false;
+    this.burnTimer = 0;
+    this.burningTimer = 0;
+
     this.idle;
     this.walk;
     this.staffSmash;
@@ -104,7 +108,7 @@ class Hero {
           energyRegen: 1,
           xp: 0,
           xpToNextLevel: this.levels[this.stats.level],
-          points: 75,
+          points: 0,
           upgrades: {
             damage: 0,
             health: 0,
@@ -453,6 +457,31 @@ class Hero {
       }
     } else {
       this.energyRegenTimer++;
+    }
+
+    for (let i = 0; i < monsters.length; i++) {
+      if (monsters[i].attacking && monsters[i].burning) {
+        this.burning = true;
+      }
+    }
+
+    if (this.burning) {
+      this.burningTimer++;
+      this.burnTimer++;
+
+      if (this.burnTimer >= 30) {
+        this.stats.health -= calculateDefense(
+          this.stats.defense,
+          heroes[0].stats.damage / 2
+        );
+        this.burnTimer = 0;
+      }
+
+      if (this.burningTimer >= 300) {
+        this.burning = false;
+        this.burningTimer = 0;
+        this.burnTimer = 0;
+      }
     }
 
     this.speedOffset = 0;
