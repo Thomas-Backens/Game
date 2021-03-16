@@ -207,7 +207,7 @@ function Interface(config) {
     textSize(20);
     fill(255);
     text(
-      `Level: ${heroes[0].stats.level}`,
+      `Level: ${heroes[0].stats.level + 1}`,
       windowWidth - 200,
       windowHeight - 250
     );
