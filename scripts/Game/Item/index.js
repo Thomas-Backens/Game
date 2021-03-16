@@ -1,4 +1,4 @@
-class Coin {
+class Item {
   constructor(config) {
     this.position = new p5.Vector(config.x, config.y);
     this.type = config.type;

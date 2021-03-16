@@ -464,7 +464,7 @@ class Monster {
         }
         for (let i = 0; i < randomNum1; i++) {
           coins.push(
-            new Coin({
+            new Item({
               x: this.position.x,
               y: this.position.y,
               type: "Coin",
@@ -474,7 +474,7 @@ class Monster {
         }
         for (let i = 0; i < randomNum2; i++) {
           coins.push(
-            new Coin({
+            new Item({
               x: this.position.x,
               y: this.position.y,
               type: "XP",
