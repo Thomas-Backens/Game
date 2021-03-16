@@ -33,7 +33,7 @@ class Projectile {
     this.curveNum = this.speed / 2;
     this.splashed = false;
     this.splashTimer = 0;
-    this.alpha = 50;
+    this.alpha = 200;
 
     this.magicBall;
     this.fireBall;
@@ -163,11 +163,14 @@ class Projectile {
           //   200,
           //   200
           // );
+          push();
+          tint(255, this.alpha);
           image(
             this.web,
             this.position.x + camera.x,
             this.position.y + camera.y
           );
+          pop();
         }
         break;
     }
@@ -290,7 +293,7 @@ class Projectile {
         }
 
         if (this.dying) {
-          this.alpha--;
+          this.alpha -= 5;
 
           if (this.alpha <= 0) {
             this.dead = true;

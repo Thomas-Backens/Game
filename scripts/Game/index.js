@@ -18,12 +18,12 @@ let bitMap = [
   "1    11     11            1111     11   1",
   "1    1      1                       1   1",
   "1                11   11                1",
-  "1                1     1        1       1",
-  "1       11                      11      1",
+  "1               11     1        1       1",
+  "1       11             1        11      1",
   "1     111           p            1      1",
   "1                               11      1",
-  "1         1      1     1                1",
-  "1         1      11   11    1           1",
+  "1         1      1      1               1",
+  "1         1      11   111   1           1",
   "1                          111     1    1",
   "1                          1 11    1    1",
   "1     11      11           1  11        1",
@@ -543,6 +543,11 @@ function setup() {
       ),
       loadImage(
         "../../../sprites/Tiles/Stone/Stone_side_end2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_full.png",
         () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
         () => (sprites.Blocks.loaded = false)
       ),

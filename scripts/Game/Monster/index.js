@@ -18,6 +18,7 @@ class Monster {
     };
     this.abilities = {
       jump: { timer: 0, timeOut: 18, using: false, damage: 100 },
+      swarm: { timer: 0, timeOut: 13, using: false },
       webSlinger: { timer: 0, timeOut: 10, using: false, duration: 5 },
     };
     this.target = heroes[0];
@@ -482,20 +483,6 @@ class Monster {
         }
         if (this.isBoss) {
           this.spidersAbilities();
-          this.spawnTimer++;
-          if (this.spawnTimer >= 600) {
-            this.spawnTimer = 0;
-            let randonNum = round(random(2, 4));
-            for (let i = 0; i < randonNum; i++) {
-              monsters.push(
-                new Monster({
-                  x: this.position.x + random(-100, 100),
-                  y: this.position.y + random(-100, 100),
-                  type: "Spider",
-                })
-              );
-            }
-          }
         }
 
         if (this.fakeHealth <= this.stats.health + 1) {
@@ -849,9 +836,28 @@ class Monster {
     } else {
       this.abilities.webSlinger.timer++;
     }
+    if (this.abilities.swarm.timer >= this.abilities.swarm.timeOut * 60) {
+      this.abilities.swarm.timer = 0;
+      this.abilities.swarm.using = true;
+    } else {
+      this.abilities.swarm.timer++;
+    }
 
     if (this.abilities.jump.using) {
       this.abilities.jump.using = false;
+    }
+    if (this.abilities.swarm.using) {
+      let randonNum = round(random(1, 4));
+      for (let i = 0; i < randonNum; i++) {
+        monsters.push(
+          new Monster({
+            x: this.position.x + random(-200, 200),
+            y: this.position.y + random(-200, 200),
+            type: "Spider",
+          })
+        );
+      }
+      this.abilities.swarm.using = false;
     }
     if (this.abilities.webSlinger.using) {
       projectiles.push(

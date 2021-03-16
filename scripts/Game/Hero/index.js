@@ -52,13 +52,13 @@ class Hero {
     ];
     this.abilities = [];
     this.ability = {
-      StaffSmash: { using: false, timeOut: 10, timer: 0, energy: 25 },
+      StaffSmash: { using: false, timeOut: 10, timer: 0, energy: 10 },
       RainFire: {
         using: false,
         used: false,
         timeOut: 60,
         duration: 300,
-        energy: 75,
+        energy: 50,
       },
       LightningStrike: { using: false, used: false, duration: 10, energy: 100 },
     };

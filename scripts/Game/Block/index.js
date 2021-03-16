@@ -127,6 +127,12 @@ class Block {
         }
       }
     }
+    if (this.walls.left === null) {
+      this.wallTile = round(2, 3);
+    }
+    if (this.walls.right === null) {
+      this.wallTile = round(4, 5);
+    }
     if (this.walls.below !== null) {
       if (this.walls.below.type === "floor") {
         this.wallTile = round(random(0, 1));
@@ -145,7 +151,35 @@ class Block {
           this.walls.left.type === "wall" &&
           this.walls.below.type === "wall"
         ) {
-          this.wallTile = 7;
+          if (
+            this.walls.bottomRight !== null &&
+            this.walls.bottomLeft !== null
+          ) {
+            if (
+              this.walls.bottomRight.type === "wall" &&
+              this.walls.bottomLeft.type === "floor"
+            ) {
+              this.wallTile = 12;
+            } else {
+              this.wallTile = 7;
+            }
+          } else {
+            this.wallTile = 7;
+          }
+        }
+
+        if (
+          this.walls.left.type === "floor" &&
+          this.walls.below.type === "wall"
+        ) {
+          if (this.walls.above !== null && this.walls.right !== null) {
+            if (
+              this.walls.above.type === "floor" &&
+              this.walls.right.type === "floor"
+            ) {
+              this.wallTile = 7;
+            }
+          }
         }
       }
     }
