@@ -27,6 +27,8 @@ class Hero {
         maxHealth: 0,
         energyLimit: 0,
         maxEnergyLimit: 0,
+        damageIncrease: [],
+        healthIncrease: [],
       },
       level: 0,
       speed: 0,
@@ -112,7 +114,19 @@ class Hero {
             maxHealth: 20,
             energyLimit: 5,
             maxEnergyLimit: 20,
-            damageIncrease: [25, 50, 100, 175, 300, 500, 800, 1500, 3000, 5000],
+            damageIncrease: [
+              15,
+              25,
+              50,
+              100,
+              175,
+              300,
+              500,
+              800,
+              1500,
+              3000,
+              5000,
+            ],
             healthIncrease: [
               200,
               225,
@@ -129,11 +143,12 @@ class Hero {
               7000,
               9000,
               12000,
-              15000,
-              18000,
+              16000,
               22000,
-              26000,
-              30000,
+              27000,
+              34000,
+              42000,
+              50000,
             ],
           },
           level: 0,
@@ -389,6 +404,7 @@ class Hero {
   update() {
     this.move();
     this.collideWithBlock();
+    this.upgradeStats();
 
     this.attackTimer++;
     this.displayPointTimer++;
@@ -454,6 +470,16 @@ class Hero {
         }
       }
     }
+  }
+
+  upgradeStats() {
+    this.stats.damage = this.stats.upgrades.damageIncrease[
+      this.stats.upgrades.damage
+    ];
+    console.log(this.stats.health);
+    this.stats.maxHealth = this.stats.upgrades.healthIncrease[
+      this.stats.upgrades.health
+    ];
   }
 
   arthursAbilites() {

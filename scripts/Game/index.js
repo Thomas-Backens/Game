@@ -302,7 +302,6 @@ function setup() {
           ) {
             heroes[0].stats.points -= 2;
             heroes[0].stats.upgrades.damage++;
-            heroes[0].stats.damage += heroes[0].stats.damage * 0.1;
           }
         },
         "stats"
@@ -369,8 +368,13 @@ function setup() {
           ) {
             heroes[0].stats.points--;
             heroes[0].stats.upgrades.health++;
-            heroes[0].stats.maxHealth += heroes[0].stats.maxHealth * 0.05;
-            heroes[0].stats.health += heroes[0].stats.maxHealth * 0.05;
+            heroes[0].stats.health +=
+              heroes[0].stats.upgrades.healthIncrease[
+                heroes[0].stats.upgrades.health
+              ] -
+              heroes[0].stats.upgrades.healthIncrease[
+                heroes[0].stats.upgrades.health - 1
+              ];
           }
         },
         "stats"
