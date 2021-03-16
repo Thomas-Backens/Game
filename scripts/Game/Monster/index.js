@@ -687,6 +687,16 @@ class Monster {
     let destination = p5.Vector.sub(this.target.position, this.position);
     if (this.flee) {
       destination = p5.Vector.sub(this.position, this.target.position);
+      if (
+        dist(
+          this.position.x,
+          this.position.y,
+          this.target.position.x,
+          this.target.position.y
+        ) < this.size
+      ) {
+        destination = p5.Vector.sub(this.position, this.size);
+      }
     }
     destination.normalize();
     if (this.type === "Spider") {
@@ -713,6 +723,10 @@ class Monster {
     } else {
       if (!this.flee) {
         this.moving = false;
+      } else {
+        if (!this.burrowed && !this.attacking) {
+          this.moving = true;
+        }
       }
     }
 
@@ -899,6 +913,9 @@ class Monster {
   }
 
   repel(target, power) {
+    if (this.burrowed) {
+      return;
+    }
     let strength;
     if (!power) {
       strength = this.stats.speed * 2;
