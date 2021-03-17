@@ -30,8 +30,8 @@ class Monster {
     this.spawnTimer = 0;
     this.deathTimer = 0;
     this.hurtTimer = 0;
-    this.burrowed = false;
-    this.burrowTimer = 0;
+    this.burrowed = true;
+    this.burrowTimer = 300;
     this.unburrow = false;
     this.flee = false;
     this.fleeHit = false;
@@ -41,7 +41,7 @@ class Monster {
     this.burnTime = 30;
     this.burnTimer = 0;
     this.burning = false;
-    this.burningTime = 300;
+    this.burningTime = 275;
     this.burningTimer = 0;
 
     this.isRepelling = false;
@@ -167,21 +167,21 @@ class Monster {
         this.walkGif = sprites.Spider.walkGif;
         this.idleAttackImg = sprites.Spider.idleAttackImg;
         this.holeImg = sprites.Spider.holeImg;
-        this.attackGif = loadImage(
-          "../../../sprites/Monsters/Spider/Attack.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        this.deathGif = loadImage(
-          "../../../sprites/Monsters/Spider/Death.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        this.unburrowGif = loadImage(
-          "../../../sprites/Monsters/Spider/Unburrow.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
+        // this.attackGif = loadImage(
+        //   "../../../sprites/Monsters/Spider/Attack.gif",
+        //   () => (this.loaded = true),
+        //   () => (this.loaded = false)
+        // );
+        // this.deathGif = loadImage(
+        //   "../../../sprites/Monsters/Spider/Death.gif",
+        //   () => (this.loaded = true),
+        //   () => (this.loaded = false)
+        // );
+        // this.unburrowGif = loadImage(
+        //   "../../../sprites/Monsters/Spider/Unburrow.gif",
+        //   () => (this.loaded = true),
+        //   () => (this.loaded = false)
+        // );
         break;
       case "Snake":
         this.idleImg = sprites.Snake.idleImg;
@@ -628,9 +628,6 @@ class Monster {
     if (this.flee) {
       this.attacking = false;
       this.moving = true;
-      if (this.hurtTimer > 0 && !this.isBoss) {
-        this.moving = false;
-      }
       if (this.fleeHit && !this.isBoss && this.type !== "Snake") {
         this.burrowed = true;
         this.fleeHit = false;
@@ -640,16 +637,23 @@ class Monster {
     if (this.burrowed) {
       this.burrowTimer++;
 
-      if (!this.unburrow) {
-        this.unburrowGif.reset();
-      }
-      if (this.burrowTimer >= 300) {
-        this.unburrow = true;
-      }
-      if (this.burrowTimer >= 400) {
-        this.burrowed = false;
-        this.unburrow = false;
-        this.burrowTimer = 0;
+      if (this.type === "Spider") {
+        if (!this.unburrow) {
+          this.unburrowGif.reset();
+        }
+        if (this.burrowTimer >= 300) {
+          this.unburrow = true;
+        }
+        if (this.burrowTimer >= 360) {
+          this.burrowed = false;
+          this.unburrow = false;
+          this.burrowTimer = 0;
+        }
+      } else {
+        if (this.burrowTimer >= 300) {
+          this.burrowed = false;
+          this.burrowTimer = 0;
+        }
       }
     }
 
