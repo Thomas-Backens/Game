@@ -167,21 +167,21 @@ class Monster {
         this.walkGif = sprites.Spider.walkGif;
         this.idleAttackImg = sprites.Spider.idleAttackImg;
         this.holeImg = sprites.Spider.holeImg;
-        // this.attackGif = loadImage(
-        //   "../../../sprites/Monsters/Spider/Attack.gif",
-        //   () => (this.loaded = true),
-        //   () => (this.loaded = false)
-        // );
-        // this.deathGif = loadImage(
-        //   "../../../sprites/Monsters/Spider/Death.gif",
-        //   () => (this.loaded = true),
-        //   () => (this.loaded = false)
-        // );
-        // this.unburrowGif = loadImage(
-        //   "../../../sprites/Monsters/Spider/Unburrow.gif",
-        //   () => (this.loaded = true),
-        //   () => (this.loaded = false)
-        // );
+        this.attackGif = loadImage(
+          "../../../sprites/Monsters/Spider/Attack.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
+        this.deathGif = loadImage(
+          "../../../sprites/Monsters/Spider/Death.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
+        this.unburrowGif = loadImage(
+          "../../../sprites/Monsters/Spider/Unburrow.gif",
+          () => (this.loaded = true),
+          () => (this.loaded = false)
+        );
         break;
       case "Snake":
         this.idleImg = sprites.Snake.idleImg;
