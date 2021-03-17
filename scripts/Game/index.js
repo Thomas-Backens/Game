@@ -317,11 +317,11 @@ function setup() {
         "Energy Speed",
         function () {
           if (
-            heroes[0].stats.points >= 3 &&
+            heroes[0].stats.points >= 2 &&
             heroes[0].stats.upgrades.energy <
               heroes[0].stats.upgrades.energyLimit
           ) {
-            heroes[0].stats.points -= 3;
+            heroes[0].stats.points -= 2;
             heroes[0].stats.upgrades.energy++;
             heroes[0].stats.energyRegen -=
               heroes[0].stats.upgrades.energy * 0.05;
