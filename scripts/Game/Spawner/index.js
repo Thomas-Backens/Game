@@ -135,14 +135,44 @@ class Spawner {
   update() {
     if (this.stats.health <= 0) {
       this.dead = true;
-      monsters.push(
-        new Monster({
-          x: this.position.x,
-          y: this.position.y,
-          type: this.type,
-          isBoss: true,
-        })
-      );
+      switch (this.type) {
+        case "Spider":
+          monsters.push(
+            new Monster({
+              sprites: {
+                idleImg: sprites.Spider.idleImg,
+                idleAttackImg: sprites.Spider.idleAttackImg,
+                holeImg: sprites.Spider.holeImg,
+                walkGif: cloneGif(sprites.Spider.walkGif, 0),
+                unburrowGif: cloneGif(sprites.Spider.unburrowGif, 0),
+                attackGif: cloneGif(sprites.Spider.attackGif, 0),
+                deathGif: cloneGif(sprites.Spider.deathGif, 0),
+              },
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+              isBoss: true,
+            })
+          );
+          break;
+        case "Snake":
+          monsters.push(
+            new Monster({
+              sprites: {
+                idleImg: sprites.Spider.idleImg,
+                holeImg: sprites.Spider.holeImg,
+                walkGif: cloneGif(sprites.Spider.walkGif, 0),
+                attackGif: cloneGif(sprites.Spider.attackGif, 0),
+                deathGif: cloneGif(sprites.Spider.deathGif, 0),
+              },
+              x: this.position.x,
+              y: this.position.y,
+              type: this.type,
+              isBoss: true,
+            })
+          );
+          break;
+      }
       for (let i = 0; i < monsters.length; i++) {
         if (monsters[i].isBoss && monsters[i].type !== "Snake") {
           monsters[i].burrowed = true;
@@ -168,6 +198,15 @@ class Spawner {
         case "Spider":
           monsters.push(
             new Monster({
+              sprites: {
+                idleImg: sprites.Spider.idleImg,
+                idleAttackImg: sprites.Spider.idleAttackImg,
+                holeImg: sprites.Spider.holeImg,
+                walkGif: cloneGif(sprites.Spider.walkGif, 0),
+                unburrowGif: cloneGif(sprites.Spider.unburrowGif, 0),
+                attackGif: cloneGif(sprites.Spider.attackGif, 0),
+                deathGif: cloneGif(sprites.Spider.deathGif, 0),
+              },
               x: this.position.x + random(-100, 100),
               y: this.position.y + random(-100, 100),
               type: this.type,
@@ -175,6 +214,15 @@ class Spawner {
           );
           monsters.push(
             new Monster({
+              sprites: {
+                idleImg: sprites.Spider.idleImg,
+                idleAttackImg: sprites.Spider.idleAttackImg,
+                holeImg: sprites.Spider.holeImg,
+                walkGif: cloneGif(sprites.Spider.walkGif, 0),
+                unburrowGif: cloneGif(sprites.Spider.unburrowGif, 0),
+                attackGif: cloneGif(sprites.Spider.attackGif, 0),
+                deathGif: cloneGif(sprites.Spider.deathGif, 0),
+              },
               x: this.position.x + random(-100, 100),
               y: this.position.y + random(-100, 100),
               type: this.type,
@@ -182,6 +230,15 @@ class Spawner {
           );
           monsters.push(
             new Monster({
+              sprites: {
+                idleImg: sprites.Spider.idleImg,
+                idleAttackImg: sprites.Spider.idleAttackImg,
+                holeImg: sprites.Spider.holeImg,
+                walkGif: cloneGif(sprites.Spider.walkGif, 0),
+                unburrowGif: cloneGif(sprites.Spider.unburrowGif, 0),
+                attackGif: cloneGif(sprites.Spider.attackGif, 0),
+                deathGif: cloneGif(sprites.Spider.deathGif, 0),
+              },
               x: this.position.x + random(-100, 100),
               y: this.position.y + random(-100, 100),
               type: this.type,
@@ -191,6 +248,13 @@ class Spawner {
         case "Snake":
           monsters.push(
             new Monster({
+              sprites: {
+                idleImg: sprites.Snake.idleImg,
+                holeImg: sprites.Snake.holeImg,
+                walkGif: cloneGif(sprites.Snake.walkGif, 0),
+                attackGif: cloneGif(sprites.Snake.attackGif, 0),
+                deathGif: cloneGif(sprites.Snake.deathGif, 0),
+              },
               x: this.position.x + random(-100, 100),
               y: this.position.y + random(-100, 100),
               type: this.type,
@@ -198,6 +262,13 @@ class Spawner {
           );
           monsters.push(
             new Monster({
+              sprites: {
+                idleImg: sprites.Snake.idleImg,
+                holeImg: sprites.Snake.holeImg,
+                walkGif: cloneGif(sprites.Snake.walkGif, 0),
+                attackGif: cloneGif(sprites.Snake.attackGif, 0),
+                deathGif: cloneGif(sprites.Snake.deathGif, 0),
+              },
               x: this.position.x + random(-100, 100),
               y: this.position.y + random(-100, 100),
               type: this.type,

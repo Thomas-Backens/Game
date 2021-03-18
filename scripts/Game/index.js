@@ -66,15 +66,19 @@ let shadow;
 let sprites = {
   Spider: {
     idleImg: null,
-    walkGif: null,
     idleAttackImg: null,
-    // unburrowGif: null,
     holeImg: null,
+    walkGif: null,
+    unburrowGif: null,
+    attackGif: null,
+    deathGif: null,
     loaded: false,
   },
   Snake: {
     idleImg: null,
     walkGif: null,
+    attackGif: null,
+    deathGif: null,
     loaded: false,
   },
   Blocks: {
@@ -101,6 +105,219 @@ let loadedSprites = false;
 
 let scene = "game";
 let paused = false;
+
+function preload() {
+  shadow = loadImage("../../sprites/Misc/Shadow.png");
+
+  {
+    sprites.Spider.idleImg = loadImage(
+      "../../../sprites/Monsters/Spider/Idle.png",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.walkGif = loadImage(
+      "../../../sprites/Monsters/Spider/Walk.gif",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.idleAttackImg = loadImage(
+      "../../../sprites/Monsters/Spider/Attack.png",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.unburrowGif = loadImage(
+      "../../../sprites/Monsters/Spider/Unburrow.gif",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.holeImg = loadImage(
+      "../../../sprites/Monsters/hole.png",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.attackGif = loadImage(
+      "../../../sprites/Monsters/Spider/Attack.gif",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+    sprites.Spider.deathGif = loadImage(
+      "../../../sprites/Monsters/Spider/Death.gif",
+      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spider.loaded = false)
+    );
+  } // Spider Images
+
+  {
+    sprites.Snake.idleImg = loadImage(
+      "../../../sprites/Monsters/Snake/Idle.png",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+    sprites.Snake.walkGif = loadImage(
+      "../../../sprites/Monsters/Snake/Walk.gif",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+    sprites.Snake.holeImg = loadImage(
+      "../../../sprites/Monsters/hole.png",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+    sprites.Snake.attackGif = loadImage(
+      "../../../sprites/Monsters/Snake/Attack.gif",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+    sprites.Snake.deathGif = loadImage(
+      "../../../sprites/Monsters/Snake/Death.gif",
+      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
+      () => (sprites.Snake.loaded = false)
+    );
+  } // Snake Images
+
+  {
+    sprites.Blocks.floorTiles = [
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt3.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt4.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Dirt/Dirt_wall_top3.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+    ];
+    sprites.Blocks.wallTiles = [
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone1_side1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone1_side2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone2_side1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone2_side2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_corner1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_corner2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_corner1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_corner2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_end1.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_side_end2.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+      loadImage(
+        "../../../sprites/Tiles/Stone/Stone_full.png",
+        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
+        () => (sprites.Blocks.loaded = false)
+      ),
+    ];
+  } // Block Images
+
+  {
+    sprites.Spawners.Spider = loadImage(
+      "../../sprites/Tiles/Spawner.png",
+      () => ((sprites.Spawners.loaded = true), totalLoadedSprites++),
+      () => (sprites.Spawners.loaded = false)
+    );
+  } // Spawner Images
+
+  {
+    sprites.Projectiles.MagicBall = loadImage(
+      "../../../sprites/Projectiles/MagicBall.gif",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.FireBall = loadImage(
+      "../../../sprites/Projectiles/FireBall.gif",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.FireRing = loadImage(
+      "../../../sprites/Projectiles/FireRing_still.png",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.Web = loadImage(
+      "../../../sprites/Projectiles/Web.png",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+    sprites.Projectiles.WebShot = loadImage(
+      "../../../sprites/Projectiles/WebShot.gif",
+      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
+      () => (sprites.Projectiles.loaded = false)
+    );
+  } // Projectile Images
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -419,192 +636,6 @@ function setup() {
   UI = new Interface({
     character: heroes[0],
   });
-
-  shadow = loadImage("../../sprites/Misc/Shadow.png");
-
-  {
-    sprites.Spider.idleImg = loadImage(
-      "../../../sprites/Monsters/Spider/Idle.png",
-      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
-      () => (sprites.Spider.loaded = false)
-    );
-    sprites.Spider.walkGif = loadImage(
-      "../../../sprites/Monsters/Spider/Walk.gif",
-      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
-      () => (sprites.Spider.loaded = false)
-    );
-    sprites.Spider.idleAttackImg = loadImage(
-      "../../../sprites/Monsters/Spider/Attack.png",
-      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
-      () => (sprites.Spider.loaded = false)
-    );
-    // sprites.Spider.unburrowGif = loadImage(
-    //   "../../../sprites/Monsters/Spider/Unburrow.gif",
-    //   () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
-    //   () => (sprites.Spider.loaded = false)
-    // );
-    sprites.Spider.holeImg = loadImage(
-      "../../../sprites/Monsters/hole.png",
-      () => ((sprites.Spider.loaded = true), totalLoadedSprites++),
-      () => (sprites.Spider.loaded = false)
-    );
-  } // Spider Images
-
-  {
-    sprites.Snake.idleImg = loadImage(
-      "../../../sprites/Monsters/Snake/Idle.png",
-      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
-      () => (sprites.Snake.loaded = false)
-    );
-    sprites.Snake.walkGif = loadImage(
-      "../../../sprites/Monsters/Snake/Walk.gif",
-      () => ((sprites.Snake.loaded = true), totalLoadedSprites++),
-      () => (sprites.Snake.loaded = false)
-    );
-  } // Snake Images
-
-  {
-    sprites.Blocks.floorTiles = [
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt3.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt4.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt_wall_top1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt_wall_top2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Dirt/Dirt_wall_top3.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-    ];
-    sprites.Blocks.wallTiles = [
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone1_side1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone1_side2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone2_side1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone2_side2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_corner1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_corner2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_side_corner1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_side_corner2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_side_end1.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_side_end2.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-      loadImage(
-        "../../../sprites/Tiles/Stone/Stone_full.png",
-        () => ((sprites.Blocks.loaded = true), totalLoadedSprites++),
-        () => (sprites.Blocks.loaded = false)
-      ),
-    ];
-  } // Block Images
-
-  {
-    sprites.Spawners.Spider = loadImage(
-      "../../sprites/Tiles/Spawner.png",
-      () => ((sprites.Spawners.loaded = true), totalLoadedSprites++),
-      () => (sprites.Spawners.loaded = false)
-    );
-  } // Spawner Images
-
-  {
-    sprites.Projectiles.MagicBall = loadImage(
-      "../../../sprites/Projectiles/MagicBall.gif",
-      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
-      () => (sprites.Projectiles.loaded = false)
-    );
-    sprites.Projectiles.FireBall = loadImage(
-      "../../../sprites/Projectiles/FireBall.gif",
-      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
-      () => (sprites.Projectiles.loaded = false)
-    );
-    sprites.Projectiles.FireRing = loadImage(
-      "../../../sprites/Projectiles/FireRing_still.png",
-      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
-      () => (sprites.Projectiles.loaded = false)
-    );
-    sprites.Projectiles.Web = loadImage(
-      "../../../sprites/Projectiles/Web.png",
-      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
-      () => (sprites.Projectiles.loaded = false)
-    );
-    sprites.Projectiles.WebShot = loadImage(
-      "../../../sprites/Projectiles/WebShot.gif",
-      () => ((sprites.Projectiles.loaded = true), totalLoadedSprites++),
-      () => (sprites.Projectiles.loaded = false)
-    );
-  } // Projectile Images
 }
 
 function draw() {
@@ -879,7 +910,7 @@ function draw() {
 
           for (let i = 0; i < monsters.length; i++) {
             if (!monsters[i].loaded) {
-              monsters[i].loadImages();
+              // monsters[i].loadImages();
             } else {
               if (monsters[i].onScreen()) {
                 if (!monsters[i].isBoss) {
@@ -897,7 +928,7 @@ function draw() {
 
           for (let i = 0; i < monsters.length; i++) {
             if (!monsters[i].loaded) {
-              monsters[i].loadImages();
+              // monsters[i].loadImages();
             } else {
               if (monsters[i].onScreen()) {
                 if (monsters[i].isBoss) {
@@ -911,16 +942,16 @@ function draw() {
             switch (monsters[i].type) {
               case "Spider":
                 if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
-                  monsters[i].deathGif.delay(10000, 13);
-                  monsters[i].attackGif.pause();
-                  monsters[i].unburrowGif.delay(10000, 8);
+                  monsters[i].sprites.deathGif.delay(10000, 13);
+                  monsters[i].sprites.attackGif.pause();
+                  monsters[i].sprites.unburrowGif.delay(10000, 8);
                   monsters[i].setDelays = true;
                 }
                 break;
               case "Snake":
                 if (monsters[i].loadDelay >= 60 && !monsters[i].setDelays) {
-                  monsters[i].deathGif.delay(10000, 9);
-                  monsters[i].attackGif.pause();
+                  monsters[i].sprites.deathGif.delay(10000, 9);
+                  monsters[i].sprites.attackGif.pause();
                   monsters[i].setDelays = true;
                 }
                 break;

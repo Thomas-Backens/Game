@@ -505,7 +505,6 @@ class Hero {
     this.stats.damage = this.stats.upgrades.damageIncrease[
       this.stats.upgrades.damage
     ];
-    console.log(this.stats.health);
     this.stats.maxHealth = this.stats.upgrades.healthIncrease[
       this.stats.upgrades.health
     ];

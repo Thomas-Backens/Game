@@ -41,3 +41,25 @@ var rectCircleCollide = function (rx, ry, w, h, theta, cx, cy, diam, rectM) {
   var closestY = constrain(cy, ry, ry + h);
   return isInCircle(closestX, closestY, cx, cy, diam);
 };
+
+function cloneGif(gif, startFrame) {
+  let gifClone = gif.get();
+  // access original gif properties
+  gp = gif.gifProperties;
+  // make a new object for the clone
+  gifClone.gifProperties = {
+    displayIndex: gp.displayIndex,
+    // we still point to the original array of frames
+    frames: gp.frames,
+    lastChangeTime: gp.lastChangeTime,
+    loopCount: gp.loopCount,
+    loopLimit: gp.loopLimit,
+    numFrames: gp.numFrames,
+    playing: gp.playing,
+    timeDisplayed: gp.timeDisplayed,
+  };
+  // optional tweak the start frame
+  gifClone.setFrame(startFrame);
+
+  return gifClone;
+}

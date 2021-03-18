@@ -1,5 +1,6 @@
 class Monster {
   constructor(config) {
+    this.sprites = config.sprites;
     this.position = new p5.Vector(config.x, config.y);
     this.velocity = new p5.Vector(0, 0);
     this.repelVelocity = new p5.Vector(0, 0);
@@ -56,14 +57,7 @@ class Monster {
     this.shedX = 0;
     this.shedY = 0;
 
-    this.idleImg;
-    this.walkGif;
-    this.idleAttackImg;
-    this.attackGif;
-    this.deathGif;
-    this.holeImg;
-    this.unburrowGif;
-    this.loaded = false;
+    this.loaded = true;
     this.loadDelay = 0;
     this.setDelays = false;
     this.attacking = false;
@@ -160,47 +154,6 @@ class Monster {
     this.hitTimer = 0;
   }
 
-  loadImages() {
-    switch (this.type) {
-      case "Spider":
-        this.idleImg = sprites.Spider.idleImg;
-        this.walkGif = sprites.Spider.walkGif;
-        this.idleAttackImg = sprites.Spider.idleAttackImg;
-        this.holeImg = sprites.Spider.holeImg;
-        this.attackGif = loadImage(
-          "../../../sprites/Monsters/Spider/Attack.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        this.deathGif = loadImage(
-          "../../../sprites/Monsters/Spider/Death.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        this.unburrowGif = loadImage(
-          "../../../sprites/Monsters/Spider/Unburrow.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        break;
-      case "Snake":
-        this.idleImg = sprites.Snake.idleImg;
-        this.walkGif = sprites.Snake.walkGif;
-        this.holeImg = sprites.Spawners.Spider;
-        this.attackGif = loadImage(
-          "../../../sprites/Monsters/Snake/Attack.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        this.deathGif = loadImage(
-          "../../../sprites/Monsters/Snake/Death.gif",
-          () => (this.loaded = true),
-          () => (this.loaded = false)
-        );
-        break;
-    }
-  }
-
   display() {
     if (!this.dying) {
       this.angle = this.velocity.heading();
@@ -235,15 +188,27 @@ class Monster {
         rotate(this.angle - 4.8);
         if (!this.burrowed) {
           if (this.dying) {
-            image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
+            image(this.sprites.deathGif, 0, 0, this.size * 2, this.size * 2);
           } else {
             if (this.moving) {
-              image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+              image(this.sprites.walkGif, 0, 0, this.size * 2, this.size * 2);
             } else {
               if (this.attacking) {
-                image(this.attackGif, 0, 0, this.size * 2, this.size * 2);
+                image(
+                  this.sprites.attackGif,
+                  0,
+                  0,
+                  this.size * 2,
+                  this.size * 2
+                );
               } else {
-                image(this.idleAttackImg, 0, 0, this.size * 2, this.size * 2);
+                image(
+                  this.sprites.idleAttackImg,
+                  0,
+                  0,
+                  this.size * 2,
+                  this.size * 2
+                );
               }
             }
           }
@@ -259,7 +224,7 @@ class Monster {
             translate(this.shedX + camera.x, this.shedY + camera.y);
             rotate(this.shedAngle);
             tint(50, 100, 0);
-            image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+            image(this.sprites.idleImg, 0, 0, this.size * 2, this.size * 2);
             pop();
           }
         } else {
@@ -273,15 +238,21 @@ class Monster {
         rotate(this.angle - 4.8);
         if (!this.burrowed) {
           if (this.dying) {
-            image(this.deathGif, 0, 0, this.size * 2, this.size * 2);
+            image(this.sprites.deathGif, 0, 0, this.size * 2, this.size * 2);
           } else {
             if (this.moving) {
-              image(this.walkGif, 0, 0, this.size * 2, this.size * 2);
+              image(this.sprites.walkGif, 0, 0, this.size * 2, this.size * 2);
             } else {
               if (this.attacking) {
-                image(this.attackGif, 0, 0, this.size * 4, this.size * 4);
+                image(
+                  this.sprites.attackGif,
+                  0,
+                  0,
+                  this.size * 4,
+                  this.size * 4
+                );
               } else {
-                image(this.idleImg, 0, 0, this.size * 2, this.size * 2);
+                image(this.sprites.idleImg, 0, 0, this.size * 2, this.size * 2);
               }
             }
           }
@@ -321,7 +292,7 @@ class Monster {
       if (this.type === "Spider") {
         if (this.unburrow) {
           image(
-            this.unburrowGif,
+            this.sprites.unburrowGif,
             this.position.x + camera.x,
             this.position.y + camera.y,
             this.size * 2,
@@ -329,7 +300,7 @@ class Monster {
           );
         } else {
           image(
-            this.holeImg,
+            this.sprites.holeImg,
             this.position.x + camera.x,
             this.position.y + camera.y,
             this.size * 2,
@@ -338,7 +309,7 @@ class Monster {
         }
       } else {
         image(
-          this.holeImg,
+          this.sprites.holeImg,
           this.position.x + camera.x,
           this.position.y + camera.y,
           this.size * 2,
@@ -557,6 +528,12 @@ class Monster {
             for (let i = 0; i < randonNum; i++) {
               monsters.push(
                 new Monster({
+                  sprites: {
+                    idleImg: sprites.Snake.idleImg,
+                    walkGif: cloneGif(sprites.Snake.walkGif, 0),
+                    attackGif: cloneGif(sprites.Snake.attackGif, 0),
+                    deathGif: cloneGif(sprites.Snake.deathGif, 0),
+                  },
                   x: this.position.x + random(-100, 100),
                   y: this.position.y + random(-100, 100),
                   type: "Spider",
@@ -639,7 +616,7 @@ class Monster {
 
       if (this.type === "Spider") {
         if (!this.unburrow) {
-          this.unburrowGif.reset();
+          this.sprites.unburrowGif.reset();
         }
         if (this.burrowTimer >= 300) {
           this.unburrow = true;
@@ -801,12 +778,12 @@ class Monster {
         this.attackTimer < this.stats.attackSpeed * 42
       ) {
         this.attacking = false;
-        this.attackGif.reset();
-        this.attackGif.pause();
+        this.sprites.attackGif.reset();
+        this.sprites.attackGif.pause();
       }
       if (this.attackTimer >= this.stats.attackSpeed * 48) {
         this.attacking = true;
-        this.attackGif.play();
+        this.sprites.attackGif.play();
       }
 
       if (this.attackTimer >= this.stats.attackSpeed * 60) {
@@ -818,7 +795,7 @@ class Monster {
       }
     } else {
       this.attacking = false;
-      this.attackGif.reset();
+      this.sprites.attackGif.reset();
     }
   }
 
@@ -848,12 +825,12 @@ class Monster {
         this.attackTimer < this.stats.attackSpeed * 42
       ) {
         this.attacking = false;
-        this.attackGif.reset();
-        this.attackGif.pause();
+        this.sprites.attackGif.reset();
+        this.sprites.attackGif.pause();
       }
       if (this.attackTimer >= this.stats.attackSpeed * 48) {
         this.attacking = true;
-        this.attackGif.play();
+        this.sprites.attackGif.play();
       }
 
       if (this.attackTimer === this.stats.attackSpeed * 54) {
@@ -867,7 +844,7 @@ class Monster {
       }
     } else {
       this.attacking = false;
-      this.attackGif.reset();
+      this.sprites.attackGif.reset();
     }
   }
 
@@ -906,6 +883,15 @@ class Monster {
       for (let i = 0; i < randonNum; i++) {
         monsters.push(
           new Monster({
+            sprites: {
+              idleImg: sprites.Spider.idleImg,
+              idleAttackImg: sprites.Spider.idleAttackImg,
+              holeImg: sprites.Spider.holeImg,
+              walkGif: cloneGif(sprites.Spider.walkGif, 0),
+              unburrowGif: cloneGif(sprites.Spider.unburrowGif, 0),
+              attackGif: cloneGif(sprites.Spider.attackGif, 0),
+              deathGif: cloneGif(sprites.Spider.deathGif, 0),
+            },
             x: this.position.x + random(-200, 200),
             y: this.position.y + random(-200, 200),
             type: "Spider",
