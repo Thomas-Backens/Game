@@ -628,7 +628,7 @@ class Hero {
   move() {
     this.running = false;
     if (keys[87]) {
-      if (!keys[68] && !keys[65]) {
+      if ((!keys[68] && !keys[65]) || (keys[68] && keys[65])) {
         if (!this.collidingWith.bottom) {
           this.position.y -= this.stats.speed + this.speedOffset;
         }
@@ -652,7 +652,7 @@ class Hero {
     }
     if (keys[83]) {
       this.running = true;
-      if (!keys[68] && !keys[65]) {
+      if ((!keys[68] && !keys[65]) || (keys[68] && keys[65])) {
         if (!this.collidingWith.top) {
           this.position.y += this.stats.speed + this.speedOffset;
         }
