@@ -866,7 +866,7 @@ function draw() {
       textSize(12);
       text("2", windowWidth / 2 + 290, windowHeight / 2 - 212);
       text("Points", windowWidth / 2 + 290, windowHeight / 2 - 198);
-      text("3", windowWidth / 2 + 290, windowHeight / 2 - 112);
+      text("2", windowWidth / 2 + 290, windowHeight / 2 - 112);
       text("Points", windowWidth / 2 + 290, windowHeight / 2 - 98);
       text("1", windowWidth / 2 + 290, windowHeight / 2 - 12);
       text("Point", windowWidth / 2 + 290, windowHeight / 2 + 2);
