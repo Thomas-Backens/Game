@@ -22,9 +22,11 @@ class Hero {
         damage: 0,
         health: 0,
         energy: 0,
+        defense: 0,
         maxEnergy: 0,
         maxDamage: 0,
         maxHealth: 0,
+        defenseLimit: 0,
         energyLimit: 0,
         maxEnergyLimit: 0,
         damageIncrease: [],
@@ -113,9 +115,11 @@ class Hero {
             damage: 0,
             health: 0,
             energy: 0,
+            defense: 0,
             maxEnergy: 0,
             maxDamage: 10,
             maxHealth: 20,
+            defenseLimit: 20,
             energyLimit: 5,
             maxEnergyLimit: 20,
             damageIncrease: [
@@ -623,12 +627,12 @@ class Hero {
   move() {
     this.running = false;
     if (keys[87]) {
-      if (!keys[68] && !keys[65]) {
+      if ((!keys[68] && !keys[65]) || (keys[68] && keys[65])) {
         if (!this.collidingWith.bottom) {
           this.position.y -= this.stats.speed + this.speedOffset;
         }
       }
-      if (keys[68]) {
+      if (keys[68] && !keys[65]) {
         if (!this.collidingWith.bottom) {
           this.position.y -= this.stats.speed / 1.2 + this.speedOffset;
         }
@@ -636,7 +640,7 @@ class Hero {
           this.position.x += this.stats.speed / 1.2 + this.speedOffset;
         }
       }
-      if (keys[65]) {
+      if (keys[65] && !keys[68]) {
         if (!this.collidingWith.bottom) {
           this.position.y -= this.stats.speed / 1.2 + this.speedOffset;
         }
@@ -647,12 +651,12 @@ class Hero {
     }
     if (keys[83]) {
       this.running = true;
-      if (!keys[68] && !keys[65]) {
+      if ((!keys[68] && !keys[65]) || (keys[68] && keys[65])) {
         if (!this.collidingWith.top) {
           this.position.y += this.stats.speed + this.speedOffset;
         }
       }
-      if (keys[68]) {
+      if (keys[68] && !keys[65]) {
         if (!this.collidingWith.top) {
           this.position.y += this.stats.speed / 1.2 + this.speedOffset;
         }
@@ -660,7 +664,7 @@ class Hero {
           this.position.x += this.stats.speed / 1.2 + this.speedOffset;
         }
       }
-      if (keys[65]) {
+      if (keys[65] && !keys[68]) {
         if (!this.collidingWith.top) {
           this.position.y += this.stats.speed / 1.2 + this.speedOffset;
         }
