@@ -633,7 +633,7 @@ class Hero {
           this.position.y -= this.stats.speed + this.speedOffset;
         }
       }
-      if (keys[68]) {
+      if (keys[68] && !keys[65]) {
         if (!this.collidingWith.bottom) {
           this.position.y -= this.stats.speed / 1.2 + this.speedOffset;
         }
@@ -641,7 +641,7 @@ class Hero {
           this.position.x += this.stats.speed / 1.2 + this.speedOffset;
         }
       }
-      if (keys[65]) {
+      if (keys[65] && !keys[68]) {
         if (!this.collidingWith.bottom) {
           this.position.y -= this.stats.speed / 1.2 + this.speedOffset;
         }
@@ -657,7 +657,7 @@ class Hero {
           this.position.y += this.stats.speed + this.speedOffset;
         }
       }
-      if (keys[68]) {
+      if (keys[68] && !keys[65]) {
         if (!this.collidingWith.top) {
           this.position.y += this.stats.speed / 1.2 + this.speedOffset;
         }
@@ -665,7 +665,7 @@ class Hero {
           this.position.x += this.stats.speed / 1.2 + this.speedOffset;
         }
       }
-      if (keys[65]) {
+      if (keys[65] && !keys[68]) {
         if (!this.collidingWith.top) {
           this.position.y += this.stats.speed / 1.2 + this.speedOffset;
         }
