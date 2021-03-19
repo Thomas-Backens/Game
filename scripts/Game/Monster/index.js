@@ -86,7 +86,7 @@ class Monster {
           defense: 8,
           attackRange: 2,
           attackSpeed: 3,
-          speed: 2,
+          speed: 4,
           visionRange: 15,
         };
         this.size = 50;
